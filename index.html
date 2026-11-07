@@ -81,7 +81,7 @@
                 <button onclick="clientLogout()" class="bg-rose-50 text-rose-600 px-4 py-2 rounded-xl text-xs font-bold hover:bg-rose-100 transition">تسجيل الخروج</button>
             </div>
 
-            <!-- أزرار اختيار المشغلين (بطاقات + شحن رصيد) -->
+            <!-- أزرار اختيار المشغلين -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <button onclick="selectOperator('Ooredoo')" class="bg-gradient-to-r from-red-500 to-rose-600 text-white p-4 rounded-2xl font-bold shadow-lg shadow-rose-200 hover:scale-[1.02] transition flex flex-col items-center justify-center gap-2">
                     <i class="fa-solid fa-signal text-2xl"></i> أوريدو (Ooredoo)
@@ -97,7 +97,7 @@
                 </button>
             </div>
 
-            <!-- فئات المنتجات (كوارط وشحن رصيد) -->
+            <!-- فئات المنتجات -->
             <div id="productsSection" class="bg-white p-6 rounded-2xl shadow-sm border border-indigo-50 hidden">
                 <h3 id="selectedOperatorTitle" class="text-lg font-bold text-gray-800 mb-4"></h3>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="cardsGrid"></div>
@@ -127,18 +127,22 @@
                 <button onclick="showSection('clientAuth')" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-xl text-xs font-bold hover:bg-gray-200 transition">إغلاق لوحة التحكم</button>
             </div>
 
-            <!-- إحصائيات الأدمن -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <!-- إحصائيات الأدمن (تمت إضافة نافذة الأرباح/المراسيم هنا) -->
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
                 <div class="bg-white p-5 rounded-2xl shadow-sm border border-indigo-50">
-                    <p class="text-gray-400 text-xs font-semibold">مداخيل اليوم (الخالصة Payé)</p>
+                    <p class="text-gray-400 text-xs font-semibold">مداخيل اليوم (Payé)</p>
                     <h3 id="adminRecetteDay" class="text-2xl font-extrabold text-gray-800 mt-1">0.000 د.ت</h3>
                 </div>
                 <div class="bg-white p-5 rounded-2xl shadow-sm border border-indigo-50">
-                    <p class="text-gray-400 text-xs font-semibold">مداخيل الشهر (الخالصة Payé)</p>
+                    <p class="text-gray-400 text-xs font-semibold">مداخيل الشهر (Payé)</p>
                     <h3 id="adminRecetteMonth" class="text-2xl font-extrabold text-gray-800 mt-1">0.000 د.ت</h3>
                 </div>
                 <div class="bg-white p-5 rounded-2xl shadow-sm border border-indigo-50">
-                    <p class="text-gray-400 text-xs font-semibold">إجمالي ديون الكريدي المتخلدة</p>
+                    <p class="text-gray-400 text-xs font-semibold">إجمالي الأرباح (Bénéfices)</p>
+                    <h3 id="adminTotalBenefice" class="text-2xl font-extrabold text-emerald-600 mt-1">0.000 د.ت</h3>
+                </div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-indigo-50">
+                    <p class="text-gray-400 text-xs font-semibold">إجمالي ديون الكريدي</p>
                     <h3 id="adminTotalCredit" class="text-2xl font-extrabold text-rose-600 mt-1">0.000 د.ت</h3>
                 </div>
                 <div class="bg-white p-5 rounded-2xl shadow-sm border border-indigo-50">
@@ -156,10 +160,13 @@
                 <button onclick="switchAdminTab('tariffs')" id="tabAdminTariffs" class="admin-tab bg-white text-gray-600 px-5 py-2.5 rounded-xl text-sm font-semibold border">إدارة الأسعار</button>
             </div>
 
-            <!-- تاب الطلبات الواردة -->
+            <!-- تاب الطلبات الواردة (تظهر أسماء المتاجر فقط كأزرار تفتح الفاتورة) -->
             <div id="adminOrdersContent" class="admin-content space-y-4">
-                <div id="ordersListContainer" class="bg-white rounded-2xl shadow-sm border p-5">
-                    <p class="text-gray-400 text-center py-6">جاري تحميل الطلبات...</p>
+                <div class="bg-white rounded-2xl shadow-sm border p-5">
+                    <p class="text-xs text-gray-400 mb-3 font-bold">اضغط على اسم الحانوت لفتح الفاتورة ومراجعتها أو تعديلها:</p>
+                    <div id="ordersListContainer" class="space-y-2">
+                        <p class="text-gray-400 text-center py-6">جاري تحميل الطلبات...</p>
+                    </div>
                 </div>
             </div>
 
@@ -256,16 +263,39 @@
         </div>
     </div>
 
+    <!-- فاتورة الطلب المصغرة (Modal تفاصيل الفاتورة عند النقر على اسم الحانوت) -->
+    <div id="orderInvoiceModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-lg w-full mx-4 space-y-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 class="font-bold text-lg text-gray-800"><i class="fa-solid fa-receipt text-indigo-600 ml-2"></i> فاتورة الطلب</h3>
+                <button onclick="closeOrderInvoiceModal()" class="text-gray-400 hover:text-gray-600 text-lg font-bold">&times;</button>
+            </div>
+            
+            <div id="invoiceContentDetails" class="space-y-3 max-h-60 overflow-y-auto">
+                <!-- تفاصيل المنتجات والكميات -->
+            </div>
+
+            <div class="border-t pt-3 flex justify-between items-center">
+                <span class="font-bold text-gray-700">المجموع الجملي: <span id="invoiceTotalAmount" class="text-emerald-600 text-lg font-extrabold">0.000 د.ت</span></span>
+            </div>
+
+            <div class="flex gap-2 pt-2">
+                <button onclick="openEditFromInvoice()" class="flex-1 bg-amber-500 text-white py-2.5 rounded-xl font-bold text-sm shadow hover:bg-amber-600">تعديل الطلب</button>
+                <button onclick="confirmDeliveryFromInvoice()" class="flex-1 bg-emerald-600 text-white py-2.5 rounded-xl font-bold text-sm shadow hover:bg-emerald-700">تأكيد وتسليم</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal تعديل الطلب من طرف الأدمن -->
     <div id="editOrderModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50">
         <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-lg w-full mx-4 space-y-4">
-            <h3 class="font-bold text-lg text-gray-800"><i class="fa-solid fa-pen-to-square text-indigo-600 ml-2"></i> مراجعة وتعديل الطلب</h3>
+            <h3 class="font-bold text-lg text-gray-800"><i class="fa-solid fa-pen-to-square text-indigo-600 ml-2"></i> مراجعة وتعديل الكميات</h3>
             <div id="editOrderItemsContainer" class="space-y-3 max-h-60 overflow-y-auto"></div>
             <div class="flex justify-between items-center border-t pt-3">
                 <span class="font-bold text-gray-700">المجموع الجديد: <span id="editOrderTotal" class="text-emerald-600">0.000 د.ت</span></span>
                 <div class="flex gap-2">
                     <button onclick="closeEditModal()" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-xl text-sm font-bold">إلغاء</button>
-                    <button onclick="saveEditedOrder()" class="bg-indigo-600 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-md">حفظ وتأكيد</button>
+                    <button onclick="saveEditedOrder()" class="bg-indigo-600 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-md">حفظ التعديل</button>
                 </div>
             </div>
         </div>
@@ -331,6 +361,9 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        window.db = db;
+        window.updateDoc = updateDoc;
+        window.doc = doc;
 
         window.currentClient = null;
         window.currentOperator = '';
@@ -340,34 +373,30 @@
         window.allOrders = [];
         window.editingOrderId = null;
         window.editingItems = [];
+        window.activeInvoiceOrderId = null;
         window.activeDeliveryOrderId = null;
         window.activeDeliveryTotal = 0;
         window.activeCreditClientName = '';
 
-        // قائمة المنتجات: تشمل الكوارط وشحن الرصيد لجميع الشركات (Ooredoo, Telecom, Orange, Lycamobile/Light)
         window.tariffs = [
-            // Ooredoo
             { id: 'Ooredoo_1', operator: 'Ooredoo', name: 'Ticket 1D', buy: 0.950, sell: 1.000 },
             { id: 'Ooredoo_5', operator: 'Ooredoo', name: 'Carte 5D', buy: 4.750, sell: 5.000 },
             { id: 'Ooredoo_10', operator: 'Ooredoo', name: 'Carte 10D', buy: 9.500, sell: 10.000 },
             { id: 'Ooredoo_25', operator: 'Ooredoo', name: 'Carte 25D', buy: 23.750, sell: 25.000 },
-            { id: 'Ooredoo_recharge', operator: 'Ooredoo', name: 'شحن رصيد مباشر', buy: 0.000, sell: 0.000 }, // يتم إدخال المبلغ لاحقاً أو حسب الطلب
+            { id: 'Ooredoo_recharge', operator: 'Ooredoo', name: 'شحن رصيد مباشر', buy: 0.000, sell: 0.000 },
             
-            // Telecom
             { id: 'Telecom_1', operator: 'Telecom', name: 'Ticket 1D', buy: 0.950, sell: 1.000 },
             { id: 'Telecom_5', operator: 'Telecom', name: 'Carte 5D', buy: 4.750, sell: 5.000 },
             { id: 'Telecom_10', operator: 'Telecom', name: 'Carte 10D', buy: 9.500, sell: 10.000 },
             { id: 'Telecom_25', operator: 'Telecom', name: 'Carte 25D', buy: 23.750, sell: 25.000 },
             { id: 'Telecom_recharge', operator: 'Telecom', name: 'شحن رصيد مباشر', buy: 0.000, sell: 0.000 },
 
-            // Orange
             { id: 'Orange_1', operator: 'Orange', name: 'Ticket 1D', buy: 0.950, sell: 1.000 },
             { id: 'Orange_5', operator: 'Orange', name: 'Carte 5D', buy: 4.750, sell: 5.000 },
             { id: 'Orange_10', operator: 'Orange', name: 'Carte 10D', buy: 9.500, sell: 10.000 },
             { id: 'Orange_25', operator: 'Orange', name: 'Carte 25D', buy: 23.750, sell: 25.000 },
             { id: 'Orange_recharge', operator: 'Orange', name: 'شحن رصيد مباشر', buy: 0.000, sell: 0.000 },
 
-            // Lycamobile / Light / شحن رصيد
             { id: 'Lycamobile_5', operator: 'Lycamobile', name: 'بطاقة 5D', buy: 4.750, sell: 5.000 },
             { id: 'Lycamobile_10', operator: 'Lycamobile', name: 'بطاقة 10D', buy: 9.500, sell: 10.000 },
             { id: 'Lycamobile_recharge', operator: 'Lycamobile', name: 'شحن رصيد مباشر (لايت)', buy: 0.000, sell: 0.000 }
@@ -496,6 +525,7 @@
                 alert('تم تأكيد التسليم وتسجيل الخلاص بنجاح!');
                 closePaymentChoiceModal();
                 closeTrancheModal();
+                closeOrderInvoiceModal();
             } catch (e) {
                 console.error("Error delivering order:", e);
                 alert('حدث خطأ أثناء الحفظ.');
@@ -679,6 +709,41 @@
             window.currentClient = null;
             window.cart = {};
             showSection('clientAuth');
+        }
+
+        // فتح فاتورة الطلب عبر الضغط على اسم المتجر
+        function openOrderInvoice(orderId) {
+            let order = window.allOrders.find(o => o.id === orderId);
+            if (!order) return;
+            window.activeInvoiceOrderId = orderId;
+            window.activeDeliveryOrderId = orderId;
+            window.activeDeliveryTotal = order.totalSell;
+
+            let container = document.getElementById('invoiceContentDetails');
+            let html = `<div class="bg-indigo-50 p-3 rounded-xl mb-3 text-xs"><p class="font-bold text-gray-800">الحانوت: ${order.clientName} (${order.clientPhone})</p><p class="text-gray-500">العنوان: ${order.clientAddress}</p></div><div class="space-y-2">`;
+            
+            order.items.forEach(i => {
+                html += `<div class="flex justify-between items-center bg-gray-50 p-2.5 rounded-xl border text-sm"><span>[${i.operator}] ${i.name}</span><span class="font-bold">× ${i.qty}</span></div>`;
+            });
+            html += `</div>`;
+
+            container.innerHTML = html;
+            document.getElementById('invoiceTotalAmount').innerText = order.totalSell.toFixed(3) + ' د.ت';
+            document.getElementById('orderInvoiceModal').classList.remove('hidden');
+        }
+
+        function closeOrderInvoiceModal() {
+            document.getElementById('orderInvoiceModal').classList.add('hidden');
+        }
+
+        function openEditFromInvoice() {
+            closeOrderInvoiceModal();
+            openEditOrderModal(window.activeInvoiceOrderId);
+        }
+
+        function confirmDeliveryFromInvoice() {
+            closeOrderInvoiceModal();
+            openPaymentChoiceModal(window.activeInvoiceOrderId, window.activeDeliveryTotal);
         }
 
         function openPaymentChoiceModal(orderId, totalSell) {
@@ -871,6 +936,7 @@
             window.editingOrderId = null;
         }
 
+        // دالة حفظ التعديل المصححة تماماً والمتصلة بالفايربيز
         async function saveEditedOrder() {
             if (!window.editingOrderId) return;
             let totalSell = 0;
@@ -881,10 +947,11 @@
             });
 
             try {
-                await window.updateDoc(window.doc(window.db, "orders", window.editingOrderId), {
+                const orderRef = window.doc(window.db, "orders", window.editingOrderId);
+                await window.updateDoc(orderRef, {
                     items: window.editingItems.filter(i => i.qty > 0),
-                    totalSell,
-                    totalBuy,
+                    totalSell: totalSell,
+                    totalBuy: totalBuy,
                     benefice: totalSell - totalBuy,
                     creditAmount: totalSell
                 });
@@ -892,7 +959,7 @@
                 closeEditModal();
             } catch (e) {
                 console.error("Error updating order:", e);
-                alert('حدث خطأ عند تعديل الكمية.');
+                alert('حدث خطأ عند تعديل الكمية: ' + e.message);
             }
         }
 
@@ -938,6 +1005,7 @@
         function processAdminData() {
             let dayTotal = 0;
             let monthTotal = 0;
+            let totalBenefice = 0;
             let totalCredit = 0;
             let pendingCount = 0;
 
@@ -957,6 +1025,8 @@
                     if (o.paidAmount) dayTotal += (o.date.slice(0, 10) === today ? o.paidAmount : 0);
                     if (o.paidAmount) monthTotal += (o.date.slice(0, 7) === thisMonth ? o.paidAmount : 0);
                     
+                    if (o.benefice) totalBenefice += o.benefice;
+
                     let currentCred = o.creditAmount !== undefined ? o.creditAmount : (o.paymentStatus === 'Crédit' ? o.totalSell : 0);
                     totalCredit += currentCred;
                     clientsMap[o.clientName].credit += currentCred;
@@ -964,35 +1034,30 @@
 
                 if (o.status === 'قيد الانتظار للتحضير') {
                     pendingCount++;
-                    let itemsDetail = '';
-                    o.items.forEach(i => {
-                        let badgeBg = 'bg-indigo-50 text-indigo-700';
-                        if (i.operator === 'Ooredoo') badgeBg = 'bg-rose-50 text-rose-700 border border-rose-200';
-                        else if (i.operator === 'Telecom') badgeBg = 'bg-blue-50 text-blue-700 border border-blue-200';
-                        else if (i.operator === 'Orange') badgeBg = 'bg-amber-50 text-amber-700 border border-amber-200';
-                        else if (i.operator === 'Lycamobile') badgeBg = 'bg-purple-50 text-purple-700 border border-purple-200';
-
-                        itemsDetail += `<span class="${badgeBg} px-2.5 py-1 rounded-xl text-xs ml-1 font-bold">[${i.operator}] ${i.name} (${i.qty})</span>`;
-                    });
-
+                    // يظهر فقط زر يحمل اسم الحانوت، وعند الضغط عليه تفتح الفاتورة
                     ordersHtml += `
-                        <div class="border border-indigo-100 p-4 rounded-2xl bg-indigo-50/30 mb-3 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
-                            <div>
-                                <h4 class="font-bold text-gray-900">${o.clientName} (${o.clientPhone}) - ${o.clientAddress}</h4>
-                                <div class="mt-2 flex flex-wrap gap-1.5">${itemsDetail}</div>
-                                <p class="text-sm font-extrabold text-indigo-600 mt-2">المجموع: ${o.totalSell.toFixed(3)} د.ت</p>
+                        <button onclick="openOrderInvoice('${o.id}')" class="w-full text-right bg-indigo-50/70 hover:bg-indigo-100 border border-indigo-200 p-4 rounded-2xl flex justify-between items-center transition shadow-sm mb-2">
+                            <div class="flex items-center gap-3">
+                                <div class="bg-indigo-600 text-white w-10 h-10 rounded-xl flex items-center justify-center font-bold">
+                                    <i class="fa-solid fa-store"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-gray-900 text-base">${o.clientName}</h4>
+                                    <p class="text-xs text-gray-500">${o.clientAddress} - هاتف: ${o.clientPhone}</p>
+                                </div>
                             </div>
-                            <div class="flex items-center gap-2">
-                                <button onclick="openEditOrderModal('${o.id}')" class="bg-white border text-gray-700 px-3 py-2 rounded-xl text-xs font-bold hover:bg-gray-50 shadow-sm">تعديل الكمية</button>
-                                <button onclick="openPaymentChoiceModal('${o.id}', ${o.totalSell})" class="bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-indigo-700 shadow-md">تسليم وحساب</button>
+                            <div class="flex items-center gap-3">
+                                <span class="font-extrabold text-indigo-600 text-sm">${o.totalSell.toFixed(3)} د.ت</span>
+                                <span class="bg-indigo-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow">فتح الفاتورة</span>
                             </div>
-                        </div>
+                        </button>
                     `;
                 }
             });
 
             document.getElementById('adminRecetteDay').innerText = dayTotal.toFixed(3) + ' د.ت';
             document.getElementById('adminRecetteMonth').innerText = monthTotal.toFixed(3) + ' د.ت';
+            document.getElementById('adminTotalBenefice').innerText = totalBenefice.toFixed(3) + ' د.ت';
             document.getElementById('adminTotalCredit').innerText = totalCredit.toFixed(3) + ' د.ت';
             document.getElementById('adminPendingOrders').innerText = pendingCount;
 

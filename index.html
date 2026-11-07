@@ -90,52 +90,53 @@
 
         <!-- ================= 2. واجهة طلبات التاجر وكشف الحساب ================= -->
         <div id="clientDashboardSection" class="hidden space-y-6 max-w-4xl mx-auto">
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-indigo-50 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-indigo-50 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
                 <div>
-                    <h3 class="font-bold text-xl text-gray-800" id="welcomeClientName">مرحباً بالتاجر</h3>
-                    <p class="text-xs text-gray-500 mt-1" id="welcomeClientDetails"></p>
+                    <h3 class="font-bold text-lg text-gray-800" id="welcomeClientName">مرحباً بالتاجر</h3>
+                    <p class="text-xs text-gray-500 mt-0.5" id="welcomeClientDetails"></p>
                 </div>
                 <div class="flex gap-2 w-full md:w-auto">
-                    <button onclick="openClientStatsModal()" class="flex-1 md:flex-none bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-4 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 shadow-sm">
-                        <i class="fa-solid fa-chart-bar"></i> إحصائيات المشتريات
+                    <button onclick="openClientStatsModal()" class="flex-1 md:flex-none bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 shadow-sm">
+                        <i class="fa-solid fa-chart-bar"></i> الإحصائيات
                     </button>
-                    <button onclick="contactAdminWhatsApp()" class="flex-1 md:flex-none bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-sm">
-                        <i class="fa-brands fa-whatsapp text-lg"></i> مراسلة الإدارة
+                    <button onclick="contactAdminWhatsApp()" class="flex-1 md:flex-none bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 shadow-sm">
+                        <i class="fa-brands fa-whatsapp"></i> مراسلة الإدارة
                     </button>
-                    <button onclick="clientLogout()" class="flex-1 md:flex-none bg-rose-50 text-rose-600 px-4 py-2 rounded-xl text-xs font-bold hover:bg-rose-100 transition">تسجيل الخروج</button>
+                    <button onclick="clientLogout()" class="flex-1 md:flex-none bg-rose-50 text-rose-600 px-3 py-1.5 rounded-xl text-xs font-bold hover:bg-rose-100 transition">خروج</button>
                 </div>
             </div>
 
-            <!-- أزرار اختيار المشغلين -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <button onclick="selectOperator('Ooredoo')" class="bg-gradient-to-r from-red-500 to-rose-600 text-white p-4 rounded-2xl font-bold shadow-lg shadow-rose-200 hover:scale-[1.02] transition flex flex-col items-center justify-center gap-2">
-                    <i class="fa-solid fa-signal text-2xl"></i> أوريدو (Ooredoo)
+            <!-- أزرار اختيار المشغلين بحجم مدمج ومريح -->
+            <div class="grid grid-cols-3 gap-3">
+                <button onclick="selectOperator('Ooredoo')" class="bg-gradient-to-r from-red-500 to-rose-600 text-white p-3 rounded-xl font-bold shadow-md shadow-rose-200 hover:scale-[1.02] transition flex flex-col items-center justify-center gap-1 text-xs md:text-sm">
+                    <i class="fa-solid fa-signal text-lg"></i> أوريدو
                 </button>
-                <button onclick="selectOperator('Telecom')" class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-4 rounded-2xl font-bold shadow-lg shadow-indigo-200 hover:scale-[1.02] transition flex flex-col items-center justify-center gap-2">
-                    <i class="fa-solid fa-globe text-2xl"></i> تيليكوم (Telecom)
+                <button onclick="selectOperator('Telecom')" class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-3 rounded-xl font-bold shadow-md shadow-indigo-200 hover:scale-[1.02] transition flex flex-col items-center justify-center gap-1 text-xs md:text-sm">
+                    <i class="fa-solid fa-globe text-lg"></i> تيليكوم
                 </button>
-                <button onclick="selectOperator('Orange')" class="bg-gradient-to-r from-orange-500 to-amber-600 text-white p-4 rounded-2xl font-bold shadow-lg shadow-amber-200 hover:scale-[1.02] transition flex flex-col items-center justify-center gap-2">
-                    <i class="fa-solid fa-wifi text-2xl"></i> أورنج (Orange)
+                <button onclick="selectOperator('Orange')" class="bg-gradient-to-r from-orange-500 to-amber-600 text-white p-3 rounded-xl font-bold shadow-md shadow-amber-200 hover:scale-[1.02] transition flex flex-col items-center justify-center gap-1 text-xs md:text-sm">
+                    <i class="fa-solid fa-wifi text-lg"></i> أورنج
                 </button>
             </div>
 
-            <!-- فئات المنتجات -->
-            <div id="productsSection" class="bg-white p-6 rounded-2xl shadow-sm border border-indigo-50 hidden">
-                <h3 id="selectedOperatorTitle" class="text-lg font-bold text-gray-800 mb-4"></h3>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="cardsGrid"></div>
+            <!-- فئات المنتجات (مع دعم الكتابة المباشرة للرصيد المباشر وتثبيت المجموع في الأسفل) -->
+            <div id="productsSection" class="bg-white p-5 rounded-2xl shadow-sm border border-indigo-50 hidden space-y-4">
+                <h3 id="selectedOperatorTitle" class="text-base font-bold text-gray-800 border-b pb-2"></h3>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 max-h-[55vh] overflow-y-auto p-1" id="cardsGrid"></div>
 
-                <div class="mt-6 border-t pt-4 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="border-t pt-3 flex justify-between items-center bg-gray-50 p-3 rounded-xl sticky bottom-0 z-10 shadow-inner">
                     <div>
-                        <span class="text-gray-500 text-sm">المجموع الإجمالي:</span>
-                        <span id="cartTotal" class="text-2xl font-extrabold text-emerald-600 mr-2">0.000 د.ت</span>
+                        <span class="text-gray-500 text-xs">المجموع الإجمالي:</span>
+                        <span id="cartTotal" class="text-xl font-extrabold text-emerald-600 mr-2">0.000 د.ت</span>
                     </div>
-                    <button onclick="window.submitOrder()" class="bg-indigo-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-indigo-700 transition shadow-md shadow-indigo-200">إرسال الطلب (Commande)</button>
+                    <button onclick="window.submitOrder()" class="bg-indigo-600 text-white px-6 py-2.5 rounded-xl font-bold text-xs hover:bg-indigo-700 transition shadow-md shadow-indigo-200">إرسال الطلب (Commande)</button>
                 </div>
             </div>
 
             <!-- كشف حساب التاجر -->
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-indigo-50 space-y-4">
-                <h4 class="font-bold text-lg text-gray-800"><i class="fa-solid fa-file-invoice-dollar text-indigo-600 ml-2"></i> كشف حسابي وسجل الطلبات (اضغط على أي طلب لعرض تفاصيله)</h4>
+                <h4 class="font-bold text-base text-gray-800"><i class="fa-solid fa-file-invoice-dollar text-indigo-600 ml-2"></i> كشف حسابي وسجل الطلبات (اضغط على أي طلب لعرض تفاصيله)</h4>
                 <div id="clientMyOrdersContainer" class="space-y-3">
                     <p class="text-gray-400 text-sm text-center py-4">جاري تحميل سجلك...</p>
                 </div>
@@ -312,7 +313,7 @@
         </div>
     </div>
 
-    <!-- نافذة البيع المباشر (POS) - تحتوي على 3 خيارات (Payé, Crédit, Partiel) -->
+    <!-- نافذة البيع المباشر (POS) -->
     <div id="windowPos" class="admin-window fixed inset-0 bg-indigo-900/40 backdrop-blur-md hidden flex items-center justify-center z-40 p-2 md:p-6">
         <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-5xl w-full h-[95vh] flex flex-col justify-between overflow-hidden">
             <div class="overflow-y-auto pr-1 flex-1 space-y-4">
@@ -463,7 +464,7 @@
         </div>
     </div>
 
-    <!-- نافذة خلاص الديون لأدمن -->
+    <!-- نافذة خلاص الديون للأدمن -->
     <div id="payCreditModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
         <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-sm w-full mx-4 space-y-4 text-center">
             <h3 class="font-bold text-lg text-gray-800" id="payCreditTitle">تسجيل خلاص دين</h3>
@@ -839,7 +840,10 @@
                 await addDoc(collection(db, "orders"), orderData);
                 showCustomAlert('نجاح', 'تم إرسال طلبك بنجاح إلى الإدارة في انتظار التحضير والتسليم!');
                 window.cart = {};
-                document.querySelectorAll('[id^="qty_"]').forEach(el => el.innerText = '0');
+                document.querySelectorAll('[id^="qty_"]').forEach(el => {
+                    if (el.tagName === 'INPUT') el.value = '0';
+                    else el.innerText = '0';
+                });
                 calculateTotal();
                 renderClientOrders();
             } catch (e) {
@@ -1646,22 +1650,40 @@
             let gridHtml = '';
             opTariffs.forEach(t => {
                 let currentQty = window.cart[t.id] || 0;
-                gridHtml += `
-                    <div class="bg-indigo-50/50 p-4 rounded-2xl border border-indigo-100 flex flex-col justify-between">
-                        <div>
-                            <span class="text-xs text-indigo-500 font-semibold">${t.operator}</span>
-                            <h4 class="font-bold text-gray-800 text-lg">${t.name}</h4>
-                            <p class="text-emerald-600 font-extrabold text-sm">${t.sell > 0 ? t.sell.toFixed(3) + ' د.ت' : 'حسب الطلب'}</p>
+                let isRecharge = t.id.includes('recharge');
+                
+                if (isRecharge) {
+                    gridHtml += `
+                        <div class="bg-indigo-50/70 p-3 rounded-2xl border border-indigo-200 flex flex-col justify-between col-span-2">
+                            <div>
+                                <span class="text-xs text-indigo-500 font-semibold">${t.operator}</span>
+                                <h4 class="font-bold text-gray-800 text-sm">${t.name}</h4>
+                            </div>
+                            <div class="mt-2 flex items-center gap-2">
+                                <input type="number" min="0" step="0.001" id="qty_${t.id}" value="${currentQty}" oninput="updateRechargeQty('${t.id}', this.value)" placeholder="المبلغ بـ د.ت" class="border p-2 rounded-xl w-full text-center font-extrabold text-sm bg-white">
+                                <span class="text-xs text-gray-500 font-bold">د.ت</span>
+                            </div>
                         </div>
-                        <div class="mt-4 flex items-center justify-between">
-                            <button onclick="updateQty('${t.id}', -1)" class="bg-white border text-gray-700 hover:bg-gray-100 w-9 h-9 rounded-xl font-bold shadow-sm">-</button>
-                            <span id="qty_${t.id}" class="font-extrabold text-lg">${currentQty}</span>
-                            <button onclick="updateQty('${t.id}', 1)" class="bg-indigo-600 text-white hover:bg-indigo-700 w-9 h-9 rounded-xl font-bold shadow-sm">+</button>
+                    `;
+                } else {
+                    gridHtml += `
+                        <div class="bg-indigo-50/50 p-3 rounded-2xl border border-indigo-100 flex flex-col justify-between">
+                            <div>
+                                <span class="text-xs text-indigo-500 font-semibold">${t.operator}</span>
+                                <h4 class="font-bold text-gray-800 text-sm">${t.name}</h4>
+                                <p class="text-emerald-600 font-extrabold text-xs">${t.sell.toFixed(3)} د.ت</p>
+                            </div>
+                            <div class="mt-3 flex items-center justify-between">
+                                <button onclick="updateQty('${t.id}', -1)" class="bg-white border text-gray-700 hover:bg-gray-100 w-8 h-8 rounded-xl font-bold shadow-sm">-</button>
+                                <span id="qty_${t.id}" class="font-extrabold text-sm">${currentQty}</span>
+                                <button onclick="updateQty('${t.id}', 1)" class="bg-indigo-600 text-white hover:bg-indigo-700 w-8 h-8 rounded-xl font-bold shadow-sm">+</button>
+                            </div>
                         </div>
-                    </div>
-                `;
+                    `;
+                }
             });
             document.getElementById('cardsGrid').innerHTML = gridHtml;
+            calculateTotal();
         }
 
         function updateQty(id, change) {
@@ -1673,12 +1695,22 @@
             calculateTotal();
         }
 
+        function updateRechargeQty(id, val) {
+            let amount = parseFloat(val) || 0;
+            window.cart[id] = amount;
+            calculateTotal();
+        }
+
         function calculateTotal() {
             let total = 0;
             for (let id in window.cart) {
                 const item = window.tariffs.find(t => t.id === id);
-                if (item && item.sell > 0) {
-                    total += item.sell * window.cart[id];
+                if (item) {
+                    if (item.id.includes('recharge')) {
+                        total += window.cart[id] || 0;
+                    } else if (item.sell > 0) {
+                        total += item.sell * window.cart[id];
+                    }
                 }
             }
             document.getElementById('cartTotal').innerText = total.toFixed(3) + ' د.ت';
@@ -1693,19 +1725,35 @@
             let gridHtml = '';
             opTariffs.forEach(t => {
                 let currentPosQty = window.posCart[t.id] || 0;
-                gridHtml += `
-                    <div class="bg-gray-50 p-3 rounded-xl border flex flex-col justify-between">
-                        <div>
-                            <span class="text-xs text-gray-500">${t.name}</span>
-                            <p class="text-emerald-600 font-bold text-sm">${t.sell > 0 ? t.sell.toFixed(3) + ' د.ت' : 'حسب الطلب'}</p>
+                let isRecharge = t.id.includes('recharge');
+
+                if (isRecharge) {
+                    gridHtml += `
+                        <div class="bg-gray-50 p-3 rounded-xl border flex flex-col justify-between col-span-2">
+                            <div>
+                                <span class="text-xs text-gray-500">${t.name}</span>
+                            </div>
+                            <div class="mt-2 flex items-center gap-2">
+                                <input type="number" min="0" step="0.001" id="pos_qty_${t.id}" value="${currentPosQty}" oninput="updatePosRechargeQty('${t.id}', this.value)" placeholder="المبلغ بـ د.ت" class="border p-2 rounded-xl w-full text-center font-extrabold text-sm bg-white">
+                                <span class="text-xs text-gray-500 font-bold">د.ت</span>
+                            </div>
                         </div>
-                        <div class="mt-2 flex items-center justify-between">
-                            <button onclick="updatePosQty('${t.id}', -1)" class="bg-white border w-7 h-7 rounded font-bold">-</button>
-                            <span id="pos_qty_${t.id}" class="font-bold">${currentPosQty}</span>
-                            <button onclick="updatePosQty('${t.id}', 1)" class="bg-indigo-600 text-white w-7 h-7 rounded font-bold">+</button>
+                    `;
+                } else {
+                    gridHtml += `
+                        <div class="bg-gray-50 p-3 rounded-xl border flex flex-col justify-between">
+                            <div>
+                                <span class="text-xs text-gray-500">${t.name}</span>
+                                <p class="text-emerald-600 font-bold text-xs">${t.sell.toFixed(3)} د.ت</p>
+                            </div>
+                            <div class="mt-2 flex items-center justify-between">
+                                <button onclick="updatePosQty('${t.id}', -1)" class="bg-white border w-7 h-7 rounded font-bold">-</button>
+                                <span id="pos_qty_${t.id}" class="font-bold">${currentPosQty}</span>
+                                <button onclick="updatePosQty('${t.id}', 1)" class="bg-indigo-600 text-white w-7 h-7 rounded font-bold">+</button>
+                            </div>
                         </div>
-                    </div>
-                `;
+                    `;
+                }
             });
             document.getElementById('posCardsGrid').innerHTML = gridHtml;
         }
@@ -1716,11 +1764,26 @@
             if (window.posCart[id] < 0) window.posCart[id] = 0;
             let posQtyEl = document.getElementById(`pos_qty_${id}`);
             if (posQtyEl) posQtyEl.innerText = window.posCart[id];
-            
+            calculatePosTotal();
+        }
+
+        function updatePosRechargeQty(id, val) {
+            let amount = parseFloat(val) || 0;
+            window.posCart[id] = amount;
+            calculatePosTotal();
+        }
+
+        function calculatePosTotal() {
             let total = 0;
             for (let i in window.posCart) {
                 const item = window.tariffs.find(t => t.id === i);
-                if (item && item.sell > 0) total += item.sell * window.posCart[i];
+                if (item) {
+                    if (item.id.includes('recharge')) {
+                        total += window.posCart[i] || 0;
+                    } else if (item.sell > 0) {
+                        total += item.sell * window.posCart[i];
+                    }
+                }
             }
             document.getElementById('posCartTotal').innerText = total.toFixed(3) + ' د.ت';
         }

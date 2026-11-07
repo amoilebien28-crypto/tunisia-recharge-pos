@@ -127,7 +127,7 @@
                 <button onclick="showSection('clientAuth')" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-xl text-xs font-bold hover:bg-gray-200 transition">إغلاق لوحة التحكم</button>
             </div>
 
-            <!-- إحصائيات الأدمن (تمت إضافة نافذة الأرباح/المراسيم هنا) -->
+            <!-- إحصائيات الأدمن -->
             <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
                 <div class="bg-white p-5 rounded-2xl shadow-sm border border-indigo-50">
                     <p class="text-gray-400 text-xs font-semibold">مداخيل اليوم (Payé)</p>
@@ -151,22 +151,60 @@
                 </div>
             </div>
 
-            <!-- أزرار التنقل بين أقسام الأدمن -->
+            <!-- أزرار التنقل بين أقسام الأدمن (أضيفت: إحصائيات المبيعات + إدارة المخزون) -->
             <div class="flex gap-2 border-b pb-3 overflow-x-auto">
                 <button onclick="switchAdminTab('orders')" id="tabAdminOrders" class="admin-tab bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-md shadow-indigo-100">طلبات التجار (التحضير)</button>
+                <button onclick="switchAdminTab('stats')" id="tabAdminStats" class="admin-tab bg-white text-gray-600 px-5 py-2.5 rounded-xl text-sm font-semibold border">إحصائيات المبيعات</button>
+                <button onclick="switchAdminTab('stock')" id="tabAdminStock" class="admin-tab bg-white text-gray-600 px-5 py-2.5 rounded-xl text-sm font-semibold border">إدارة الشراء والمخزون (Stock)</button>
                 <button onclick="switchAdminTab('pos')" id="tabAdminPos" class="admin-tab bg-white text-gray-600 px-5 py-2.5 rounded-xl text-sm font-semibold border">البيع المباشر (POS)</button>
                 <button onclick="switchAdminTab('credits')" id="tabAdminCredits" class="admin-tab bg-white text-gray-600 px-5 py-2.5 rounded-xl text-sm font-semibold border">إدارة الكريدي والديون</button>
                 <button onclick="switchAdminTab('clients')" id="tabAdminClients" class="admin-tab bg-white text-gray-600 px-5 py-2.5 rounded-xl text-sm font-semibold border">كشف حساب الحوانت (Relevés)</button>
                 <button onclick="switchAdminTab('tariffs')" id="tabAdminTariffs" class="admin-tab bg-white text-gray-600 px-5 py-2.5 rounded-xl text-sm font-semibold border">إدارة الأسعار</button>
             </div>
 
-            <!-- تاب الطلبات الواردة (تظهر أسماء المتاجر فقط كأزرار تفتح الفاتورة) -->
+            <!-- تاب الطلبات الواردة -->
             <div id="adminOrdersContent" class="admin-content space-y-4">
                 <div class="bg-white rounded-2xl shadow-sm border p-5">
                     <p class="text-xs text-gray-400 mb-3 font-bold">اضغط على اسم الحانوت لفتح الفاتورة ومراجعتها أو تعديلها:</p>
                     <div id="ordersListContainer" class="space-y-2">
                         <p class="text-gray-400 text-center py-6">جاري تحميل الطلبات...</p>
                     </div>
+                </div>
+            </div>
+
+            <!-- تاب إحصائيات المبيعات (Statistiques des ventes) -->
+            <div id="adminStatsContent" class="admin-content hidden space-y-4 bg-white p-6 rounded-2xl shadow-sm border">
+                <h4 class="font-bold text-lg text-gray-800 mb-3"><i class="fa-solid fa-chart-pie text-indigo-600 ml-2"></i> إحصائيات كميات المبيعات حسب المشغل والفئة</h4>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right border-collapse">
+                        <thead>
+                            <tr class="border-b bg-gray-50 text-gray-600 text-sm">
+                                <th class="p-3">المشغل (Opérateur)</th>
+                                <th class="p-3">الفئة / النوع</th>
+                                <th class="p-3">الكمية الإجمالي المباعة</th>
+                            </tr>
+                        </thead>
+                        <tbody id="salesStatsTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- تاب إدارة الشراء والمخزون (Stock Management) -->
+            <div id="adminStockContent" class="admin-content hidden space-y-4 bg-white p-6 rounded-2xl shadow-sm border">
+                <h4 class="font-bold text-lg text-gray-800 mb-3"><i class="fa-solid fa-boxes-stacked text-indigo-600 ml-2"></i> إدارة المخزون والمشتريات (Stock)</h4>
+                <p class="text-xs text-gray-500 mb-4">قم بإدخال كميات الشراء الجديدة لتغذية المخزون. يتم خصم المبيعات تلقائياً عند تأكيد التسليم.</p>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right border-collapse">
+                        <thead>
+                            <tr class="border-b bg-gray-50 text-gray-600 text-sm">
+                                <th class="p-3">المشغل</th>
+                                <th class="p-3">الفئة / النوع</th>
+                                <th class="p-3">كمية الشراء الجديدة (إضافة)</th>
+                                <th class="p-3">الكمية المتبقية في المخزون (Stock Restant)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="stockTableBody"></tbody>
+                    </table>
                 </div>
             </div>
 
@@ -263,7 +301,7 @@
         </div>
     </div>
 
-    <!-- فاتورة الطلب المصغرة (Modal تفاصيل الفاتورة عند النقر على اسم الحانوت) -->
+    <!-- فاتورة الطلب المصغرة -->
     <div id="orderInvoiceModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50">
         <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-lg w-full mx-4 space-y-4">
             <div class="flex justify-between items-center border-b pb-3">
@@ -271,9 +309,7 @@
                 <button onclick="closeOrderInvoiceModal()" class="text-gray-400 hover:text-gray-600 text-lg font-bold">&times;</button>
             </div>
             
-            <div id="invoiceContentDetails" class="space-y-3 max-h-60 overflow-y-auto">
-                <!-- تفاصيل المنتجات والكميات -->
-            </div>
+            <div id="invoiceContentDetails" class="space-y-3 max-h-60 overflow-y-auto"></div>
 
             <div class="border-t pt-3 flex justify-between items-center">
                 <span class="font-bold text-gray-700">المجموع الجملي: <span id="invoiceTotalAmount" class="text-emerald-600 text-lg font-extrabold">0.000 د.ت</span></span>
@@ -371,6 +407,7 @@
         window.cart = {};
         window.posCart = {};
         window.allOrders = [];
+        window.stockPurchases = JSON.parse(localStorage.getItem('stockPurchases') || '{}');
         window.editingOrderId = null;
         window.editingItems = [];
         window.activeInvoiceOrderId = null;
@@ -711,7 +748,6 @@
             showSection('clientAuth');
         }
 
-        // فتح فاتورة الطلب عبر الضغط على اسم المتجر
         function openOrderInvoice(orderId) {
             let order = window.allOrders.find(o => o.id === orderId);
             if (!order) return;
@@ -936,7 +972,6 @@
             window.editingOrderId = null;
         }
 
-        // دالة حفظ التعديل المصححة تماماً والمتصلة بالفايربيز
         async function saveEditedOrder() {
             if (!window.editingOrderId) return;
             let totalSell = 0;
@@ -1002,6 +1037,20 @@
             document.getElementById('posCartTotal').innerText = total.toFixed(3) + ' د.ت';
         }
 
+        // إضافة كمية شراء جديدة للمخزون
+        function addStockPurchase(tariffId) {
+            let qtyInput = prompt("أدخل كمية الشراء الجديدة المضافة للمخزون:");
+            let addedQty = parseInt(qtyInput);
+            if (isNaN(addedQty) || addedQty <= 0) return;
+
+            if (!window.stockPurchases[tariffId]) window.stockPurchases[tariffId] = 0;
+            window.stockPurchases[tariffId] += addedQty;
+            
+            localStorage.setItem('stockPurchases', JSON.stringify(window.stockPurchases));
+            processAdminData();
+            alert('تم تحديث المخزون بنجاح!');
+        }
+
         function processAdminData() {
             let dayTotal = 0;
             let monthTotal = 0;
@@ -1015,6 +1064,9 @@
             let ordersHtml = '';
             let clientsMap = {};
             let clientsListHtml = '<option value="">اختر الحانوت لعرض الكشف...</option>';
+            
+            // حساب المبيعات المباعة حسب الصنف لإحصائيات المبيعات والمخزون
+            let salesCounts = {};
 
             window.allOrders.forEach((o) => {
                 if (!clientsMap[o.clientName]) {
@@ -1030,11 +1082,16 @@
                     let currentCred = o.creditAmount !== undefined ? o.creditAmount : (o.paymentStatus === 'Crédit' ? o.totalSell : 0);
                     totalCredit += currentCred;
                     clientsMap[o.clientName].credit += currentCred;
+
+                    // تجميع المبيعات حسب الصنف
+                    o.items.forEach(i => {
+                        if (!salesCounts[i.id]) salesCounts[i.id] = { operator: i.operator, name: i.name, qty: 0 };
+                        salesCounts[i.id].qty += i.qty;
+                    });
                 }
 
                 if (o.status === 'قيد الانتظار للتحضير') {
                     pendingCount++;
-                    // يظهر فقط زر يحمل اسم الحانوت، وعند الضغط عليه تفتح الفاتورة
                     ordersHtml += `
                         <button onclick="openOrderInvoice('${o.id}')" class="w-full text-right bg-indigo-50/70 hover:bg-indigo-100 border border-indigo-200 p-4 rounded-2xl flex justify-between items-center transition shadow-sm mb-2">
                             <div class="flex items-center gap-3">
@@ -1066,6 +1123,41 @@
             } else {
                 document.getElementById('ordersListContainer').innerHTML = '<p class="text-gray-400 text-center py-6">لا توجد طلبات معلقة للتحضير حالياً.</p>';
             }
+
+            // جدول إحصائيات المبيعات
+            let statsHtml = '';
+            for (let id in salesCounts) {
+                let s = salesCounts[id];
+                statsHtml += `
+                    <tr class="border-b text-sm">
+                        <td class="p-3 font-semibold text-indigo-900">${s.operator}</td>
+                        <td class="p-3">${s.name}</td>
+                        <td class="p-3 font-extrabold text-emerald-600">${s.qty} قطعة</td>
+                    </tr>
+                `;
+            }
+            document.getElementById('salesStatsTableBody').innerHTML = statsHtml || `<tr><td colspan="3" class="text-center py-4 text-gray-400">لا توجد مبيعات مكتملة بعد.</td></tr>`;
+
+            // جدول إدارة الشراء والمخزون
+            let stockHtml = '';
+            window.tariffs.forEach(t => {
+                let sold = salesCounts[t.id] ? salesCounts[t.id].qty : 0;
+                let purchased = window.stockPurchases[t.id] || 0;
+                let remainingStock = purchased - sold;
+
+                stockHtml += `
+                    <tr class="border-b text-sm">
+                        <td class="p-3 font-semibold">${t.operator}</td>
+                        <td class="p-3">${t.name}</td>
+                        <td class="p-3">
+                            <button onclick="addStockPurchase('${t.id}')" class="bg-indigo-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow-sm hover:bg-indigo-700">شراء وإضافة كمية</button>
+                            <span class="mr-2 text-xs text-gray-500">(تم شراء: ${purchased})</span>
+                        </td>
+                        <td class="p-3 font-extrabold ${remainingStock > 5 ? 'text-emerald-600' : 'text-rose-600'}">${remainingStock} قطعة</td>
+                    </tr>
+                `;
+            });
+            document.getElementById('stockTableBody').innerHTML = stockHtml;
 
             let creditsTableHtml = '';
             for (let cName in clientsMap) {
@@ -1152,6 +1244,12 @@
             if (tab === 'orders') {
                 document.getElementById('adminOrdersContent').classList.remove('hidden');
                 document.getElementById('tabAdminOrders').className = "admin-tab bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-md shadow-indigo-100";
+            } else if (tab === 'stats') {
+                document.getElementById('adminStatsContent').classList.remove('hidden');
+                document.getElementById('tabAdminStats').className = "admin-tab bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-md shadow-indigo-100";
+            } else if (tab === 'stock') {
+                document.getElementById('adminStockContent').classList.remove('hidden');
+                document.getElementById('tabAdminStock').className = "admin-tab bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-md shadow-indigo-100";
             } else if (tab === 'pos') {
                 document.getElementById('adminPosContent').classList.remove('hidden');
                 document.getElementById('tabAdminPos').className = "admin-tab bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-md shadow-indigo-100";

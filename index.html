@@ -106,7 +106,7 @@
                 </div>
             </div>
 
-            <!-- أزرار اختيار المشغلين الثلاثة الأساسيين -->
+            <!-- أزرار اختيار المشغلين -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <button onclick="selectOperator('Ooredoo')" class="bg-gradient-to-r from-red-500 to-rose-600 text-white p-4 rounded-2xl font-bold shadow-lg shadow-rose-200 hover:scale-[1.02] transition flex flex-col items-center justify-center gap-2">
                     <i class="fa-solid fa-signal text-2xl"></i> أوريدو (Ooredoo)
@@ -157,7 +157,6 @@
             <div class="bg-white p-6 rounded-3xl shadow-sm border space-y-3">
                 <p class="text-xs font-bold text-gray-400 mb-2">اختر القسم المطلوب فتحه:</p>
                 
-                <!-- زر البيع المباشر في الصدارة -->
                 <button onclick="openAdminWindow('pos')" class="w-full text-right bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white p-4 rounded-2xl font-bold flex justify-between items-center transition shadow-lg">
                     <span><i class="fa-solid fa-cash-register ml-2 text-yellow-300"></i> نظام البيع المباشر (Caisse POS)</span>
                     <i class="fa-solid fa-chevron-left"></i>
@@ -173,6 +172,12 @@
                     <i class="fa-solid fa-chevron-left text-gray-400"></i>
                 </button>
 
+                <!-- زر مرابيح كل شهر الجديد -->
+                <button onclick="openMonthlyBeneficeModal()" class="w-full text-right bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white p-4 rounded-2xl font-bold flex justify-between items-center transition shadow-md">
+                    <span><i class="fa-solid fa-calendar-days ml-2 text-yellow-200"></i> مرابيح كل شهر (جانفي، فيفري، مارس...)</span>
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+
                 <button onclick="openAdminWindow('stock')" class="w-full text-right bg-gray-50 hover:bg-gray-100 border text-gray-800 p-4 rounded-2xl font-bold flex justify-between items-center transition">
                     <span><i class="fa-solid fa-boxes-stacked ml-2 text-indigo-600"></i> إدارة المخزون (Stock)</span>
                     <i class="fa-solid fa-chevron-left text-gray-400"></i>
@@ -183,7 +188,6 @@
                     <i class="fa-solid fa-chevron-left text-gray-400"></i>
                 </button>
 
-                <!-- زر رأس المال والمخزون النهائي -->
                 <button onclick="openCapitalModal()" class="w-full text-right bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white p-4 rounded-2xl font-bold flex justify-between items-center transition shadow-md">
                     <span><i class="fa-solid fa-vault ml-2 text-yellow-200"></i> رأس المال والمخزون النهائي (Capital & Stock)</span>
                     <i class="fa-solid fa-chevron-left"></i>
@@ -209,13 +213,11 @@
                     <i class="fa-solid fa-chevron-left text-gray-400"></i>
                 </button>
 
-                <!-- زر تغيير كلمة سر الأدمن الجديد -->
                 <button onclick="openChangePasswordModal()" class="w-full text-right bg-gray-800 hover:bg-gray-900 text-white p-4 rounded-2xl font-bold flex justify-between items-center transition shadow-md">
                     <span><i class="fa-solid fa-key ml-2 text-yellow-300"></i> تغيير كلمة سر الأدمن</span>
                     <i class="fa-solid fa-chevron-left"></i>
                 </button>
 
-                <!-- أزرار النسخ الاحتياطي واسترجاع البيانات -->
                 <div class="grid grid-cols-2 gap-3 pt-3 border-t">
                     <button onclick="exportDatabaseBackup()" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 p-3 rounded-xl font-bold text-xs transition flex items-center justify-center gap-1 shadow-sm">
                         <i class="fa-solid fa-download"></i> نسخة احتياطية
@@ -268,7 +270,7 @@
         </div>
     </div>
 
-    <!-- نافذة المخزون المستقلة -->
+    <!-- نافذة المخزون -->
     <div id="windowStock" class="admin-window fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-40 p-4">
         <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto space-y-4">
             <div class="flex justify-between items-center border-b pb-3">
@@ -293,7 +295,7 @@
         </div>
     </div>
 
-    <!-- نافذة فواتير الشراء المستقلة -->
+    <!-- نافذة فواتير الشراء -->
     <div id="windowPurchases" class="admin-window fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-40 p-4">
         <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto space-y-4">
             <div class="flex justify-between items-center border-b pb-3">
@@ -351,7 +353,6 @@
                 </div>
             </div>
 
-            <!-- زر التأكيد والمجموع مثبتان في الأسفل بصفة دائمة -->
             <div class="border-t pt-4 flex flex-col md:flex-row justify-between items-center gap-4 bg-gray-50 p-4 rounded-2xl mt-2">
                 <div>
                     <span class="text-gray-500 text-sm">المجموع الجملي للبيع:</span>
@@ -362,6 +363,32 @@
                     <button onclick="window.submitPosOrder()" class="flex-1 md:flex-none bg-emerald-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-emerald-700 shadow-md">تأكيد عملية البيع</button>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- نافذة مرابيح كل شهر الجديدة -->
+    <div id="monthlyBeneficeModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto space-y-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 class="font-bold text-lg text-gray-800"><i class="fa-solid fa-calendar-days text-teal-600 ml-2"></i> صافي الأرباح والمرابيح لكل شهر</h3>
+                <button onclick="closeMonthlyBeneficeModal()" class="text-gray-400 hover:text-gray-600 text-lg font-bold">&times;</button>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-right border-collapse">
+                    <thead>
+                        <tr class="border-b bg-gray-50 text-gray-600 text-sm">
+                            <th class="p-3">الشهر</th>
+                            <th class="p-3">صافي الربح (د.ت)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="monthlyBeneficeTableBody"></tbody>
+                </table>
+            </div>
+            <div class="border-t pt-3 flex justify-between items-center font-bold">
+                <span class="text-gray-700">مجموع الأرباح السنوية:</span>
+                <span id="annualBeneficeTotal" class="text-emerald-600 text-lg">0.000 د.ت</span>
+            </div>
+            <button onclick="closeMonthlyBeneficeModal()" class="w-full bg-indigo-600 text-white py-2.5 rounded-xl font-bold text-sm shadow-md">إغلاق</button>
         </div>
     </div>
 
@@ -596,7 +623,7 @@
         </div>
     </div>
 
-    <!-- نافذة فاتورة الطلب للأدمن -->
+    <!-- نافذة فاتورة الطلب للأدمن (تم إصلاح زر التعديل والتسليم) -->
     <div id="orderInvoiceModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
         <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto space-y-4">
             <div class="flex justify-between items-center border-b pb-3">
@@ -955,7 +982,6 @@
             }
         }
 
-        // نوافذ تغيير كلمة السر للأدمن
         function openChangePasswordModal() {
             document.getElementById('newAdminPasswordInput').value = '';
             document.getElementById('changePasswordModal').classList.remove('hidden');
@@ -1045,6 +1071,41 @@
             return 'Orders';
         }
 
+        // نافذة مرابيح كل شهر للأدمن
+        function openMonthlyBeneficeModal() {
+            let monthsNames = ["جانفي", "فيفري", "مارس", "أفريل", "ماي", "جون", "جويلية", "أوت", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
+            let monthlyBenefices = new Array(12).fill(0);
+            let annualBeneficeTotal = 0;
+
+            window.allOrders.forEach(o => {
+                if (o.status === 'مكتمل' || o.status === 'مكتمل (مباشر)') {
+                    let d = new Date(o.date);
+                    let m = d.getMonth();
+                    let b = o.benefice !== undefined ? o.benefice : (o.totalSell - (o.totalBuy || 0));
+                    monthlyBenefices[m] += b;
+                    annualBeneficeTotal += b;
+                }
+            });
+
+            let html = '';
+            for (let i = 0; i < 12; i++) {
+                html += `
+                    <tr class="border-b text-sm">
+                        <td class="p-3 font-semibold text-indigo-900">${monthsNames[i]}</td>
+                        <td class="p-3 font-bold text-teal-600">${monthlyBenefices[i].toFixed(3)} د.ت</td>
+                    </tr>
+                `;
+            }
+
+            document.getElementById('monthlyBeneficeTableBody').innerHTML = html;
+            document.getElementById('annualBeneficeTotal').innerText = annualBeneficeTotal.toFixed(3) + ' د.ت';
+            document.getElementById('monthlyBeneficeModal').classList.remove('hidden');
+        }
+
+        function closeMonthlyBeneficeModal() {
+            document.getElementById('monthlyBeneficeModal').classList.add('hidden');
+        }
+
         // إحصائيات المشتريات الشهرية للتاجر
         function openClientStatsModal() {
             let myOrders = window.allOrders.filter(o => o.clientName === window.currentClient.name);
@@ -1078,7 +1139,6 @@
             document.getElementById('clientStatsModal').classList.add('hidden');
         }
 
-        // تفاصيل الطلب للتاجر عند الضغط عليه
         function openClientOrderDetail(orderDate, totalSell, paymentStatus, status, itemsJSON) {
             let items = JSON.parse(itemsJSON);
             let container = document.getElementById('clientOrderDetailContent');
@@ -1098,7 +1158,6 @@
             document.getElementById('clientOrderDetailModal').classList.add('hidden');
         }
 
-        // عرض الطلبات للتاجر في شكل ملخص نظيف
         function renderClientOrders() {
             let myOrders = window.allOrders.filter(o => o.clientName === window.currentClient.name);
             let container = document.getElementById('clientMyOrdersContainer');
@@ -1134,7 +1193,7 @@
             container.innerHTML = html;
         }
 
-        // فتح فاتورة الطلب للأدمن (تم إصلاحها بالكامل لتعمل بكفاءة)
+        // فتح فاتورة الطلب للأدمن (تم إصلاح مشكل عدم فتح نافذة التعديل)
         function openOrderInvoice(orderId) {
             let order = window.allOrders.find(o => o.id === orderId);
             if (!order) return;
@@ -1167,6 +1226,79 @@
         function confirmDeliveryFromInvoice() {
             closeOrderInvoiceModal();
             openPaymentChoiceModal(window.activeInvoiceOrderId, window.activeDeliveryTotal);
+        }
+
+        function openEditOrderModal(orderId) {
+            let order = window.allOrders.find(o => o.id === orderId);
+            if (!order) return;
+            window.editingOrderId = orderId;
+            window.editingItems = JSON.parse(JSON.stringify(order.items));
+
+            renderEditItems();
+            document.getElementById('editOrderModal').classList.remove('hidden');
+        }
+
+        function renderEditItems() {
+            let container = document.getElementById('editOrderItemsContainer');
+            let html = '';
+            let total = 0;
+
+            window.editingItems.forEach((item, index) => {
+                total += item.sell * item.qty;
+                html += `
+                    <div class="flex justify-between items-center bg-gray-50 p-3 rounded-xl border">
+                        <div>
+                            <p class="font-bold text-sm text-gray-800">[${item.operator}] ${item.name}</p>
+                            <p class="text-xs text-indigo-600">${item.sell > 0 ? item.sell.toFixed(3) + ' د.ت للقطعة' : 'شحن رصيد'}</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="updateEditQty(${index}, -1)" class="bg-white border w-7 h-7 rounded-lg font-bold">-</button>
+                            <span class="font-bold text-sm w-6 text-center">${item.qty}</span>
+                            <button onclick="updateEditQty(${index}, 1)" class="bg-indigo-600 text-white w-7 h-7 rounded-lg font-bold">+</button>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+            document.getElementById('editOrderTotal').innerText = total.toFixed(3) + ' د.ت';
+        }
+
+        function updateEditQty(index, change) {
+            window.editingItems[index].qty += change;
+            if (window.editingItems[index].qty < 0) window.editingItems[index].qty = 0;
+            renderEditItems();
+        }
+
+        function closeEditModal() {
+            document.getElementById('editOrderModal').classList.add('hidden');
+            window.editingOrderId = null;
+        }
+
+        async function saveEditedOrder() {
+            if (!window.editingOrderId) return;
+            let totalSell = 0;
+            let totalBuy = 0;
+            window.editingItems.forEach(i => {
+                totalSell += i.sell * i.qty;
+                totalBuy += i.buy * i.qty;
+            });
+
+            try {
+                const orderRef = window.doc(window.db, "orders", window.editingOrderId);
+                await window.updateDoc(orderRef, {
+                    items: window.editingItems.filter(i => i.qty > 0),
+                    totalSell: totalSell,
+                    totalBuy: totalBuy,
+                    benefice: totalSell - totalBuy,
+                    creditAmount: totalSell
+                });
+                showCustomAlert('نجاح', 'تم تحديث الطلب بنجاح!');
+                closeEditModal();
+                processAdminData();
+            } catch (e) {
+                console.error("Error updating order:", e);
+                showCustomAlert('خطأ', 'حدث خطأ عند تعديل الكمية: ' + e.message);
+            }
         }
 
         function openPaymentChoiceModal(orderId, totalSell) {

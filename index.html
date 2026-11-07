@@ -9,7 +9,7 @@
     <!-- FontAwesome للأيقونات -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen font-sans">
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen font-sans pb-12">
 
     <!-- رأسية التطبيق -->
     <header class="bg-indigo-600 text-white shadow-lg">
@@ -87,7 +87,13 @@
                     <h3 class="font-bold text-xl text-gray-800" id="welcomeClientName">مرحباً بالتاجر</h3>
                     <p class="text-xs text-gray-500 mt-1" id="welcomeClientDetails"></p>
                 </div>
-                <button onclick="clientLogout()" class="bg-rose-50 text-rose-600 px-4 py-2 rounded-xl text-xs font-bold hover:bg-rose-100 transition">تسجيل الخروج</button>
+                <div class="flex gap-2 w-full md:w-auto">
+                    <!-- زر الواتساب للتواصل مع الإدارة -->
+                    <button onclick="contactAdminWhatsApp()" class="flex-1 md:flex-none bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-sm">
+                        <i class="fa-brands fa-whatsapp text-lg"></i> مراسلة الإدارة
+                    </button>
+                    <button onclick="clientLogout()" class="flex-1 md:flex-none bg-rose-50 text-rose-600 px-4 py-2 rounded-xl text-xs font-bold hover:bg-rose-100 transition">تسجيل الخروج</button>
+                </div>
             </div>
 
             <!-- أزرار اختيار المشغلين -->
@@ -129,7 +135,7 @@
             </div>
         </div>
 
-        <!-- ================= 3. لوحة تحكم الأدمن الرئيسية (أزرار تفتح نوافذ مستقلة مع زر البيع المباشر في الصدارة) ================= -->
+        <!-- ================= 3. لوحة تحكم الأدمن الرئيسية ================= -->
         <div id="adminDashboardSection" class="hidden space-y-6 max-w-2xl mx-auto">
             <div class="flex justify-between items-center bg-white p-5 rounded-2xl shadow-sm border">
                 <h3 class="font-bold text-xl text-indigo-900"><i class="fa-solid fa-shield-halved text-indigo-600 ml-2"></i> لوحة تحكم الإدارة</h3>
@@ -144,7 +150,7 @@
             <div class="bg-white p-6 rounded-3xl shadow-sm border space-y-3">
                 <p class="text-xs font-bold text-gray-400 mb-2">اختر القسم المطلوب فتحه:</p>
                 
-                <!-- زر البيع المباشر في الصدارة (الترتيب الأول وبشكل بارز جداً) -->
+                <!-- زر البيع المباشر في الصدارة بحجم كبير ومميز -->
                 <button onclick="openAdminWindow('pos')" class="w-full text-right bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white p-4 rounded-2xl font-bold flex justify-between items-center transition shadow-lg">
                     <span><i class="fa-solid fa-cash-register ml-2 text-yellow-300"></i> نظام البيع المباشر (Caisse POS)</span>
                     <i class="fa-solid fa-chevron-left"></i>
@@ -189,6 +195,17 @@
                     <span><i class="fa-solid fa-tags ml-2 text-indigo-600"></i> إدارة الأسعار</span>
                     <i class="fa-solid fa-chevron-left text-gray-400"></i>
                 </button>
+
+                <!-- أزرار النسخ الاحتياطي واسترجاع البيانات -->
+                <div class="grid grid-cols-2 gap-3 pt-3 border-t">
+                    <button onclick="exportDatabaseBackup()" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 p-3 rounded-xl font-bold text-xs transition flex items-center justify-center gap-1 shadow-sm">
+                        <i class="fa-solid fa-download"></i> نسخة احتياطية
+                    </button>
+                    <label class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 p-3 rounded-xl font-bold text-xs transition flex items-center justify-center gap-1 shadow-sm cursor-pointer">
+                        <i class="fa-solid fa-upload"></i> استرجاع البيانات
+                        <input type="file" id="importBackupFile" onchange="importDatabaseBackup(event)" class="hidden" accept=".json">
+                    </label>
+                </div>
             </div>
         </div>
 
@@ -239,7 +256,7 @@
                 <h4 class="font-bold text-lg text-gray-800"><i class="fa-solid fa-boxes-stacked text-indigo-600 ml-2"></i> إدارة المخزون الحالي (Stock)</h4>
                 <button onclick="closeAdminWindow('stock')" class="text-gray-400 hover:text-gray-600 text-lg font-bold">&times;</button>
             </div>
-            <p class="text-xs text-gray-500">حالة المخزون الحالي يتم تحديثها تلقائياً مع المشتريات والمبيعات:</p>
+            <p class="text-xs text-gray-500">حالة المخزون الحالي يتم تحديثها تلقائياً مع فواتير الشراء والمبيعات:</p>
             <div class="overflow-x-auto">
                 <table class="w-full text-right border-collapse">
                     <thead>
@@ -950,7 +967,7 @@
             if (pass === 'admin123' || pass === '1234') {
                 closeAdminModal();
                 showSection('adminDashboard');
-                localStorage.setItem('activeAdminSection', 'adminDashboard');
+                localStorage.setItem('activeAppSection', 'adminDashboard');
             } else {
                 showCustomAlert('خطأ', 'كلمة مرور الأدمن غير صحيحة!');
             }
@@ -979,7 +996,7 @@
             }
         }
 
-        // الحفاظ على البلاصة عند عمل Actualiser (الرّيفريش)
+        // الحفاظ على البلاصة عند عمل Actualiser (الرّيفريش) بدون الخروج
         window.addEventListener('DOMContentLoaded', () => {
             let savedSection = localStorage.getItem('activeAppSection');
             if (savedSection === 'adminDashboard') {
@@ -1021,6 +1038,63 @@
             if (s === 'broadcast') return 'Broadcast';
             if (s === 'tariffs') return 'Tariffs';
             return 'Orders';
+        }
+
+        // إرسال رسالة عبر الواتساب للإدارة
+        function contactAdminWhatsApp() {
+            let adminPhone = "21698765432"; // استبدل برقم هاتفك الخاص بالإدارة
+            let shopName = window.currentClient ? window.currentClient.name : 'تاجر';
+            let text = `مرحباً بالإدارة، أنا التاجر من حانوت (${shopName}) عندي ملاحظة أو استفسار:`;
+            let url = `https://wa.me/${adminPhone}?text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank');
+        }
+
+        // تصدير النسخة الاحتياطية (Sauvegarde)
+        function exportDatabaseBackup() {
+            let backupData = {
+                orders: window.allOrders,
+                clients: window.allRegisteredClients,
+                purchaseInvoices: window.purchaseInvoices,
+                stockPurchases: window.stockPurchases,
+                tariffs: window.tariffs,
+                date: new Date().toISOString()
+            };
+            let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData, null, 2));
+            let downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `backup_recharge_${new Date().toISOString().slice(0,10)}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+            showCustomAlert('نجاح', 'تم تصدير النسخة الاحتياطية بنجاح!');
+        }
+
+        // استرجاع الداتا (Restauration)
+        function importDatabaseBackup(event) {
+            let file = event.target.files[0];
+            if (!file) return;
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    let backupData = JSON.parse(e.target.result);
+                    if (backupData.purchaseInvoices) {
+                        window.purchaseInvoices = backupData.purchaseInvoices;
+                        localStorage.setItem('purchaseInvoices', JSON.stringify(window.purchaseInvoices));
+                    }
+                    if (backupData.stockPurchases) {
+                        window.stockPurchases = backupData.stockPurchases;
+                        localStorage.setItem('stockPurchases', JSON.stringify(window.stockPurchases));
+                    }
+                    if (backupData.tariffs) {
+                        window.tariffs = backupData.tariffs;
+                    }
+                    showCustomAlert('نجاح', 'تم استرجاع البيانات والنسخة الاحتياطية بنجاح!');
+                    processAdminData();
+                } catch (err) {
+                    showCustomAlert('خطأ', 'الملف غير صالح أو التنسيق غير صحيح.');
+                }
+            };
+            reader.readAsText(file);
         }
 
         function sendBroadcastMessage() {
@@ -1499,7 +1573,6 @@
 
             let inv = window.purchaseInvoices[invIndex];
 
-            // خصم الكميات من الستوك
             inv.items.forEach(i => {
                 if (window.stockPurchases[i.id]) {
                     window.stockPurchases[i.id] -= i.qty;
@@ -1508,7 +1581,6 @@
             });
             localStorage.setItem('stockPurchases', JSON.stringify(window.stockPurchases));
 
-            // حذف الفاتورة من السجل
             window.purchaseInvoices.splice(invIndex, 1);
             localStorage.setItem('purchaseInvoices', JSON.stringify(window.purchaseInvoices));
 
@@ -1550,7 +1622,6 @@
             let clientsMap = {};
             let salesCounts = {};
 
-            // تجميع معلومات الحوانت المسجلة أولاً
             if (window.allRegisteredClients && window.allRegisteredClients.length > 0) {
                 window.allRegisteredClients.forEach(c => {
                     clientsMap[c.name] = { phone: c.phone, credit: 0 };

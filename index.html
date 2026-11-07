@@ -43,7 +43,7 @@
                     <label class="block text-xs font-bold text-gray-600 mb-1">كلمة المرور (Mot de passe)</label>
                     <input type="password" id="loginPassword" placeholder="أدخل كلمة المرور..." class="border p-2 rounded-lg text-sm w-full">
                 </div>
-                <button onclick="clientLogin()" class="w-full bg-blue-600 text-white py-2.5 rounded-lg font-bold hover:bg-blue-700 transition mt-2">دخول إلى واجهة الطلبات</button>
+                <button onclick="window.clientLogin()" class="w-full bg-blue-600 text-white py-2.5 rounded-lg font-bold hover:bg-blue-700 transition mt-2">دخول إلى واجهة الطلبات</button>
             </div>
 
             <!-- نموذج التسجيل لأول مرة -->
@@ -64,11 +64,11 @@
                     <label class="block text-xs font-bold text-gray-600 mb-1">كلمة المرور (Mot de passe)</label>
                     <input type="password" id="regPassword" placeholder="اختر كلمة مرور..." class="border p-2 rounded-lg text-sm w-full">
                 </div>
-                <button onclick="clientRegister()" class="w-full bg-emerald-600 text-white py-2.5 rounded-lg font-bold hover:bg-emerald-700 transition mt-2">تسجيل الحساب الجديد</button>
+                <button onclick="window.clientRegister()" class="w-full bg-emerald-600 text-white py-2.5 rounded-lg font-bold hover:bg-emerald-700 transition mt-2">تسجيل الحساب الجديد</button>
             </div>
         </div>
 
-        <!-- ================= 2. واجهة طلبات التاجر (تظهر بعد الدخول الناجح) ================= -->
+        <!-- ================= 2. واجهة طلبات التاجر ================= -->
         <div id="clientDashboardSection" class="hidden space-y-6">
             <div class="bg-white p-4 rounded-xl shadow-sm border flex justify-between items-center">
                 <div>
@@ -78,7 +78,6 @@
                 <button onclick="clientLogout()" class="bg-red-100 text-red-600 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-red-200 transition">تسجيل الخروج</button>
             </div>
 
-            <!-- اختيار المشغلين -->
             <div class="grid grid-cols-3 gap-3">
                 <button onclick="selectOperator('Ooredoo')" class="bg-red-500 text-white p-4 rounded-xl font-bold shadow hover:bg-red-600 transition flex flex-col items-center justify-center gap-1">
                     <i class="fa-solid fa-signal text-xl"></i> أوريدو (Ooredoo)
@@ -91,7 +90,6 @@
                 </button>
             </div>
 
-            <!-- اختيار الفئات والكميات -->
             <div id="productsSection" class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hidden">
                 <h3 id="selectedOperatorTitle" class="text-xl font-bold text-gray-800 mb-4"></h3>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="cardsGrid"></div>
@@ -110,7 +108,7 @@
                         </select>
                     </div>
 
-                    <button onclick="submitOrder()" class="bg-blue-600 text-white px-6 py-2.5 rounded-lg font-bold hover:bg-blue-700 transition">إرسال الطلب (Commande)</button>
+                    <button onclick="window.submitOrder()" class="bg-blue-600 text-white px-6 py-2.5 rounded-lg font-bold hover:bg-blue-700 transition">إرسال الطلب (Commande)</button>
                 </div>
             </div>
         </div>
@@ -126,14 +124,13 @@
             <button onclick="showSection('clientAuth')" class="w-full text-gray-500 text-xs text-center pt-2 hover:underline">الرجوع لواجهة التجار</button>
         </div>
 
-        <!-- ================= 4. لوحة تحكم الأدمن (Admin Dashboard) ================= -->
+        <!-- ================= 4. لوحة تحكم الأدمن ================= -->
         <div id="adminDashboardSection" class="hidden space-y-6">
             <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border">
                 <h3 class="font-bold text-lg text-gray-800"><i class="fa-solid fa-chart-line text-blue-600 ml-2"></i> لوحة تحكم الإدارة</h3>
-                <button onclick="showSection('clientAuth')" class="bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-gray-200 transition">خروج للأدمن</button>
+                <button onclick="showSection('clientAuth')" class="bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-gray-200 transition">خروج</button>
             </div>
 
-            <!-- إحصائيات عامة -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div class="bg-white p-4 rounded-xl shadow-sm border">
                     <p class="text-gray-500 text-sm">مداخيل اليوم (الخالصة Payé)</p>
@@ -153,7 +150,6 @@
                 </div>
             </div>
 
-            <!-- التنقل داخل الـ Admin -->
             <div class="flex gap-2 border-b pb-3 overflow-x-auto">
                 <button onclick="switchAdminTab('orders')" id="tabAdminOrders" class="admin-tab bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">الطلبات الواردة</button>
                 <button onclick="switchAdminTab('credits')" id="tabAdminCredits" class="admin-tab bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold">إدارة الكريدي (Crédits)</button>
@@ -161,14 +157,12 @@
                 <button onclick="switchAdminTab('tariffs')" id="tabAdminTariffs" class="admin-tab bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold">إدارة الأسعار</button>
             </div>
 
-            <!-- تاب الطلبات -->
             <div id="adminOrdersContent" class="admin-content space-y-4">
                 <div id="ordersListContainer" class="bg-white rounded-xl shadow-sm border p-4">
                     <p class="text-gray-500 text-center py-4">جاري تحميل الطلبات...</p>
                 </div>
             </div>
 
-            <!-- تاب إدارة الكريدي -->
             <div id="adminCreditsContent" class="admin-content hidden space-y-4">
                 <div class="bg-white rounded-xl shadow-sm border p-4 overflow-x-auto">
                     <table class="w-full text-right border-collapse">
@@ -185,7 +179,6 @@
                 </div>
             </div>
 
-            <!-- تاب Relevé par client -->
             <div id="adminClientsContent" class="admin-content hidden space-y-4">
                 <div class="bg-white rounded-xl shadow-sm border p-4">
                     <select id="selectClientReleve" onchange="loadClientReleve()" class="border p-2 rounded-lg w-full md:w-1/3 mb-4 text-sm">
@@ -195,7 +188,6 @@
                 </div>
             </div>
 
-            <!-- تاب إدارة الأسعار -->
             <div id="adminTariffsContent" class="admin-content hidden space-y-4">
                 <div class="bg-white rounded-xl shadow-sm border p-4 overflow-x-auto">
                     <table class="w-full text-right border-collapse">
@@ -216,12 +208,11 @@
 
     </main>
 
-    <!-- سكربت التشغيل وربط Firebase SDK الحديث -->
+    <!-- سكربت الفايربيز الموحد والربط الصحيح -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, updatedoc, onSnapshot, query, orderBy, where, writeBatch } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, onSnapshot, query, orderBy, where, writeBatch } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // إعدادات الـ Firebase الخاص بك
         const firebaseConfig = {
             apiKey: "AIzaSyAYNDYcwlmX5rdnpXyGoHR48g-T6h_oHFk",
             authDomain: "tunisia-recharge-pos.firebaseapp.com",
@@ -235,31 +226,13 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // جعل الدوال متاحة عالمياً في الـ Window
-        window.db = db;
-        window.getDocs = getDocs;
-        window.collection = collection;
-        window.addDoc = addDoc;
-        window.doc = doc;
-        window.updatedoc = updatedoc;
-        window.onSnapshot = onSnapshot;
-        window.query = query;
-        window.orderBy = orderBy;
-        window.where = where;
-        window.writeBatch = writeBatch;
+        // متغيرات عامة
+        window.currentClient = null;
+        window.currentOperator = '';
+        window.cart = {};
+        window.allOrders = [];
 
-        // بدء جلب الطلبات عند التحميل
-        listenToOrders();
-    </script>
-
-    <script>
-        // المتغيرات العامة للتحكم
-        let currentClient = null;
-        let currentOperator = '';
-        let cart = {};
-        let allOrders = [];
-
-        let tariffs = [
+        window.tariffs = [
             { id: 'Ooredoo_1', operator: 'Ooredoo', name: 'Ticket 1D', buy: 0.950, sell: 1.000 },
             { id: 'Ooredoo_5', operator: 'Ooredoo', name: 'Carte 5D', buy: 4.750, sell: 5.000 },
             { id: 'Ooredoo_10', operator: 'Ooredoo', name: 'Carte 10D', buy: 9.500, sell: 10.000 },
@@ -274,7 +247,162 @@
             { id: 'Orange_25', operator: 'Orange', name: 'Carte 25D', buy: 23.750, sell: 25.000 }
         ];
 
-        // التنقل بين الأقسام الرئيسية
+        // تسجيل حساب جديد
+        window.clientRegister = async function() {
+            const name = document.getElementById('regName').value.trim();
+            const phone = document.getElementById('regPhone').value.trim();
+            const address = document.getElementById('regAddress').value.trim();
+            const password = document.getElementById('regPassword').value.trim();
+
+            if (!name || !phone || !password) {
+                alert('الرجاء إدخال اسم الحانوت، رقم الهاتف، وكلمة المرور.');
+                return;
+            }
+
+            try {
+                const q = query(collection(db, "clients"), where("phone", "==", phone));
+                const querySnapshot = await getDocs(q);
+                if (!querySnapshot.empty) {
+                    alert('رقم الهاتف مسجل مسبقاً، الرجاء تسجيل الدخول.');
+                    return;
+                }
+
+                await addDoc(collection(db, "clients"), {
+                    name, phone, address, password, date: new Date().toISOString()
+                });
+
+                alert('تم تسجيل الحساب بنجاح! يمكنك الدخول الآن.');
+                switchAuthTab('login');
+                document.getElementById('loginPhone').value = phone;
+            } catch (e) {
+                console.error("Error registering: ", e);
+                alert('حدث خطأ أثناء التسجيل: ' + e.message);
+            }
+        };
+
+        // تسجيل الدخول
+        window.clientLogin = async function() {
+            const phone = document.getElementById('loginPhone').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+
+            if (!phone || !password) {
+                alert('الرجاء إدخال رقم الهاتف وكلمة المرور.');
+                return;
+            }
+
+            try {
+                const q = query(collection(db, "clients"), where("phone", "==", phone), where("password", "==", password));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    alert('رقم الهاتف أو كلمة المرور غير صحيحة.');
+                    return;
+                }
+
+                querySnapshot.forEach((docSnap) => {
+                    window.currentClient = { id: docSnap.id, ...docSnap.data() };
+                });
+
+                document.getElementById('welcomeClientName').innerText = `مرحباً، ${window.currentClient.name}`;
+                document.getElementById('welcomeClientDetails').innerText = `الهاتف: ${window.currentClient.phone} | العنوان: ${window.currentClient.address}`;
+                
+                showSection('clientAuth');
+            } catch (e) {
+                console.error("Error logging in: ", e);
+                alert('حدث خطأ أثناء الاتصال بقاعدة البيانات: ' + e.message);
+            }
+        };
+
+        // إرسال الكوموند
+        window.submitOrder = async function() {
+            let itemsOrdered = [];
+            let totalSell = 0;
+            let totalBuy = 0;
+
+            for (let id in window.cart) {
+                if (window.cart[id] > 0) {
+                    const item = window.tariffs.find(t => t.id === id);
+                    itemsOrdered.push({ ...item, qty: window.cart[id] });
+                    totalSell += item.sell * window.cart[id];
+                    totalBuy += item.buy * window.cart[id];
+                }
+            }
+
+            if (itemsOrdered.length === 0) {
+                alert('الرجاء اختيار كمية واحدة على الأقل.');
+                return;
+            }
+
+            const paymentStatus = document.getElementById('paymentStatusSelect').value;
+
+            const orderData = {
+                clientName: window.currentClient.name,
+                clientPhone: window.currentClient.phone,
+                clientAddress: window.currentClient.address,
+                items: itemsOrdered,
+                totalSell,
+                totalBuy,
+                benefice: totalSell - totalBuy,
+                paymentStatus,
+                date: new Date().toISOString(),
+                status: 'قيد الانتظار'
+            };
+
+            try {
+                await addDoc(collection(db, "orders"), orderData);
+                alert(paymentStatus === 'Crédit' ? 'تم تسجيل الطلب وإضافته للكريدي بنجاح!' : 'تم إرسال الطلب بنجاح للإدارة!');
+                
+                window.cart = {};
+                document.querySelectorAll('[id^="qty_"]').forEach(el => el.innerText = '0');
+                calculateTotal();
+            } catch (e) {
+                console.error("Error submitting order: ", e);
+                alert('حدث خطأ أثناء إرسال الطلب: ' + e.message);
+            }
+        };
+
+        // الاستماع للطلبات Real-time
+        onSnapshot(query(collection(db, "orders"), orderBy("date", "desc")), (snapshot) => {
+            window.allOrders = [];
+            snapshot.forEach((docSnap) => {
+                window.allOrders.push({ id: docSnap.id, ...docSnap.data() });
+            });
+            processAdminData();
+        });
+
+        // تسليم الطلب من الأدمن
+        window.completeOrder = async function(orderId) {
+            try {
+                await updateDoc(doc(db, "orders", orderId), { status: 'مكتمل' });
+            } catch (e) {
+                console.error("Error updating order:", e);
+            }
+        };
+
+        // تسوية الكريدي
+        window.payClientCredit = async function(clientName) {
+            if (!confirm(`هل أنت متأكد من تسوية وخلاص ديون الحانوت: ${clientName}؟`)) return;
+
+            try {
+                const q = query(collection(db, "orders"), where("clientName", "==", clientName), where("paymentStatus", "==", "Crédit"));
+                const querySnapshot = await getDocs(q);
+                const batch = writeBatch(db);
+                
+                querySnapshot.forEach((document) => {
+                    batch.update(doc(db, "orders", document.id), { paymentStatus: 'Payé' });
+                });
+                
+                await batch.commit();
+                alert(`تم تسجيل خلاص ديون ${clientName} بنجاح!`);
+            } catch (e) {
+                console.error("Error paying credit:", e);
+                alert("حدث خطأ أثناء التحديث.");
+            }
+        };
+    </script>
+
+    <script>
+        // دوال التحكم بالواجهات والعرض
         function showSection(section) {
             document.getElementById('clientAuthSection').classList.add('hidden');
             document.getElementById('clientDashboardSection').classList.add('hidden');
@@ -282,7 +410,7 @@
             document.getElementById('adminDashboardSection').classList.add('hidden');
 
             if (section === 'clientAuth') {
-                if (currentClient) {
+                if (window.currentClient) {
                     document.getElementById('clientDashboardSection').classList.remove('hidden');
                 } else {
                     document.getElementById('clientAuthSection').classList.remove('hidden');
@@ -296,7 +424,6 @@
             }
         }
 
-        // التبديل بين تسجيل الدخول والتسجيل الجديد للتاجر
         function switchAuthTab(tab) {
             if (tab === 'login') {
                 document.getElementById('loginForm').classList.remove('hidden');
@@ -311,83 +438,15 @@
             }
         }
 
-        // تسجيل حساب جديد (Inscription) في Firestore
-        async function clientRegister() {
-            const name = document.getElementById('regName').value.trim();
-            const phone = document.getElementById('regPhone').value.trim();
-            const address = document.getElementById('regAddress').value.trim();
-            const password = document.getElementById('regPassword').value.trim();
-
-            if (!name || !phone || !password) {
-                alert('الرجاء إدخال اسم الحانوت، رقم الهاتف، وكلمة المرور.');
-                return;
-            }
-
-            try {
-                // التحقق هل الهاتف مسجل مسبقاً
-                const q = query(collection(window.db, "clients"), where("phone", "==", phone));
-                const querySnapshot = await getDocs(q);
-                if (!querySnapshot.empty) {
-                    alert('رقم الهاتف مسجل مسبقاً،الرجاء تسجيل الدخول.');
-                    return;
-                }
-
-                await addDoc(collection(window.db, "clients"), {
-                    name, phone, address, password, date: new Date().toISOString()
-                });
-
-                alert('تم تسجيل الحساب بنجاح! يمكنك الدخول الآن.');
-                switchAuthTab('login');
-                document.getElementById('loginPhone').value = phone;
-            } catch (e) {
-                console.error("Error registering: ", e);
-                alert('حدث خطأ أثناء التسجيل.');
-            }
-        }
-
-        // تسجيل الدخول للتاجر
-        async function clientLogin() {
-            const phone = document.getElementById('loginPhone').value.trim();
-            const password = document.getElementById('loginPassword').value.trim();
-
-            if (!phone || !password) {
-                alert('الرجاء إدخال رقم الهاتف وكلمة المرور.');
-                return;
-            }
-
-            try {
-                const q = query(collection(window.db, "clients"), where("phone", "==", phone), where("password", "==", password));
-                const querySnapshot = await getDocs(q);
-
-                if (querySnapshot.empty) {
-                    alert('رقم الهاتف أو كلمة المرور غير صحيحة.');
-                    return;
-                }
-
-                querySnapshot.forEach((doc) => {
-                    currentClient = { id: doc.id, ...doc.data() };
-                });
-
-                document.getElementById('welcomeClientName').innerText = `مرحباً، ${currentClient.name}`;
-                document.getElementById('welcomeClientDetails').innerText = `الهاتف: ${currentClient.phone} | العنوان: ${currentClient.address}`;
-                
-                showSection('clientAuth');
-            } catch (e) {
-                console.error("Error logging in: ", e);
-                alert('حدث خطأ أثناء الاتصال بقاعدة البيانات.');
-            }
-        }
-
         function clientLogout() {
-            currentClient = null;
-            cart = {};
+            window.currentClient = null;
+            window.cart = {};
             showSection('clientAuth');
         }
 
-        // الدخول للوحة تحكم الأدمن بكلمة مرور بسيطة
         function adminLogin() {
             const pass = document.getElementById('adminPasswordInput').value;
-            if (pass === 'admin123' || pass === '1234') { // تنجم تبدل كلمة المرور كيف ما تحب
+            if (pass === 'admin123' || pass === '1234') {
                 showSection('adminDashboard');
                 document.getElementById('adminPasswordInput').value = '';
             } else {
@@ -395,13 +454,12 @@
             }
         }
 
-        // اختيار المشغل من طرف التاجر
         function selectOperator(operator) {
-            currentOperator = operator;
+            window.currentOperator = operator;
             document.getElementById('productsSection').classList.remove('hidden');
             document.getElementById('selectedOperatorTitle').innerText = `اختر الكميات لـ: ${operator}`;
             
-            const opTariffs = tariffs.filter(t => t.operator === operator);
+            const opTariffs = window.tariffs.filter(t => t.operator === operator);
             let gridHtml = '';
             opTariffs.forEach(t => {
                 gridHtml += `
@@ -423,82 +481,22 @@
         }
 
         function updateQty(id, change) {
-            if (!cart[id]) cart[id] = 0;
-            cart[id] += change;
-            if (cart[id] < 0) cart[id] = 0;
-            document.getElementById(`qty_${id}`).innerText = cart[id];
+            if (!window.cart[id]) window.cart[id] = 0;
+            window.cart[id] += change;
+            if (window.cart[id] < 0) window.cart[id] = 0;
+            document.getElementById(`qty_${id}`).innerText = window.cart[id];
             calculateTotal();
         }
 
         function calculateTotal() {
             let total = 0;
-            for (let id in cart) {
-                const item = tariffs.find(t => t.id === id);
-                if (item) total += item.sell * cart[id];
+            for (let id in window.cart) {
+                const item = window.tariffs.find(t => t.id === id);
+                if (item) total += item.sell * window.cart[id];
             }
             document.getElementById('cartTotal').innerText = total.toFixed(3) + ' د.ت';
         }
 
-        // إرسال الكوموند من التاجر إلى Firebase
-        async function submitOrder() {
-            let itemsOrdered = [];
-            let totalSell = 0;
-            let totalBuy = 0;
-
-            for (let id in cart) {
-                if (cart[id] > 0) {
-                    const item = tariffs.find(t => t.id === id);
-                    itemsOrdered.push({ ...item, qty: cart[id] });
-                    totalSell += item.sell * cart[id];
-                    totalBuy += item.buy * cart[id];
-                }
-            }
-
-            if (itemsOrdered.length === 0) {
-                alert('الرجاء اختيار كمية واحدة على الأقل.');
-                return;
-            }
-
-            const paymentStatus = document.getElementById('paymentStatusSelect').value;
-
-            const orderData = {
-                clientName: currentClient.name,
-                clientPhone: currentClient.phone,
-                clientAddress: currentClient.address,
-                items: itemsOrdered,
-                totalSell,
-                totalBuy,
-                benefice: totalSell - totalBuy,
-                paymentStatus, // 'Payé' أو 'Crédit'
-                date: new Date().toISOString(),
-                status: 'قيد الانتظار'
-            };
-
-            try {
-                await addDoc(collection(window.db, "orders"), orderData);
-                alert(paymentStatus === 'Crédit' ? 'تم تسجيل الطلب وإضافته للكريدي بنجاح!' : 'تم إرسال الطلب بنجاح للإدارة!');
-                
-                cart = {};
-                document.querySelectorAll('[id^="qty_"]').forEach(el => el.innerText = '0');
-                calculateTotal();
-            } catch (e) {
-                console.error("Error submitting order: ", e);
-                alert('حدث خطأ أثناء إرسال الطلب.');
-            }
-        }
-
-        // الاستماع للطلبات في الوقت الفعلي Real-time
-        function listenToOrders() {
-            onSnapshot(query(collection(window.db, "orders"), orderBy("date", "desc")), (snapshot) => {
-                allOrders = [];
-                snapshot.forEach((doc) => {
-                    allOrders.push({ id: doc.id, ...doc.data() });
-                });
-                processAdminData();
-            });
-        }
-
-        // معالجة بيانات الأدمن (المداخيل، الكريدي، الطلبات)
         function processAdminData() {
             let dayTotal = 0;
             let monthTotal = 0;
@@ -512,7 +510,7 @@
             let clientsMap = {};
             let clientsListHtml = '<option value="">اختر الحانوت لعرض الكشف...</option>';
 
-            allOrders.forEach((o) => {
+            window.allOrders.forEach((o) => {
                 if (!clientsMap[o.clientName]) {
                     clientsMap[o.clientName] = { phone: o.clientPhone, credit: 0 };
                 }
@@ -550,7 +548,6 @@
                 document.getElementById('ordersListContainer').innerHTML = '<p class="text-gray-500 text-center py-4">لا توجد طلبات معلقة حالياً.</p>';
             }
 
-            // جدول الكريدي لكل حانوت
             let creditsTableHtml = '';
             for (let cName in clientsMap) {
                 let cData = clientsMap[cName];
@@ -571,36 +568,6 @@
             document.getElementById('selectClientReleve').innerHTML = clientsListHtml;
         }
 
-        // تسوية ديون الحانوت وتحويلها إلى Payé
-        async function payClientCredit(clientName) {
-            if (!confirm(`هل أنت متأكد من تسوية وخلاص ديون الحانوت: ${clientName}؟`)) return;
-
-            try {
-                const q = query(collection(window.db, "orders"), where("clientName", "==", clientName), where("paymentStatus", "==", "Crédit"));
-                const querySnapshot = await getDocs(q);
-                const batch = writeBatch(window.db);
-                
-                querySnapshot.forEach((document) => {
-                    batch.update(doc(window.db, "orders", document.id), { paymentStatus: 'Payé' });
-                });
-                
-                await batch.commit();
-                alert(`تم تسجيل خلاص ديون ${clientName} بنجاح!`);
-            } catch (e) {
-                console.error("Error paying credit:", e);
-                alert("حدث خطأ أثناء التحديث.");
-            }
-        }
-
-        async function completeOrder(orderId) {
-            try {
-                await updatedoc(doc(window.db, "orders", orderId), { status: 'مكتمل' });
-            } catch (e) {
-                console.error("Error updating order:", e);
-            }
-        }
-
-        // كشف الحساب لكل حانوت (Relevé par client)
         function loadClientReleve() {
             const clientName = document.getElementById('selectClientReleve').value;
             if (!clientName) {
@@ -608,7 +575,7 @@
                 return;
             }
 
-            let clientOrders = allOrders.filter(o => o.clientName === clientName);
+            let clientOrders = window.allOrders.filter(o => o.clientName === clientName);
             let totalSpent = 0;
             let totalCreditClient = 0;
             let totalQuantity = 0;
@@ -651,7 +618,6 @@
             document.getElementById('clientReleveDetails').innerHTML = summaryHtml + html;
         }
 
-        // التنقل بين أقسام الأدمن
         function switchAdminTab(tab) {
             document.querySelectorAll('.admin-content').forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('.admin-tab').forEach(el => {
@@ -676,7 +642,7 @@
 
         function renderAdminTariffs() {
             let html = '';
-            tariffs.forEach(t => {
+            window.tariffs.forEach(t => {
                 html += `
                     <tr class="border-b text-sm">
                         <td class="p-3 font-semibold">${t.operator}</td>
@@ -693,7 +659,7 @@
         function updateTariff(id) {
             const newBuy = parseFloat(document.getElementById(`buy_${id}`).value);
             const newSell = parseFloat(document.getElementById(`sell_${id}`).value);
-            const tariff = tariffs.find(t => t.id === id);
+            const tariff = window.tariffs.find(t => t.id === id);
             if (tariff) {
                 tariff.buy = newBuy;
                 tariff.sell = newSell;

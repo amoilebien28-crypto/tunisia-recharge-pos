@@ -3,40 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منظومة توزيع كوارط الاتصالات - مع إدارة الكريدي</title>
+    <title>منظومة توزيع الكوارط - تونس</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Firebase App & Firestore SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <!-- FontAwesome للأيقونات -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-gray-100 font-sans">
 
-    <!-- شاشة التنقل العلوي -->
+    <!-- رأسية التطبيق -->
     <header class="bg-blue-600 text-white shadow-md">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <h1 class="text-xl font-bold"><i class="fa-solid fa-sim-card ml-2"></i> منصة توزيع كوارط التيليكوم (إدارة الكريدي)</h1>
-            <div class="flex gap-2">
-                <button onclick="switchView('client')" id="btnClientView" class="bg-blue-700 px-4 py-2 rounded-lg text-sm font-semibold transition hover:bg-blue-800">واجهة الحانوت / البائع</button>
-                <button onclick="switchView('admin')" id="btnAdminView" class="bg-blue-800 px-4 py-2 rounded-lg text-sm font-semibold transition hover:bg-blue-900">لوحة التحكم (Admin)</button>
+            <h1 class="text-xl font-bold"><i class="fa-solid fa-sim-card ml-2"></i> منصة توزيع الكوارط (تونس)</h1>
+            <div id="topNavButtons" class="flex gap-2">
+                <button onclick="showSection('clientAuth')" class="bg-blue-700 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-800 transition">واجهة التاجر</button>
+                <button onclick="showSection('adminLogin')" class="bg-blue-800 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-900 transition">لوحة التحكم (Admin)</button>
             </div>
         </div>
     </header>
 
     <main class="container mx-auto px-4 py-6">
 
-        <!-- ================= واجهة الحانوت (CLIENT / POS) ================= -->
-        <div id="clientView" class="space-y-6">
-            <!-- تسجيل الحانوت -->
-            <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-                <h2 class="text-lg font-bold text-gray-800 mb-3"><i class="fa-solid fa-store text-blue-600 ml-2"></i> معلومات الحانوت</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <input type="text" id="clientName" placeholder="اسم الحانوت" class="border p-2 rounded-lg text-sm">
-                    <input type="text" id="clientPhone" placeholder="رقم الهاتف" class="border p-2 rounded-lg text-sm">
-                    <input type="text" id="clientAddress" placeholder="العنوان / المكان" class="border p-2 rounded-lg text-sm">
+        <!-- ================= 1. واجهة دخول أو تسجيل التاجر ================= -->
+        <div id="clientAuthSection" class="max-w-md mx-auto bg-white p-6 rounded-2xl shadow-sm border border-gray-200 space-y-4">
+            <h2 class="text-xl font-bold text-gray-800 text-center mb-4"><i class="fa-solid fa-store text-blue-600 ml-2"></i> بوابة الحانوت / التاجر</h2>
+            
+            <div class="flex border-b pb-2 mb-4">
+                <button onclick="switchAuthTab('login')" id="tabLogin" class="flex-1 py-2 font-bold text-blue-600 border-b-2 border-blue-600 text-sm">تسجيل الدخول</button>
+                <button onclick="switchAuthTab('register')" id="tabRegister" class="flex-1 py-2 font-semibold text-gray-500 text-sm">حساب جديد (Inscription)</button>
+            </div>
+
+            <!-- نموذج الدخول -->
+            <div id="loginForm" class="space-y-3">
+                <div>
+                    <label class="block text-xs font-bold text-gray-600 mb-1">رقم الهاتف</label>
+                    <input type="text" id="loginPhone" placeholder="أدخل رقم الهاتف..." class="border p-2 rounded-lg text-sm w-full">
                 </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-600 mb-1">كلمة المرور (Mot de passe)</label>
+                    <input type="password" id="loginPassword" placeholder="أدخل كلمة المرور..." class="border p-2 rounded-lg text-sm w-full">
+                </div>
+                <button onclick="clientLogin()" class="w-full bg-blue-600 text-white py-2.5 rounded-lg font-bold hover:bg-blue-700 transition mt-2">دخول إلى واجهة الطلبات</button>
+            </div>
+
+            <!-- نموذج التسجيل لأول مرة -->
+            <div id="registerForm" class="space-y-3 hidden">
+                <div>
+                    <label class="block text-xs font-bold text-gray-600 mb-1">اسم الحانوت</label>
+                    <input type="text" id="regName" placeholder="مثال: حانوت البركة..." class="border p-2 rounded-lg text-sm w-full">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-600 mb-1">رقم الهاتف</label>
+                    <input type="text" id="regPhone" placeholder="رقم الهاتف الخاص بك..." class="border p-2 rounded-lg text-sm w-full">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-600 mb-1">العنوان / المكان</label>
+                    <input type="text" id="regAddress" placeholder="المدينة، الحي..." class="border p-2 rounded-lg text-sm w-full">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-600 mb-1">كلمة المرور (Mot de passe)</label>
+                    <input type="password" id="regPassword" placeholder="اختر كلمة مرور..." class="border p-2 rounded-lg text-sm w-full">
+                </div>
+                <button onclick="clientRegister()" class="w-full bg-emerald-600 text-white py-2.5 rounded-lg font-bold hover:bg-emerald-700 transition mt-2">تسجيل الحساب الجديد</button>
+            </div>
+        </div>
+
+        <!-- ================= 2. واجهة طلبات التاجر (تظهر بعد الدخول الناجح) ================= -->
+        <div id="clientDashboardSection" class="hidden space-y-6">
+            <div class="bg-white p-4 rounded-xl shadow-sm border flex justify-between items-center">
+                <div>
+                    <h3 class="font-bold text-lg text-gray-800" id="welcomeClientName">مرحباً بالتاجر</h3>
+                    <p class="text-xs text-gray-500" id="welcomeClientDetails"></p>
+                </div>
+                <button onclick="clientLogout()" class="bg-red-100 text-red-600 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-red-200 transition">تسجيل الخروج</button>
             </div>
 
             <!-- اختيار المشغلين -->
@@ -45,7 +84,7 @@
                     <i class="fa-solid fa-signal text-xl"></i> أوريدو (Ooredoo)
                 </button>
                 <button onclick="selectOperator('Telecom')" class="bg-blue-500 text-white p-4 rounded-xl font-bold shadow hover:bg-blue-600 transition flex flex-col items-center justify-center gap-1">
-                    <i class="fa-solid fa-globe text-xl"></i> تليكوم (Télécom)
+                    <i class="fa-solid fa-globe text-xl"></i> تيليكوم (Télécom)
                 </button>
                 <button onclick="selectOperator('Orange')" class="bg-orange-500 text-white p-4 rounded-xl font-bold shadow hover:bg-orange-600 transition flex flex-col items-center justify-center gap-1">
                     <i class="fa-solid fa-wifi text-xl"></i> أورنج (Orange)
@@ -55,9 +94,7 @@
             <!-- اختيار الفئات والكميات -->
             <div id="productsSection" class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hidden">
                 <h3 id="selectedOperatorTitle" class="text-xl font-bold text-gray-800 mb-4"></h3>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="cardsGrid">
-                    <!-- تعبئة ديناميكية -->
-                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="cardsGrid"></div>
 
                 <div class="mt-6 border-t pt-4 flex flex-col md:flex-row justify-between items-center gap-4">
                     <div>
@@ -65,40 +102,52 @@
                         <span id="cartTotal" class="text-2xl font-bold text-green-600 mr-2">0.000 د.ت</span>
                     </div>
 
-                    <!-- اختيار حالة الخلاص (Payé أو Crédit) -->
-                    <div class="flex items-center gap-3">
-                        <label class="font-bold text-sm text-gray-700">حالة العملية:</label>
+                    <div class="flex items-center gap-2">
+                        <label class="font-bold text-sm text-gray-700">طريقة الخلاص:</label>
                         <select id="paymentStatusSelect" class="border p-2 rounded-lg font-bold text-sm bg-gray-50">
                             <option value="Payé">خلاص كاش (Payé)</option>
                             <option value="Crédit">كريدي (Crédit)</option>
                         </select>
                     </div>
 
-                    <div class="flex gap-2">
-                        <button onclick="submitOrder('pos')" class="bg-emerald-600 text-white px-5 py-2.5 rounded-lg font-bold hover:bg-emerald-700 transition">بيع مباشر (Sur place)</button>
-                        <button onclick="submitOrder('online')" class="bg-blue-600 text-white px-5 py-2.5 rounded-lg font-bold hover:bg-blue-700 transition">إرسال طلب (Commande)</button>
-                    </div>
+                    <button onclick="submitOrder()" class="bg-blue-600 text-white px-6 py-2.5 rounded-lg font-bold hover:bg-blue-700 transition">إرسال الطلب (Commande)</button>
                 </div>
             </div>
         </div>
 
-        <!-- ================= لوحة التحكم (ADMIN VIEW) ================= -->
-        <div id="adminView" class="hidden space-y-6">
+        <!-- ================= 3. واجهة تسجيل دخول الأدمن ================= -->
+        <div id="adminLoginSection" class="max-w-md mx-auto bg-white p-6 rounded-2xl shadow-sm border border-gray-200 space-y-4 hidden">
+            <h2 class="text-xl font-bold text-gray-800 text-center mb-4"><i class="fa-solid fa-lock text-blue-600 ml-2"></i> دخول لوحة التحكم (Admin)</h2>
+            <div>
+                <label class="block text-xs font-bold text-gray-600 mb-1">كلمة المرور للأدمن</label>
+                <input type="password" id="adminPasswordInput" placeholder="أدخل كلمة المرور..." class="border p-2 rounded-lg text-sm w-full">
+            </div>
+            <button onclick="adminLogin()" class="w-full bg-blue-800 text-white py-2.5 rounded-lg font-bold hover:bg-blue-900 transition">دخول لوحة التحكم</button>
+            <button onclick="showSection('clientAuth')" class="w-full text-gray-500 text-xs text-center pt-2 hover:underline">الرجوع لواجهة التجار</button>
+        </div>
+
+        <!-- ================= 4. لوحة تحكم الأدمن (Admin Dashboard) ================= -->
+        <div id="adminDashboardSection" class="hidden space-y-6">
+            <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border">
+                <h3 class="font-bold text-lg text-gray-800"><i class="fa-solid fa-chart-line text-blue-600 ml-2"></i> لوحة تحكم الإدارة</h3>
+                <button onclick="showSection('clientAuth')" class="bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-gray-200 transition">خروج للأدمن</button>
+            </div>
+
             <!-- إحصائيات عامة -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-                    <p class="text-gray-500 text-sm">مداخيل اليوم (الخالصة فقط)</p>
+                <div class="bg-white p-4 rounded-xl shadow-sm border">
+                    <p class="text-gray-500 text-sm">مداخيل اليوم (الخالصة Payé)</p>
                     <h3 id="adminRecetteDay" class="text-2xl font-bold text-gray-800 mt-1">0.000 د.ت</h3>
                 </div>
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-                    <p class="text-gray-500 text-sm">مداخيل الشهر (الخالصة فقط)</p>
+                <div class="bg-white p-4 rounded-xl shadow-sm border">
+                    <p class="text-gray-500 text-sm">مداخيل الشهر (الخالصة Payé)</p>
                     <h3 id="adminRecetteMonth" class="text-2xl font-bold text-gray-800 mt-1">0.000 د.ت</h3>
                 </div>
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+                <div class="bg-white p-4 rounded-xl shadow-sm border">
                     <p class="text-gray-500 text-sm">إجمالي ديون الكريدي المتخلدة</p>
                     <h3 id="adminTotalCredit" class="text-2xl font-bold text-red-600 mt-1">0.000 د.ت</h3>
                 </div>
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+                <div class="bg-white p-4 rounded-xl shadow-sm border">
                     <p class="text-gray-500 text-sm">الطلبات المعلقة</p>
                     <h3 id="adminPendingOrders" class="text-2xl font-bold text-blue-600 mt-1">0</h3>
                 </div>
@@ -106,23 +155,21 @@
 
             <!-- التنقل داخل الـ Admin -->
             <div class="flex gap-2 border-b pb-3 overflow-x-auto">
-                <button onclick="switchAdminTab('orders')" id="tabOrders" class="admin-tab bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">الطلبات الواردة</button>
-                <button onclick="switchAdminTab('credits')" id="tabCredits" class="admin-tab bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold">إدارة الكريدي (Crédits)</button>
-                <button onclick="switchAdminTab('clients')" id="tabClients" class="admin-tab bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold">حركات الحوانت (Relevés)</button>
-                <button onclick="switchAdminTab('tariffs')" id="tabTariffs" class="admin-tab bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold">إدارة الأسعار</button>
+                <button onclick="switchAdminTab('orders')" id="tabAdminOrders" class="admin-tab bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">الطلبات الواردة</button>
+                <button onclick="switchAdminTab('credits')" id="tabAdminCredits" class="admin-tab bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold">إدارة الكريدي (Crédits)</button>
+                <button onclick="switchAdminTab('clients')" id="tabAdminClients" class="admin-tab bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold">حركات الحوانت (Relevés)</button>
+                <button onclick="switchAdminTab('tariffs')" id="tabAdminTariffs" class="admin-tab bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold">إدارة الأسعار</button>
             </div>
 
-            <!-- محتوى تاب الطلبات -->
+            <!-- تاب الطلبات -->
             <div id="adminOrdersContent" class="admin-content space-y-4">
-                <h3 class="font-bold text-lg text-gray-800">الطلبات الجارية</h3>
                 <div id="ordersListContainer" class="bg-white rounded-xl shadow-sm border p-4">
                     <p class="text-gray-500 text-center py-4">جاري تحميل الطلبات...</p>
                 </div>
             </div>
 
-            <!-- محتوى تاب إدارة الكريدي -->
+            <!-- تاب إدارة الكريدي -->
             <div id="adminCreditsContent" class="admin-content hidden space-y-4">
-                <h3 class="font-bold text-lg text-gray-800">متابعة الديون والكريدي لكل حانوت</h3>
                 <div class="bg-white rounded-xl shadow-sm border p-4 overflow-x-auto">
                     <table class="w-full text-right border-collapse">
                         <thead>
@@ -130,32 +177,26 @@
                                 <th class="p-3">اسم الحانوت</th>
                                 <th class="p-3">رقم الهاتف</th>
                                 <th class="p-3">إجمالي الكريدي (د.ت)</th>
-                                <th class="p-3">إجراء (خلاص دين / Versement)</th>
+                                <th class="p-3">إجراء الخلاص (Solder)</th>
                             </tr>
                         </thead>
-                        <tbody id="creditsTableBody">
-                            <!-- سيتم تعبئتها ديناميكياً -->
-                        </tbody>
+                        <tbody id="creditsTableBody"></tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- محتوى تاب الحوانت و Relevé -->
+            <!-- تاب Relevé par client -->
             <div id="adminClientsContent" class="admin-content hidden space-y-4">
-                <h3 class="font-bold text-lg text-gray-800">متابعة حسابات الحوانت (Relevé par Client)</h3>
                 <div class="bg-white rounded-xl shadow-sm border p-4">
-                    <select id="selectClientReleve" onchange="loadClientReleve()" class="border p-2 rounded-lg w-full md:w-1/3 mb-4">
+                    <select id="selectClientReleve" onchange="loadClientReleve()" class="border p-2 rounded-lg w-full md:w-1/3 mb-4 text-sm">
                         <option value="">اختر الحانوت لعرض الكشف...</option>
                     </select>
-                    <div id="clientReleveDetails" class="space-y-3">
-                        <!-- تفاصيل الحركات -->
-                    </div>
+                    <div id="clientReleveDetails" class="space-y-3"></div>
                 </div>
             </div>
 
-            <!-- محتوى تاب الأسعار -->
+            <!-- تاب إدارة الأسعار -->
             <div id="adminTariffsContent" class="admin-content hidden space-y-4">
-                <h3 class="font-bold text-lg text-gray-800">تحديد أسعار الشراء والبيع</h3>
                 <div class="bg-white rounded-xl shadow-sm border p-4 overflow-x-auto">
                     <table class="w-full text-right border-collapse">
                         <thead>
@@ -167,9 +208,7 @@
                                 <th class="p-3">إجراء</th>
                             </tr>
                         </thead>
-                        <tbody id="tariffsTableBody">
-                            <!-- جدول الأسعار -->
-                        </tbody>
+                        <tbody id="tariffsTableBody"></tbody>
                     </table>
                 </div>
             </div>
@@ -177,23 +216,49 @@
 
     </main>
 
-    <!-- سكربت التشغيل وربط Firebase Firestore الجديد -->
-    <script>
-        // ضع هنا إعدادات الـ Firebase الجديد الخاص بك
+    <!-- سكربت التشغيل وربط Firebase SDK الحديث -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, updatedoc, onSnapshot, query, orderBy, where, writeBatch } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // إعدادات الـ Firebase الخاص بك
         const firebaseConfig = {
-            apiKey: "YOUR_NEW_API_KEY",
-            authDomain: "YOUR_NEW_PROJECT_ID.firebaseapp.com",
-            projectId: "YOUR_NEW_PROJECT_ID",
-            storageBucket: "YOUR_NEW_PROJECT_ID.appspot.com",
-            messagingSenderId: "YOUR_NEW_SENDER_ID",
-            appId: "YOUR_NEW_APP_ID"
+            apiKey: "AIzaSyAYNDYcwlmX5rdnpXyGoHR48g-T6h_oHFk",
+            authDomain: "tunisia-recharge-pos.firebaseapp.com",
+            projectId: "tunisia-recharge-pos",
+            storageBucket: "tunisia-recharge-pos.firebasestorage.app",
+            messagingSenderId: "101019163347",
+            appId: "1:101019163347:web:29ca8f5597d97821abd226",
+            measurementId: "G-F7B9D7FLJ0"
         };
 
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
+        // جعل الدوال متاحة عالمياً في الـ Window
+        window.db = db;
+        window.getDocs = getDocs;
+        window.collection = collection;
+        window.addDoc = addDoc;
+        window.doc = doc;
+        window.updatedoc = updatedoc;
+        window.onSnapshot = onSnapshot;
+        window.query = query;
+        window.orderBy = orderBy;
+        window.where = where;
+        window.writeBatch = writeBatch;
+
+        // بدء جلب الطلبات عند التحميل
+        listenToOrders();
+    </script>
+
+    <script>
+        // المتغيرات العامة للتحكم
+        let currentClient = null;
         let currentOperator = '';
         let cart = {};
+        let allOrders = [];
+
         let tariffs = [
             { id: 'Ooredoo_1', operator: 'Ooredoo', name: 'Ticket 1D', buy: 0.950, sell: 1.000 },
             { id: 'Ooredoo_5', operator: 'Ooredoo', name: 'Carte 5D', buy: 4.750, sell: 5.000 },
@@ -209,46 +274,132 @@
             { id: 'Orange_25', operator: 'Orange', name: 'Carte 25D', buy: 23.750, sell: 25.000 }
         ];
 
-        let allOrders = [];
+        // التنقل بين الأقسام الرئيسية
+        function showSection(section) {
+            document.getElementById('clientAuthSection').classList.add('hidden');
+            document.getElementById('clientDashboardSection').classList.add('hidden');
+            document.getElementById('adminLoginSection').classList.add('hidden');
+            document.getElementById('adminDashboardSection').classList.add('hidden');
 
-        function switchView(view) {
-            if (view === 'client') {
-                document.getElementById('clientView').classList.remove('hidden');
-                document.getElementById('adminView').classList.add('hidden');
-            } else {
-                document.getElementById('clientView').classList.add('hidden');
-                document.getElementById('adminView').classList.remove('hidden');
+            if (section === 'clientAuth') {
+                if (currentClient) {
+                    document.getElementById('clientDashboardSection').classList.remove('hidden');
+                } else {
+                    document.getElementById('clientAuthSection').classList.remove('hidden');
+                }
+            } else if (section === 'adminLogin') {
+                document.getElementById('adminLoginSection').classList.remove('hidden');
+            } else if (section === 'adminDashboard') {
+                document.getElementById('adminDashboardSection').classList.remove('hidden');
                 renderAdminTariffs();
-                fetchOrdersFromFirebase();
+                processAdminData();
             }
         }
 
-        function switchAdminTab(tab) {
-            document.querySelectorAll('.admin-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.admin-tab').forEach(el => {
-                el.classList.remove('bg-blue-600', 'text-white');
-                el.classList.add('bg-gray-200', 'text-gray-700');
-            });
-
-            if (tab === 'orders') {
-                document.getElementById('adminOrdersContent').classList.remove('hidden');
-                document.getElementById('tabOrders').classList.add('bg-blue-600', 'text-white');
-            } else if (tab === 'credits') {
-                document.getElementById('adminCreditsContent').classList.remove('hidden');
-                document.getElementById('tabCredits').classList.add('bg-blue-600', 'text-white');
-            } else if (tab === 'clients') {
-                document.getElementById('adminClientsContent').classList.remove('hidden');
-                document.getElementById('tabClients').classList.add('bg-blue-600', 'text-white');
-            } else if (tab === 'tariffs') {
-                document.getElementById('adminTariffsContent').classList.remove('hidden');
-                document.getElementById('tabTariffs').classList.add('bg-blue-600', 'text-white');
+        // التبديل بين تسجيل الدخول والتسجيل الجديد للتاجر
+        function switchAuthTab(tab) {
+            if (tab === 'login') {
+                document.getElementById('loginForm').classList.remove('hidden');
+                document.getElementById('registerForm').classList.add('hidden');
+                document.getElementById('tabLogin').className = "flex-1 py-2 font-bold text-blue-600 border-b-2 border-blue-600 text-sm";
+                document.getElementById('tabRegister').className = "flex-1 py-2 font-semibold text-gray-500 text-sm";
+            } else {
+                document.getElementById('loginForm').classList.add('hidden');
+                document.getElementById('registerForm').classList.remove('hidden');
+                document.getElementById('tabRegister').className = "flex-1 py-2 font-bold text-blue-600 border-b-2 border-blue-600 text-sm";
+                document.getElementById('tabLogin').className = "flex-1 py-2 font-semibold text-gray-500 text-sm";
             }
         }
 
+        // تسجيل حساب جديد (Inscription) في Firestore
+        async function clientRegister() {
+            const name = document.getElementById('regName').value.trim();
+            const phone = document.getElementById('regPhone').value.trim();
+            const address = document.getElementById('regAddress').value.trim();
+            const password = document.getElementById('regPassword').value.trim();
+
+            if (!name || !phone || !password) {
+                alert('الرجاء إدخال اسم الحانوت، رقم الهاتف، وكلمة المرور.');
+                return;
+            }
+
+            try {
+                // التحقق هل الهاتف مسجل مسبقاً
+                const q = query(collection(window.db, "clients"), where("phone", "==", phone));
+                const querySnapshot = await getDocs(q);
+                if (!querySnapshot.empty) {
+                    alert('رقم الهاتف مسجل مسبقاً،الرجاء تسجيل الدخول.');
+                    return;
+                }
+
+                await addDoc(collection(window.db, "clients"), {
+                    name, phone, address, password, date: new Date().toISOString()
+                });
+
+                alert('تم تسجيل الحساب بنجاح! يمكنك الدخول الآن.');
+                switchAuthTab('login');
+                document.getElementById('loginPhone').value = phone;
+            } catch (e) {
+                console.error("Error registering: ", e);
+                alert('حدث خطأ أثناء التسجيل.');
+            }
+        }
+
+        // تسجيل الدخول للتاجر
+        async function clientLogin() {
+            const phone = document.getElementById('loginPhone').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+
+            if (!phone || !password) {
+                alert('الرجاء إدخال رقم الهاتف وكلمة المرور.');
+                return;
+            }
+
+            try {
+                const q = query(collection(window.db, "clients"), where("phone", "==", phone), where("password", "==", password));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    alert('رقم الهاتف أو كلمة المرور غير صحيحة.');
+                    return;
+                }
+
+                querySnapshot.forEach((doc) => {
+                    currentClient = { id: doc.id, ...doc.data() };
+                });
+
+                document.getElementById('welcomeClientName').innerText = `مرحباً، ${currentClient.name}`;
+                document.getElementById('welcomeClientDetails').innerText = `الهاتف: ${currentClient.phone} | العنوان: ${currentClient.address}`;
+                
+                showSection('clientAuth');
+            } catch (e) {
+                console.error("Error logging in: ", e);
+                alert('حدث خطأ أثناء الاتصال بقاعدة البيانات.');
+            }
+        }
+
+        function clientLogout() {
+            currentClient = null;
+            cart = {};
+            showSection('clientAuth');
+        }
+
+        // الدخول للوحة تحكم الأدمن بكلمة مرور بسيطة
+        function adminLogin() {
+            const pass = document.getElementById('adminPasswordInput').value;
+            if (pass === 'admin123' || pass === '1234') { // تنجم تبدل كلمة المرور كيف ما تحب
+                showSection('adminDashboard');
+                document.getElementById('adminPasswordInput').value = '';
+            } else {
+                alert('كلمة مرور الأدمن غير صحيحة!');
+            }
+        }
+
+        // اختيار المشغل من طرف التاجر
         function selectOperator(operator) {
             currentOperator = operator;
             document.getElementById('productsSection').classList.remove('hidden');
-            document.getElementById('selectedOperatorTitle').innerText = `إختر الكميات لـ: ${operator}`;
+            document.getElementById('selectedOperatorTitle').innerText = `اختر الكميات لـ: ${operator}`;
             
             const opTariffs = tariffs.filter(t => t.operator === operator);
             let gridHtml = '';
@@ -288,18 +439,8 @@
             document.getElementById('cartTotal').innerText = total.toFixed(3) + ' د.ت';
         }
 
-        // إرسال الطلب وحفظه في Firebase (مع حالة Payé أو Crédit)
-        async function submitOrder(type) {
-            const name = document.getElementById('clientName').value.trim();
-            const phone = document.getElementById('clientPhone').value.trim();
-            const address = document.getElementById('clientAddress').value.trim();
-            const paymentStatus = document.getElementById('paymentStatusSelect').value; // 'Payé' أو 'Crédit'
-
-            if (!name || !phone) {
-                alert('الرجاء إدخال اسم الحانوت ورقم الهاتف أولاً.');
-                return;
-            }
-
+        // إرسال الكوموند من التاجر إلى Firebase
+        async function submitOrder() {
             let itemsOrdered = [];
             let totalSell = 0;
             let totalBuy = 0;
@@ -318,36 +459,37 @@
                 return;
             }
 
+            const paymentStatus = document.getElementById('paymentStatusSelect').value;
+
             const orderData = {
-                clientName: name,
-                clientPhone: phone,
-                clientAddress: address,
+                clientName: currentClient.name,
+                clientPhone: currentClient.phone,
+                clientAddress: currentClient.address,
                 items: itemsOrdered,
-                totalSell: totalSell,
-                totalBuy: totalBuy,
+                totalSell,
+                totalBuy,
                 benefice: totalSell - totalBuy,
-                type: type, // 'pos' أو 'online'
-                paymentStatus: paymentStatus, // 'Payé' أو 'Crédit'
+                paymentStatus, // 'Payé' أو 'Crédit'
                 date: new Date().toISOString(),
-                status: type === 'pos' ? 'مكتمل (مباشر)' : 'قيد الانتظار'
+                status: 'قيد الانتظار'
             };
 
             try {
-                await db.collection("orders").add(orderData);
-                alert(paymentStatus === 'Crédit' ? 'تم تسجيل العملية كـ [كريدي] بنجاح في حساب الحانوت!' : 'تم تسجيل عملية البيع و الخلاص [Payé] بنجاح!');
+                await addDoc(collection(window.db, "orders"), orderData);
+                alert(paymentStatus === 'Crédit' ? 'تم تسجيل الطلب وإضافته للكريدي بنجاح!' : 'تم إرسال الطلب بنجاح للإدارة!');
                 
                 cart = {};
                 document.querySelectorAll('[id^="qty_"]').forEach(el => el.innerText = '0');
                 calculateTotal();
-                fetchOrdersFromFirebase();
-            } catch (error) {
-                console.error("Error adding order: ", error);
-                alert('حدث خطأ أثناء الاتصال بقاعدة البيانات.');
+            } catch (e) {
+                console.error("Error submitting order: ", e);
+                alert('حدث خطأ أثناء إرسال الطلب.');
             }
         }
 
-        function fetchOrdersFromFirebase() {
-            db.collection("orders").orderBy("date", "desc").onSnapshot((snapshot) => {
+        // الاستماع للطلبات في الوقت الفعلي Real-time
+        function listenToOrders() {
+            onSnapshot(query(collection(window.db, "orders"), orderBy("date", "desc")), (snapshot) => {
                 allOrders = [];
                 snapshot.forEach((doc) => {
                     allOrders.push({ id: doc.id, ...doc.data() });
@@ -356,6 +498,7 @@
             });
         }
 
+        // معالجة بيانات الأدمن (المداخيل، الكريدي، الطلبات)
         function processAdminData() {
             let dayTotal = 0;
             let monthTotal = 0;
@@ -366,17 +509,14 @@
             const thisMonth = new Date().toISOString().slice(0, 7);
 
             let ordersHtml = '';
-            let clientsMap = {}; // لحساب الكريدي لكل حانوت
+            let clientsMap = {};
             let clientsListHtml = '<option value="">اختر الحانوت لعرض الكشف...</option>';
 
             allOrders.forEach((o) => {
-                // تجميع بيانات الحوانت
                 if (!clientsMap[o.clientName]) {
-                    clientsMap[o.clientName] = { phone: o.clientPhone, credit: 0, orders: [] };
+                    clientsMap[o.clientName] = { phone: o.clientPhone, credit: 0 };
                 }
-                clientsMap[o.clientName].orders.push(o);
 
-                // حساب المداخيل (للعمليات الخالصة Payé فقط)
                 if (o.paymentStatus === 'Payé') {
                     if (o.date.slice(0, 10) === today) dayTotal += o.totalSell;
                     if (o.date.slice(0, 7) === thisMonth) monthTotal += o.totalSell;
@@ -388,12 +528,12 @@
                 if (o.status === 'قيد الانتظار') {
                     pendingCount++;
                     ordersHtml += `
-                        <div class="border p-4 rounded-lg flex justify-between items-center bg-gray-50">
+                        <div class="border p-4 rounded-lg flex justify-between items-center bg-gray-50 mb-2">
                             <div>
                                 <h4 class="font-bold text-gray-800">${o.clientName} (${o.clientPhone})</h4>
                                 <p class="text-sm text-gray-500">${o.clientAddress} - المجموع: <span class="font-bold text-blue-600">${o.totalSell.toFixed(3)} د.ت</span> (${o.paymentStatus})</p>
                             </div>
-                            <button onclick="completeOrder('${o.id}')" class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-bold">تم التسليم</button>
+                            <button onclick="completeOrder('${o.id}')" class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-green-700">تم التسليم</button>
                         </div>
                     `;
                 }
@@ -410,7 +550,7 @@
                 document.getElementById('ordersListContainer').innerHTML = '<p class="text-gray-500 text-center py-4">لا توجد طلبات معلقة حالياً.</p>';
             }
 
-            // تعبئة جدول إدارة الكريدي لكل حانوت
+            // جدول الكريدي لكل حانوت
             let creditsTableHtml = '';
             for (let cName in clientsMap) {
                 let cData = clientsMap[cName];
@@ -431,33 +571,36 @@
             document.getElementById('selectClientReleve').innerHTML = clientsListHtml;
         }
 
-        // تسجيل خلاص دين الحانوت (تحويل طلبات الكريدي إلى Payé)
+        // تسوية ديون الحانوت وتحويلها إلى Payé
         async function payClientCredit(clientName) {
             if (!confirm(`هل أنت متأكد من تسوية وخلاص ديون الحانوت: ${clientName}؟`)) return;
 
             try {
-                const snapshot = await db.collection("orders").where("clientName", "==", clientName).where("paymentStatus", "==", "Crédit").get();
-                const batch = db.batch();
-                snapshot.forEach((doc) => {
-                    batch.update(doc.ref, { paymentStatus: 'Payé' });
+                const q = query(collection(window.db, "orders"), where("clientName", "==", clientName), where("paymentStatus", "==", "Crédit"));
+                const querySnapshot = await getDocs(q);
+                const batch = writeBatch(window.db);
+                
+                querySnapshot.forEach((document) => {
+                    batch.update(doc(window.db, "orders", document.id), { paymentStatus: 'Payé' });
                 });
+                
                 await batch.commit();
-                alert(`تم تسجيل خلاص ديون ${clientName} بنجاح! وانضافت للمداخيل.`);
+                alert(`تم تسجيل خلاص ديون ${clientName} بنجاح!`);
             } catch (e) {
                 console.error("Error paying credit:", e);
-                alert("حدث خطأ أثناء تحديث بيانات الخلاص.");
+                alert("حدث خطأ أثناء التحديث.");
             }
         }
 
         async function completeOrder(orderId) {
             try {
-                await db.collection("orders").doc(orderId).update({ status: 'مكتمل' });
+                await updatedoc(doc(window.db, "orders", orderId), { status: 'مكتمل' });
             } catch (e) {
-                console.error("Error updating order: ", e);
+                console.error("Error updating order:", e);
             }
         }
 
-        // كشف حساب الحانوت (Relevé client)
+        // كشف الحساب لكل حانوت (Relevé par client)
         function loadClientReleve() {
             const clientName = document.getElementById('selectClientReleve').value;
             if (!clientName) {
@@ -469,9 +612,8 @@
             let totalSpent = 0;
             let totalCreditClient = 0;
             let totalQuantity = 0;
-            let html = `<h4 class="font-bold text-gray-700">حركات الحانوت: ${clientName}</h4>`;
+            let html = `<h4 class="font-bold text-gray-700">حركات الحانوت: ${clientName}</h4><div class="space-y-2 mt-2">`;
             
-            html += `<div class="space-y-2 mt-2">`;
             clientOrders.forEach(o => {
                 totalSpent += o.totalSell;
                 if (o.paymentStatus === 'Crédit') totalCreditClient += o.totalSell;
@@ -481,7 +623,7 @@
                     <div class="border-r-4 ${o.paymentStatus === 'Payé' ? 'border-green-500' : 'border-red-500'} bg-gray-50 p-3 rounded text-sm flex justify-between items-center">
                         <div>
                             <span class="text-gray-500 text-xs">${new Date(o.date).toLocaleString()}</span>
-                            <p class="font-bold text-gray-800">الحالة: <span class="${o.paymentStatus === 'Payé' ? 'text-green-600' : 'text-red-600'}">${o.paymentStatus}</span> (${o.type})</p>
+                            <p class="font-bold text-gray-800">الحالة: <span class="${o.paymentStatus === 'Payé' ? 'text-green-600' : 'text-red-600'}">${o.paymentStatus}</span></p>
                         </div>
                         <span class="font-bold text-blue-600">${o.totalSell.toFixed(3)} د.ت</span>
                     </div>
@@ -507,6 +649,29 @@
             `;
 
             document.getElementById('clientReleveDetails').innerHTML = summaryHtml + html;
+        }
+
+        // التنقل بين أقسام الأدمن
+        function switchAdminTab(tab) {
+            document.querySelectorAll('.admin-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.admin-tab').forEach(el => {
+                el.classList.remove('bg-blue-600', 'text-white');
+                el.classList.add('bg-gray-200', 'text-gray-700');
+            });
+
+            if (tab === 'orders') {
+                document.getElementById('adminOrdersContent').classList.remove('hidden');
+                document.getElementById('tabAdminOrders').classList.add('bg-blue-600', 'text-white');
+            } else if (tab === 'credits') {
+                document.getElementById('adminCreditsContent').classList.remove('hidden');
+                document.getElementById('tabAdminCredits').classList.add('bg-blue-600', 'text-white');
+            } else if (tab === 'clients') {
+                document.getElementById('adminClientsContent').classList.remove('hidden');
+                document.getElementById('tabAdminClients').classList.add('bg-blue-600', 'text-white');
+            } else if (tab === 'tariffs') {
+                document.getElementById('adminTariffsContent').classList.remove('hidden');
+                document.getElementById('tabAdminTariffs').classList.add('bg-blue-600', 'text-white');
+            }
         }
 
         function renderAdminTariffs() {

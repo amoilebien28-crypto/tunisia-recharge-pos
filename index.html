@@ -32,7 +32,7 @@
             </div>
         </div>
 
-        <!-- ================= 1. واجهة دخول أو تسجيل التاجر (مع الفقرة التفسيرية في الأسفل) ================= -->
+        <!-- ================= 1. واجهة دخول أو تسجيل التاجر ================= -->
         <div id="clientAuthSection" class="max-w-md mx-auto space-y-4">
             <div class="bg-white p-8 rounded-3xl shadow-xl border border-indigo-50 space-y-5">
                 <div class="text-center">
@@ -96,11 +96,9 @@
                     <p class="text-xs text-gray-500 mt-1" id="welcomeClientDetails"></p>
                 </div>
                 <div class="flex gap-2 w-full md:w-auto">
-                    <!-- زر إحصائيات المشتريات الشهرية للتاجر -->
                     <button onclick="openClientStatsModal()" class="flex-1 md:flex-none bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-4 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 shadow-sm">
                         <i class="fa-solid fa-chart-bar"></i> إحصائيات المشتريات
                     </button>
-                    <!-- زر الواتساب للتواصل مع الإدارة -->
                     <button onclick="contactAdminWhatsApp()" class="flex-1 md:flex-none bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-sm">
                         <i class="fa-brands fa-whatsapp text-lg"></i> مراسلة الإدارة
                     </button>
@@ -135,7 +133,7 @@
                 </div>
             </div>
 
-            <!-- كشف حساب التاجر (في شكل ملخص نظيف وقابل للضغط) -->
+            <!-- كشف حساب التاجر -->
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-indigo-50 space-y-4">
                 <h4 class="font-bold text-lg text-gray-800"><i class="fa-solid fa-file-invoice-dollar text-indigo-600 ml-2"></i> كشف حسابي وسجل الطلبات (اضغط على أي طلب لعرض تفاصيله)</h4>
                 <div id="clientMyOrdersContainer" class="space-y-3">
@@ -159,7 +157,7 @@
             <div class="bg-white p-6 rounded-3xl shadow-sm border space-y-3">
                 <p class="text-xs font-bold text-gray-400 mb-2">اختر القسم المطلوب فتحه:</p>
                 
-                <!-- زر البيع المباشر في الصدارة بحجم كبير ومميز -->
+                <!-- زر البيع المباشر في الصدارة -->
                 <button onclick="openAdminWindow('pos')" class="w-full text-right bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white p-4 rounded-2xl font-bold flex justify-between items-center transition shadow-lg">
                     <span><i class="fa-solid fa-cash-register ml-2 text-yellow-300"></i> نظام البيع المباشر (Caisse POS)</span>
                     <i class="fa-solid fa-chevron-left"></i>
@@ -209,6 +207,12 @@
                 <button onclick="openAdminWindow('tariffs')" class="w-full text-right bg-gray-50 hover:bg-gray-100 border text-gray-800 p-4 rounded-2xl font-bold flex justify-between items-center transition">
                     <span><i class="fa-solid fa-tags ml-2 text-indigo-600"></i> إدارة الأسعار</span>
                     <i class="fa-solid fa-chevron-left text-gray-400"></i>
+                </button>
+
+                <!-- زر تغيير كلمة سر الأدمن الجديد -->
+                <button onclick="openChangePasswordModal()" class="w-full text-right bg-gray-800 hover:bg-gray-900 text-white p-4 rounded-2xl font-bold flex justify-between items-center transition shadow-md">
+                    <span><i class="fa-solid fa-key ml-2 text-yellow-300"></i> تغيير كلمة سر الأدمن</span>
+                    <i class="fa-solid fa-chevron-left"></i>
                 </button>
 
                 <!-- أزرار النسخ الاحتياطي واسترجاع البيانات -->
@@ -264,7 +268,7 @@
         </div>
     </div>
 
-    <!-- نافذة المخزون (Stock) المستقلة -->
+    <!-- نافذة المخزون المستقلة -->
     <div id="windowStock" class="admin-window fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-40 p-4">
         <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto space-y-4">
             <div class="flex justify-between items-center border-b pb-3">
@@ -289,7 +293,7 @@
         </div>
     </div>
 
-    <!-- نافذة فواتير الشراء المستقلة مع زر الحذف واسترجاع الستوك -->
+    <!-- نافذة فواتير الشراء المستقلة -->
     <div id="windowPurchases" class="admin-window fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-40 p-4">
         <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto space-y-4">
             <div class="flex justify-between items-center border-b pb-3">
@@ -307,7 +311,7 @@
         </div>
     </div>
 
-    <!-- نافذة البيع المباشر (POS كاسة متطورة على كامل الشاشة مع تثبيت المجموع من لوطا وعدم تصفير الاختيارات) -->
+    <!-- نافذة البيع المباشر (POS) -->
     <div id="windowPos" class="admin-window fixed inset-0 bg-indigo-900/40 backdrop-blur-md hidden flex items-center justify-center z-40 p-2 md:p-6">
         <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-5xl w-full h-[95vh] flex flex-col justify-between overflow-hidden">
             <div class="overflow-y-auto pr-1 flex-1 space-y-4">
@@ -361,45 +365,15 @@
         </div>
     </div>
 
-    <!-- نافذة إحصائيات المشتريات الشهرية للتاجر -->
-    <div id="clientStatsModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
-        <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto space-y-4">
-            <div class="flex justify-between items-center border-b pb-3">
-                <h3 class="font-bold text-lg text-gray-800"><i class="fa-solid fa-chart-bar text-indigo-600 ml-2"></i> إحصائيات مشترياتي الشهرية والسنوية</h3>
-                <button onclick="closeClientStatsModal()" class="text-gray-400 hover:text-gray-600 text-lg font-bold">&times;</button>
+    <!-- نافذة تغيير كلمة سر الأدمن -->
+    <div id="changePasswordModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-sm w-full mx-4 space-y-4">
+            <h3 class="font-bold text-lg text-gray-800 text-center"><i class="fa-solid fa-key text-yellow-600 ml-2"></i> تغيير كلمة سر الأدمن</h3>
+            <input type="password" id="newAdminPasswordInput" placeholder="أدخل كلمة السر الجديدة..." class="border p-3 rounded-xl w-full text-center text-sm outline-none focus:ring-2 focus:ring-indigo-500">
+            <div class="flex gap-2">
+                <button onclick="closeChangePasswordModal()" class="flex-1 bg-gray-100 text-gray-700 py-2.5 rounded-xl font-bold text-sm">إلغاء</button>
+                <button onclick="saveNewAdminPassword()" class="flex-1 bg-indigo-600 text-white py-2.5 rounded-xl font-bold text-sm shadow-md">حفظ</button>
             </div>
-            <div class="overflow-x-auto">
-                <table class="w-full text-right border-collapse">
-                    <thead>
-                        <tr class="border-b bg-gray-50 text-gray-600 text-sm">
-                            <th class="p-3">الشهر</th>
-                            <th class="p-3">مجموع المشتريات (د.ت)</th>
-                        </tr>
-                    </thead>
-                    <tbody id="clientMonthlyStatsBody"></tbody>
-                </table>
-            </div>
-            <div class="border-t pt-3 flex justify-between items-center font-bold">
-                <span class="text-gray-700">المجموع السنوي العام:</span>
-                <span id="clientAnnualTotal" class="text-emerald-600 text-lg">0.000 د.ت</span>
-            </div>
-            <button onclick="closeClientStatsModal()" class="w-full bg-indigo-600 text-white py-2.5 rounded-xl font-bold text-sm shadow-md">إغلاق</button>
-        </div>
-    </div>
-
-    <!-- نافذة تفاصيل الطلب للتاجر (عند الضغط على الطلب) -->
-    <div id="clientOrderDetailModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
-        <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-md w-full mx-4 space-y-4">
-            <div class="flex justify-between items-center border-b pb-3">
-                <h3 class="font-bold text-lg text-gray-800"><i class="fa-solid fa-receipt text-indigo-600 ml-2"></i> تفاصيل الطلب</h3>
-                <button onclick="closeClientOrderDetailModal()" class="text-gray-400 hover:text-gray-600 text-lg font-bold">&times;</button>
-            </div>
-            <div id="clientOrderDetailContent" class="space-y-2 max-h-60 overflow-y-auto"></div>
-            <div class="border-t pt-3 flex justify-between items-center">
-                <span class="font-bold text-gray-700">المجموع الجملي:</span>
-                <span id="clientOrderDetailTotal" class="font-extrabold text-emerald-600 text-lg">0.000 د.ت</span>
-            </div>
-            <button onclick="closeClientOrderDetailModal()" class="w-full bg-indigo-600 text-white py-2.5 rounded-xl font-bold text-sm shadow-md">إغلاق</button>
         </div>
     </div>
 
@@ -622,6 +596,81 @@
         </div>
     </div>
 
+    <!-- نافذة فاتورة الطلب للأدمن -->
+    <div id="orderInvoiceModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto space-y-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 class="font-bold text-lg text-gray-800"><i class="fa-solid fa-receipt text-indigo-600 ml-2"></i> فاتورة الطلب</h3>
+                <button onclick="closeOrderInvoiceModal()" class="text-gray-400 hover:text-gray-600 text-lg font-bold">&times;</button>
+            </div>
+            <div id="invoiceContentDetails" class="space-y-3 max-h-60 overflow-y-auto"></div>
+            <div class="border-t pt-3 flex justify-between items-center">
+                <span class="font-bold text-gray-700">المجموع الجملي: <span id="invoiceTotalAmount" class="text-emerald-600 text-lg font-extrabold">0.000 د.ت</span></span>
+            </div>
+            <div class="flex gap-2 pt-2">
+                <button onclick="openEditFromInvoice()" class="flex-1 bg-amber-500 text-white py-2.5 rounded-xl font-bold text-sm shadow hover:bg-amber-600">تعديل الطلب</button>
+                <button onclick="confirmDeliveryFromInvoice()" class="flex-1 bg-emerald-600 text-white py-2.5 rounded-xl font-bold text-sm shadow hover:bg-emerald-700">تأكيد وتسليم</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة تعديل الطلب للأدمن -->
+    <div id="editOrderModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto space-y-4">
+            <h3 class="font-bold text-lg text-gray-800"><i class="fa-solid fa-pen-to-square text-indigo-600 ml-2"></i> مراجعة وتعديل الكميات</h3>
+            <div id="editOrderItemsContainer" class="space-y-3 max-h-60 overflow-y-auto"></div>
+            <div class="flex justify-between items-center border-t pt-3">
+                <span class="font-bold text-gray-700">المجموع الجديد: <span id="editOrderTotal" class="text-emerald-600">0.000 د.ت</span></span>
+                <div class="flex gap-2">
+                    <button onclick="closeEditModal()" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-xl text-sm font-bold">إلغاء</button>
+                    <button onclick="saveEditedOrder()" class="bg-indigo-600 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-md">حفظ التعديل</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة اختيار طريقة الخلاص -->
+    <div id="paymentChoiceModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-md w-full mx-4 space-y-4 text-center">
+            <div class="bg-indigo-50 text-indigo-600 w-12 h-12 rounded-2xl flex items-center justify-center mx-auto text-xl">
+                <i class="fa-solid fa-cash-register"></i>
+            </div>
+            <h3 class="font-bold text-xl text-gray-800">اختر طريقة الخلاص</h3>
+            <p id="paymentChoiceTotalText" class="text-sm font-bold text-indigo-600"></p>
+            <div class="space-y-2 pt-2">
+                <button onclick="selectPaymentType('Payé')" class="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold hover:bg-emerald-700 shadow-md">خلاص كاش بالحاضر (Payé)</button>
+                <button onclick="selectPaymentType('Crédit')" class="w-full bg-rose-600 text-white py-3 rounded-xl font-bold hover:bg-rose-700 shadow-md">كريدي كامل (Crédit)</button>
+                <button onclick="openTrancheInputModal()" class="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 shadow-md">خلاص جزئي (Tranche)</button>
+            </div>
+            <button onclick="closePaymentChoiceModal()" class="w-full bg-gray-100 text-gray-600 py-2.5 rounded-xl font-bold text-sm mt-2">إلغاء</button>
+        </div>
+    </div>
+
+    <!-- نافذة الخلاص الجزئي -->
+    <div id="trancheInputModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-sm w-full mx-4 space-y-4 text-center">
+            <h3 class="font-bold text-lg text-gray-800">إدخال مبلغ الخلاص الجزئي</h3>
+            <p id="trancheMaxAmountText" class="text-xs text-gray-500"></p>
+            <input type="number" step="0.001" id="trancheAmountInput" placeholder="أدخل المبلغ المدفوع..." class="border p-3 rounded-xl w-full text-center text-lg font-bold outline-none focus:ring-2 focus:ring-indigo-500">
+            <div class="flex gap-2 pt-2">
+                <button onclick="closeTrancheModal()" class="flex-1 bg-gray-100 text-gray-700 py-2.5 rounded-xl font-bold text-sm">إلغاء</button>
+                <button onclick="confirmTranchePayment()" class="flex-1 bg-indigo-600 text-white py-2.5 rounded-xl font-bold text-sm shadow-md">تم / Valider</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة خلاص الديون للأدمن -->
+    <div id="payCreditModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-sm w-full mx-4 space-y-4 text-center">
+            <h3 class="font-bold text-lg text-gray-800" id="payCreditTitle">تسجيل خلاص دين</h3>
+            <input type="number" step="0.001" id="payCreditAmountInput" placeholder="المبلغ المدفوع..." class="border p-3 rounded-xl w-full text-center text-lg font-bold outline-none focus:ring-2 focus:ring-indigo-500">
+            <div class="flex gap-2 pt-2">
+                <button onclick="closePayCreditModal()" class="flex-1 bg-gray-100 text-gray-700 py-2.5 rounded-xl font-bold text-sm">إلغاء</button>
+                <button onclick="confirmPayCredit()" class="flex-1 bg-indigo-600 text-white py-2.5 rounded-xl font-bold text-sm shadow-md">تم / Valider</button>
+            </div>
+        </div>
+    </div>
+
     <!-- سكربت الفايربيز والتطبيق -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -652,8 +701,8 @@
         window.allRegisteredClients = [];
         window.purchaseInvoices = JSON.parse(localStorage.getItem('purchaseInvoices') || '[]');
         window.stockPurchases = JSON.parse(localStorage.getItem('stockPurchases') || '{}');
+        window.adminPassword = localStorage.getItem('adminPassword') || 'admin123';
 
-        // قائمة الأسعار بدون ليكاموبيل
         window.tariffs = [
             { id: 'Ooredoo_1', operator: 'Ooredoo', name: 'Ticket 1D', buy: 0.950, sell: 1.000 },
             { id: 'Ooredoo_5', operator: 'Ooredoo', name: 'Carte 5D', buy: 4.750, sell: 5.000 },
@@ -897,13 +946,35 @@
 
         function verifyAdminPassword() {
             const pass = document.getElementById('secretAdminPass').value;
-            if (pass === 'admin123' || pass === '1234') {
+            if (pass === window.adminPassword || pass === '1234') {
                 closeAdminModal();
                 showSection('adminDashboard');
                 localStorage.setItem('activeAppSection', 'adminDashboard');
             } else {
                 showCustomAlert('خطأ', 'كلمة مرور الأدمن غير صحيحة!');
             }
+        }
+
+        // نوافذ تغيير كلمة السر للأدمن
+        function openChangePasswordModal() {
+            document.getElementById('newAdminPasswordInput').value = '';
+            document.getElementById('changePasswordModal').classList.remove('hidden');
+        }
+
+        function closeChangePasswordModal() {
+            document.getElementById('changePasswordModal').classList.add('hidden');
+        }
+
+        function saveNewAdminPassword() {
+            let newPass = document.getElementById('newAdminPasswordInput').value.trim();
+            if (!newPass) {
+                showCustomAlert('تنبيه', 'الرجاء إدخال كلمة المرور الجديدة.');
+                return;
+            }
+            window.adminPassword = newPass;
+            localStorage.setItem('adminPassword', newPass);
+            showCustomAlert('نجاح', 'تم تغيير كلمة سر الأدمن بنجاح!');
+            closeChangePasswordModal();
         }
 
         function showSection(section) {
@@ -1038,7 +1109,7 @@
             }
 
             let html = '';
-            myOrders.forEach((o, index) => {
+            myOrders.forEach((o) => {
                 let badgeColor = 'bg-amber-100 text-amber-700';
                 if (o.paymentStatus === 'Payé') badgeColor = 'bg-emerald-100 text-emerald-700';
                 else if (o.paymentStatus === 'Crédit') badgeColor = 'bg-rose-100 text-rose-700';
@@ -1061,6 +1132,60 @@
                 `;
             });
             container.innerHTML = html;
+        }
+
+        // فتح فاتورة الطلب للأدمن (تم إصلاحها بالكامل لتعمل بكفاءة)
+        function openOrderInvoice(orderId) {
+            let order = window.allOrders.find(o => o.id === orderId);
+            if (!order) return;
+            window.activeInvoiceOrderId = orderId;
+            window.activeDeliveryOrderId = orderId;
+            window.activeDeliveryTotal = order.totalSell;
+
+            let container = document.getElementById('invoiceContentDetails');
+            let html = `<div class="bg-indigo-50 p-3 rounded-xl mb-3 text-xs"><p class="font-bold text-gray-800">الحانوت: ${order.clientName} (${order.clientPhone})</p><p class="text-gray-500">العنوان: ${order.clientAddress}</p></div><div class="space-y-2">`;
+            
+            order.items.forEach(i => {
+                html += `<div class="flex justify-between items-center bg-gray-50 p-2.5 rounded-xl border text-sm"><span>[${i.operator}] ${i.name}</span><span class="font-bold">× ${i.qty}</span></div>`;
+            });
+            html += `</div>`;
+
+            container.innerHTML = html;
+            document.getElementById('invoiceTotalAmount').innerText = order.totalSell.toFixed(3) + ' د.ت';
+            document.getElementById('orderInvoiceModal').classList.remove('hidden');
+        }
+
+        function closeOrderInvoiceModal() {
+            document.getElementById('orderInvoiceModal').classList.add('hidden');
+        }
+
+        function openEditFromInvoice() {
+            closeOrderInvoiceModal();
+            openEditOrderModal(window.activeInvoiceOrderId);
+        }
+
+        function confirmDeliveryFromInvoice() {
+            closeOrderInvoiceModal();
+            openPaymentChoiceModal(window.activeInvoiceOrderId, window.activeDeliveryTotal);
+        }
+
+        function openPaymentChoiceModal(orderId, totalSell) {
+            window.activeDeliveryOrderId = orderId;
+            window.activeDeliveryTotal = totalSell;
+            document.getElementById('paymentChoiceTotalText').innerText = `المبلغ الإجمالي المطلوب: ${totalSell.toFixed(3)} د.ت`;
+            document.getElementById('paymentChoiceModal').classList.remove('hidden');
+        }
+
+        function closePaymentChoiceModal() {
+            document.getElementById('paymentChoiceModal').classList.add('hidden');
+        }
+
+        function selectPaymentType(type) {
+            if (type === 'Payé') {
+                window.executeFinalDelivery('Payé', window.activeDeliveryTotal, 0);
+            } else if (type === 'Crédit') {
+                window.executeFinalDelivery('Crédit', 0, window.activeDeliveryTotal);
+            }
         }
 
         // رأس المال والمخزون النهائي

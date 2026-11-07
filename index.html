@@ -810,8 +810,8 @@
             }
         };
 
-        // المزامنة الفورية مع الفايربيز وتحديث كافة البيانات والجداول تلقائياً
-        onSnapshot(query(collection(db, "orders"), orderBy("date", "desc")), (snapshot) => {
+        // المزامنة الفورية مع الفايربيز وجلب الطلبات تلقائياً
+        onSnapshot(query(collection(db, "orders"), orderBy("date", "desc")), async (snapshot) => {
             window.allOrders = [];
             snapshot.forEach((docSnap) => {
                 window.allOrders.push({ id: docSnap.id, ...docSnap.data() });
@@ -819,6 +819,22 @@
             processAdminData();
             if (window.currentClient) renderClientOrders();
         });
+
+        // جلب أسماء الحوانت من مجموعة clients في الفايربيز
+        window.allRegisteredClients = [];
+        async function fetchRegisteredClients() {
+            try {
+                const querySnapshot = await getDocs(collection(db, "clients"));
+                window.allRegisteredClients = [];
+                querySnapshot.forEach((docSnap) => {
+                    window.allRegisteredClients.push(docSnap.data());
+                });
+                processAdminData();
+            } catch (e) {
+                console.error("Error fetching clients:", e);
+            }
+        }
+        fetchRegisteredClients();
 
         window.executeCreditPayment = async function(paidAmount) {
             try {
@@ -912,7 +928,7 @@
             }
         }
 
-        // فتح نوافذ الأدمن المستقلة لكل زر بحد ذاته مع تحديث البيانات فوراً
+        // فتح نوافذ الأدمن المستقلة وتحديث البيانات فوراً
         function openAdminWindow(pageName) {
             document.querySelectorAll('.admin-window').forEach(el => el.classList.add('hidden'));
             const targetWindow = document.getElementById(`window${capitalize(pageName)}`);
@@ -1291,7 +1307,7 @@
             document.getElementById('posCartTotal').innerText = total.toFixed(3) + ' د.ت';
         }
 
-        // تفاصيل إدارة فواتير الشراء (Facture d'achat & Réapprovisionnement)
+        // تفاصيل إدارة فواتير الشراء
         function openPurchaseModal() {
             let container = document.getElementById('purchaseModalItemsContainer');
             let html = '';
@@ -1389,7 +1405,7 @@
             document.getElementById('purchaseDetailModal').classList.add('hidden');
         }
 
-        // معالجة بيانات الأدمن وجلبها للنافذة المفتوحة
+        // معالجة بيانات الأدمن وربطها بالكامل مع الحوانت والفايربيز
         function processAdminData() {
             let dayTotal = 0;
             let monthTotal = 0;
@@ -1402,12 +1418,18 @@
 
             let ordersHtml = '';
             let clientsMap = {};
-            let clientsListHtml = '<option value="">اختر الحانوت لعرض الكشف...</option>';
             let salesCounts = {};
+
+            // تجميع معلومات الحوانت المسجلة أولاً
+            if (window.allRegisteredClients && window.allRegisteredClients.length > 0) {
+                window.allRegisteredClients.forEach(c => {
+                    clientsMap[c.name] = { phone: c.phone, credit: 0 };
+                });
+            }
 
             window.allOrders.forEach((o) => {
                 if (!clientsMap[o.clientName]) {
-                    clientsMap[o.clientName] = { phone: o.clientPhone, credit: 0 };
+                    clientsMap[o.clientName] = { phone: o.clientPhone || 'غير متوفر', credit: 0 };
                 }
 
                 if (o.status === 'مكتمل' || o.status === 'مكتمل (مباشر)') {
@@ -1436,7 +1458,7 @@
                                 </div>
                                 <div>
                                     <h4 class="font-bold text-gray-900 text-base">${o.clientName}</h4>
-                                    <p class="text-xs text-gray-500">${o.clientAddress} - هاتف: ${o.clientPhone}</p>
+                                    <p class="text-xs text-gray-500">${o.clientAddress || ''} - هاتف: ${o.clientPhone}</p>
                                 </div>
                             </div>
                             <div class="flex items-center gap-3">
@@ -1512,6 +1534,8 @@
             }
 
             let creditsTableHtml = '';
+            let clientsListHtml = '<option value="">اختر الحانوت لعرض الكشف...</option>';
+            
             for (let cName in clientsMap) {
                 let cData = clientsMap[cName];
                 clientsListHtml += `<option value="${cName}">${cName}</option>`;
@@ -1541,7 +1565,9 @@
         }
 
         function loadClientReleve() {
-            const clientName = document.getElementById('selectClientReleve').value;
+            const selectEl = document.getElementById('selectClientReleve');
+            if (!selectEl) return;
+            const clientName = selectEl.value;
             const summaryDiv = document.getElementById('clientReleveSummary');
             if (!clientName) {
                 summaryDiv.innerHTML = '<p class="text-gray-400 text-sm text-center py-4">الرجاء اختيار حانوت لعرض الفواتير...</p>';

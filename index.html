@@ -23,7 +23,7 @@
 
     <main class="container mx-auto px-4 py-6">
 
-        <!-- تنبيه عام للحوانت (يظهر تلقائياً إذا كتبه الأدمن) -->
+        <!-- تنبيه عام للحوانت -->
         <div id="broadcastBanner" class="hidden max-w-4xl mx-auto mb-6 bg-amber-500 text-white p-4 rounded-2xl shadow-md flex items-center gap-3">
             <i class="fa-solid fa-bullhorn text-2xl"></i>
             <div>
@@ -129,10 +129,10 @@
             </div>
         </div>
 
-        <!-- ================= 3. لوحة تحكم الأدمن الرئيسية ================= -->
-        <div id="adminDashboardSection" class="hidden space-y-6 max-w-4xl mx-auto">
+        <!-- ================= 3. لوحة تحكم الأدمن الرئيسية (أزرار تفتح نوافذ مستقلة) ================= -->
+        <div id="adminDashboardSection" class="hidden space-y-6 max-w-2xl mx-auto">
             <div class="flex justify-between items-center bg-white p-5 rounded-2xl shadow-sm border">
-                <h3 class="font-bold text-xl text-indigo-900"><i class="fa-solid fa-shield-halved text-indigo-600 ml-2"></i> لوحة تحكم الإدارة الشاملة</h3>
+                <h3 class="font-bold text-xl text-indigo-900"><i class="fa-solid fa-shield-halved text-indigo-600 ml-2"></i> لوحة تحكم الإدارة</h3>
                 <div class="flex gap-2">
                     <button onclick="openRecetteModal()" class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-4 py-2 rounded-xl text-xs font-bold hover:bg-emerald-100 transition flex items-center gap-2">
                         <i class="fa-solid fa-chart-line"></i> المداخيل والمرابيح
@@ -141,186 +141,254 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <!-- القائمة العمودية -->
-                <div class="bg-white p-4 rounded-2xl shadow-sm border space-y-2 h-fit">
-                    <p class="text-xs font-bold text-gray-400 mb-3 px-2">قائمة الإدارة:</p>
-                    <button onclick="switchAdminTab('orders')" id="tabAdminOrders" class="admin-tab w-full text-right bg-indigo-600 text-white px-4 py-3 rounded-xl text-sm font-semibold shadow-sm transition">طلبات التجار (التحضير)</button>
-                    <button onclick="switchAdminTab('stats')" id="tabAdminStats" class="admin-tab w-full text-right bg-gray-50 text-gray-700 hover:bg-gray-100 px-4 py-3 rounded-xl text-sm font-semibold transition">إحصائيات المبيعات</button>
-                    <button onclick="switchAdminTab('stock')" id="tabAdminStock" class="admin-tab w-full text-right bg-gray-50 text-gray-700 hover:bg-gray-100 px-4 py-3 rounded-xl text-sm font-semibold transition">المخزون والشراء (Stock)</button>
-                    <button onclick="switchAdminTab('pos')" id="tabAdminPos" class="admin-tab w-full text-right bg-gray-50 text-gray-700 hover:bg-gray-100 px-4 py-3 rounded-xl text-sm font-semibold transition">البيع المباشر (POS)</button>
-                    <button onclick="switchAdminTab('credits')" id="tabAdminCredits" class="admin-tab w-full text-right bg-gray-50 text-gray-700 hover:bg-gray-100 px-4 py-3 rounded-xl text-sm font-semibold transition">إدارة الكريدي والديون</button>
-                    <button onclick="switchAdminTab('clients')" id="tabAdminClients" class="admin-tab w-full text-right bg-gray-50 text-gray-700 hover:bg-gray-100 px-4 py-3 rounded-xl text-sm font-semibold transition">كشف حساب الحوانت (Relevés)</button>
-                    <button onclick="switchAdminTab('broadcast')" id="tabAdminBroadcast" class="admin-tab w-full text-right bg-gray-50 text-gray-700 hover:bg-gray-100 px-4 py-3 rounded-xl text-sm font-semibold transition">تنبيهات الحوانت</button>
-                    <button onclick="switchAdminTab('tariffs')" id="tabAdminTariffs" class="admin-tab w-full text-right bg-gray-50 text-gray-700 hover:bg-gray-100 px-4 py-3 rounded-xl text-sm font-semibold transition">إدارة الأسعار</button>
-                </div>
+            <div class="bg-white p-6 rounded-3xl shadow-sm border space-y-3">
+                <p class="text-xs font-bold text-gray-400 mb-2">اختر القسم المطلوبة فتحه:</p>
+                
+                <button onclick="openAdminWindow('orders')" class="w-full text-right bg-indigo-600 hover:bg-indigo-700 text-white p-4 rounded-2xl font-bold flex justify-between items-center transition shadow-md">
+                    <span><i class="fa-solid fa-box-archive ml-2"></i> طلبات التجار (التحضير)</span>
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
 
-                <!-- مساحة العرض الرئيسية للأقسام -->
-                <div class="md:col-span-3 space-y-4">
-                    
-                    <!-- تاب الطلبات -->
-                    <div id="adminOrdersContent" class="admin-content space-y-4">
-                        <div class="bg-white rounded-2xl shadow-sm border p-5">
-                            <p class="text-xs text-gray-400 mb-3 font-bold">اضغط على اسم الحانوت لفتح الفاتورة ومراجعتها أو تعديلها:</p>
-                            <div id="ordersListContainer" class="space-y-2">
-                                <p class="text-gray-400 text-center py-6">جاري تحميل الطلبات...</p>
-                            </div>
-                        </div>
-                    </div>
+                <button onclick="openAdminWindow('stats')" class="w-full text-right bg-gray-50 hover:bg-gray-100 border text-gray-800 p-4 rounded-2xl font-bold flex justify-between items-center transition">
+                    <span><i class="fa-solid fa-chart-pie ml-2 text-indigo-600"></i> إحصائيات المبيعات</span>
+                    <i class="fa-solid fa-chevron-left text-gray-400"></i>
+                </button>
 
-                    <!-- تاب إحصائيات المبيعات -->
-                    <div id="adminStatsContent" class="admin-content hidden space-y-4 bg-white p-6 rounded-2xl shadow-sm border">
-                        <h4 class="font-bold text-lg text-gray-800 mb-3"><i class="fa-solid fa-chart-pie text-indigo-600 ml-2"></i> إحصائيات كميات المبيعات حسب المشغل والفئة</h4>
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-right border-collapse">
-                                <thead>
-                                    <tr class="border-b bg-gray-50 text-gray-600 text-sm">
-                                        <th class="p-3">المشغل (Opérateur)</th>
-                                        <th class="p-3">الفئة / النوع</th>
-                                        <th class="p-3">الكمية الإجمالي المباعة</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="salesStatsTableBody"></tbody>
-                            </table>
-                        </div>
-                    </div>
+                <button onclick="openAdminWindow('stock')" class="w-full text-right bg-gray-50 hover:bg-gray-100 border text-gray-800 p-4 rounded-2xl font-bold flex justify-between items-center transition">
+                    <span><i class="fa-solid fa-boxes-stacked ml-2 text-indigo-600"></i> المخزون وفواتير الشراء (Stock & Achats)</span>
+                    <i class="fa-solid fa-chevron-left text-gray-400"></i>
+                </button>
 
-                    <!-- تاب المخزون وشراء الأرصدة (Facture d'achat & Réapprovisionnement) -->
-                    <div id="adminStockContent" class="admin-content hidden space-y-6 bg-white p-6 rounded-2xl shadow-sm border">
-                        <div class="flex justify-between items-center border-b pb-3">
-                            <h4 class="font-bold text-lg text-gray-800"><i class="fa-solid fa-boxes-stacked text-indigo-600 ml-2"></i> إدارة المخزون وشراء الأرصدة</h4>
-                            <button onclick="openPurchaseModal()" class="bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-indigo-700 shadow"><i class="fa-solid fa-plus ml-1"></i> تسجيل فاتورة شراء جديدة</button>
-                        </div>
-                        
-                        <div>
-                            <h5 class="font-bold text-sm text-gray-700 mb-2">حالة المخزون الحالي (Stock Restant)</h5>
-                            <div class="overflow-x-auto">
-                                <table class="w-full text-right border-collapse">
-                                    <thead>
-                                        <tr class="border-b bg-gray-50 text-gray-600 text-sm">
-                                            <th class="p-3">المشغل</th>
-                                            <th class="p-3">الفئة / النوع</th>
-                                            <th class="p-3">المجموع المشتريات</th>
-                                            <th class="p-3">المتبقي في المخزون</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="stockTableBody"></tbody>
-                                </table>
-                            </div>
-                        </div>
+                <button onclick="openAdminWindow('pos')" class="w-full text-right bg-gray-50 hover:bg-gray-100 border text-gray-800 p-4 rounded-2xl font-bold flex justify-between items-center transition">
+                    <span><i class="fa-solid fa-cash-register ml-2 text-indigo-600"></i> البيع المباشر (POS)</span>
+                    <i class="fa-solid fa-chevron-left text-gray-400"></i>
+                </button>
 
-                        <div class="border-t pt-4">
-                            <h5 class="font-bold text-sm text-gray-700 mb-2">سجل فواتير الشراء (Factures d'achat)</h5>
-                            <div id="purchaseInvoicesContainer" class="space-y-2">
-                                <p class="text-gray-400 text-sm text-center py-3">لا توجد فواتير شراء مسجلة بعد.</p>
-                            </div>
-                        </div>
-                    </div>
+                <button onclick="openAdminWindow('credits')" class="w-full text-right bg-gray-50 hover:bg-gray-100 border text-gray-800 p-4 rounded-2xl font-bold flex justify-between items-center transition">
+                    <span><i class="fa-solid fa-hand-holding-dollar ml-2 text-indigo-600"></i> إدارة الكريدي والديون</span>
+                    <i class="fa-solid fa-chevron-left text-gray-400"></i>
+                </button>
 
-                    <!-- تاب POS -->
-                    <div id="adminPosContent" class="admin-content hidden space-y-4 bg-white p-6 rounded-2xl shadow-sm border">
-                        <h4 class="font-bold text-lg text-gray-800 mb-3"><i class="fa-solid fa-cash-register text-indigo-600 ml-2"></i> نقطة بيع مباشرة (POS)</h4>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
-                            <input type="text" id="posClientName" placeholder="اسم الحانوت" class="border p-3 rounded-xl text-sm">
-                            <input type="text" id="posClientPhone" placeholder="رقم الهاتف" class="border p-3 rounded-xl text-sm">
-                            <input type="text" id="posClientAddress" placeholder="العنوان" class="border p-3 rounded-xl text-sm">
-                        </div>
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
-                            <button onclick="selectPosOperator('Ooredoo')" class="bg-red-500 text-white p-3 rounded-xl font-bold text-sm shadow">أوريدو</button>
-                            <button onclick="selectPosOperator('Telecom')" class="bg-blue-500 text-white p-3 rounded-xl font-bold text-sm shadow">تيليكوم</button>
-                            <button onclick="selectPosOperator('Orange')" class="bg-orange-500 text-white p-3 rounded-xl font-bold text-sm shadow">أورنج</button>
-                            <button onclick="selectPosOperator('Lycamobile')" class="bg-purple-500 text-white p-3 rounded-xl font-bold text-sm shadow">لايت / شحن رصيد</button>
-                        </div>
-                        <div id="posProductsSection" class="hidden space-y-4 border-t pt-4">
-                            <h5 id="posSelectedOperatorTitle" class="font-bold text-gray-700"></h5>
-                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="posCardsGrid"></div>
-                            <div class="flex flex-col md:flex-row justify-between items-center border-t pt-4 gap-4">
-                                <span id="posCartTotal" class="text-xl font-extrabold text-emerald-600">0.000 د.ت</span>
-                                <div class="flex items-center gap-3">
-                                    <select id="posPaymentStatus" class="border p-2.5 rounded-xl font-bold text-sm bg-gray-50">
-                                        <option value="Payé">خلاص كاش (Payé)</option>
-                                        <option value="Crédit">كريدي كلي (Crédit)</option>
-                                    </select>
-                                    <button onclick="window.submitPosOrder()" class="bg-emerald-600 text-white px-6 py-2.5 rounded-xl font-bold hover:bg-emerald-700 shadow-md">تأكيد البيع</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <button onclick="openAdminWindow('clients')" class="w-full text-right bg-gray-50 hover:bg-gray-100 border text-gray-800 p-4 rounded-2xl font-bold flex justify-between items-center transition">
+                    <span><i class="fa-solid fa-address-book ml-2 text-indigo-600"></i> كشف حساب الحوانت (Relevés)</span>
+                    <i class="fa-solid fa-chevron-left text-gray-400"></i>
+                </button>
 
-                    <!-- تاب الكريدي -->
-                    <div id="adminCreditsContent" class="admin-content hidden space-y-4 bg-white p-6 rounded-2xl shadow-sm border">
-                        <h4 class="font-bold text-lg text-gray-800 mb-3">إدارة الكريدي والديون</h4>
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-right border-collapse">
-                                <thead>
-                                    <tr class="border-b bg-gray-50 text-gray-600 text-sm">
-                                        <th class="p-3">اسم الحانوت</th>
-                                        <th class="p-3">رقم الهاتف</th>
-                                        <th class="p-3">إجمالي الكريدي (د.ت)</th>
-                                        <th class="p-3">إجراء الخلاص</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="creditsTableBody"></tbody>
-                            </table>
-                        </div>
-                    </div>
+                <button onclick="openAdminWindow('broadcast')" class="w-full text-right bg-gray-50 hover:bg-gray-100 border text-gray-800 p-4 rounded-2xl font-bold flex justify-between items-center transition">
+                    <span><i class="fa-solid fa-bullhorn ml-2 text-indigo-600"></i> تنبيهات الحوانت</span>
+                    <i class="fa-solid fa-chevron-left text-gray-400"></i>
+                </button>
 
-                    <!-- تاب كشف الحساب (بدون تفاصيل زحمة، تفاصيل تفتح عند الضغط) -->
-                    <div id="adminClientsContent" class="admin-content hidden space-y-4 bg-white p-6 rounded-2xl shadow-sm border">
-                        <h4 class="font-bold text-lg text-gray-800 mb-3">كشف حساب الحوانت (Relevés)</h4>
-                        <select id="selectClientReleve" onchange="loadClientReleve()" class="border p-3 rounded-xl w-full md:w-1/2 mb-4 text-sm font-semibold">
-                            <option value="">اختر الحانوت لعرض الكشف...</option>
-                        </select>
-                        <div id="clientReleveSummary" class="space-y-4">
-                            <p class="text-gray-400 text-sm text-center py-4">الرجاء اختيار حانوت لعرض الفواتير...</p>
-                        </div>
-                    </div>
-
-                    <!-- تاب تنبيهات الحوانت (Broadcast) -->
-                    <div id="adminBroadcastContent" class="admin-content hidden space-y-4 bg-white p-6 rounded-2xl shadow-sm border">
-                        <h4 class="font-bold text-lg text-gray-800 mb-3"><i class="fa-solid fa-bullhorn text-indigo-600 ml-2"></i> إرسال تنبيه عام لجميع الحوانت</h4>
-                        <p class="text-xs text-gray-500">اكتب رسالة تنبيه ستظهر مباشرة لكل الحوانت عندما يفتحون المنظومة:</p>
-                        <textarea id="broadcastMessageInput" rows="4" placeholder="اكتب نص التنبيه هنا..." class="border p-3 rounded-xl w-full text-sm outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
-                        <button onclick="sendBroadcastMessage()" class="bg-indigo-600 text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow hover:bg-indigo-700">إرسال التنبيه الآن</button>
-                    </div>
-
-                    <!-- تاب إدارة الأسعار -->
-                    <div id="adminTariffsContent" class="admin-content hidden space-y-4 bg-white p-6 rounded-2xl shadow-sm border">
-                        <h4 class="font-bold text-lg text-gray-800 mb-3">إدارة الأسعار</h4>
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-right border-collapse">
-                                <thead>
-                                    <tr class="border-b bg-gray-50 text-gray-600 text-sm">
-                                        <th class="p-3">المشغل</th>
-                                        <th class="p-3">الفئة</th>
-                                        <th class="p-3">سعر الشراء</th>
-                                        <th class="p-3">سعر البيع</th>
-                                        <th class="p-3">إجراء</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tariffsTableBody"></tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                </div>
+                <button onclick="openAdminWindow('tariffs')" class="w-full text-right bg-gray-50 hover:bg-gray-100 border text-gray-800 p-4 rounded-2xl font-bold flex justify-between items-center transition">
+                    <span><i class="fa-solid fa-tags ml-2 text-indigo-600"></i> إدارة الأسعار</span>
+                    <i class="fa-solid fa-chevron-left text-gray-400"></i>
+                </button>
             </div>
         </div>
 
     </main>
 
-    <!-- ================= النوافذ المنبثقة (Modals) والنظام الجديد للإشعارات النظيفة ================= -->
+    <!-- ================= 4. نوافذ صفحات الأدمن المستقلة (Modals / Windows) ================= -->
 
-    <!-- نافذة تسجيل فاتورة شراء جديدة (Réapprovisionnement) -->
-    <div id="purchaseInvoiceModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50">
-        <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-lg w-full mx-4 space-y-4">
+    <!-- نافذة طلبات التجار -->
+    <div id="windowOrders" class="admin-window fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-40 p-4">
+        <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto space-y-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h4 class="font-bold text-lg text-gray-800"><i class="fa-solid fa-box-archive text-indigo-600 ml-2"></i> طلبات التجار (التحضير)</h4>
+                <button onclick="closeAdminWindow('orders')" class="text-gray-400 hover:text-gray-600 text-lg font-bold">&times;</button>
+            </div>
+            <p class="text-xs text-gray-400 font-bold">اضغط على اسم الحانوت لفتح الفاتورة ومراجعتها أو تعديلها:</p>
+            <div id="ordersListContainer" class="space-y-2"></div>
+            <button onclick="closeAdminWindow('orders')" class="w-full bg-gray-100 text-gray-700 py-2.5 rounded-xl font-bold text-sm">إغلاق</button>
+        </div>
+    </div>
+
+    <!-- نافذة إحصائيات المبيعات -->
+    <div id="windowStats" class="admin-window fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-40 p-4">
+        <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto space-y-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h4 class="font-bold text-lg text-gray-800"><i class="fa-solid fa-chart-pie text-indigo-600 ml-2"></i> إحصائيات كميات المبيعات</h4>
+                <button onclick="closeAdminWindow('stats')" class="text-gray-400 hover:text-gray-600 text-lg font-bold">&times;</button>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-right border-collapse">
+                    <thead>
+                        <tr class="border-b bg-gray-50 text-gray-600 text-sm">
+                            <th class="p-3">المشغل (Opérateur)</th>
+                            <th class="p-3">الفئة / النوع</th>
+                            <th class="p-3">الكمية الإجمالي المباعة</th>
+                        </tr>
+                    </thead>
+                    <tbody id="salesStatsTableBody"></tbody>
+                </table>
+            </div>
+            <button onclick="closeAdminWindow('stats')" class="w-full bg-gray-100 text-gray-700 py-2.5 rounded-xl font-bold text-sm">إغلاق</button>
+        </div>
+    </div>
+
+    <!-- نافذة المخزون وفواتير الشراء -->
+    <div id="windowStock" class="admin-window fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-40 p-4">
+        <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto space-y-6">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h4 class="font-bold text-lg text-gray-800"><i class="fa-solid fa-boxes-stacked text-indigo-600 ml-2"></i> المخزون وفواتير الشراء (Facture d'achat)</h4>
+                <button onclick="closeAdminWindow('stock')" class="text-gray-400 hover:text-gray-600 text-lg font-bold">&times;</button>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-xs text-gray-500">سجل فواتير الشراء وحالة المخزون الحالي:</span>
+                <button onclick="openPurchaseModal()" class="bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-indigo-700 shadow"><i class="fa-solid fa-plus ml-1"></i> تسجيل فاتورة شراء جديدة</button>
+            </div>
+            <div>
+                <h5 class="font-bold text-sm text-gray-700 mb-2">حالة المخزون الحالي (Stock Restant)</h5>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right border-collapse">
+                        <thead>
+                            <tr class="border-b bg-gray-50 text-gray-600 text-sm">
+                                <th class="p-3">المشغل</th>
+                                <th class="p-3">الفئة / النوع</th>
+                                <th class="p-3">المجموع المشتريات</th>
+                                <th class="p-3">المتبقي في المخزون</th>
+                            </tr>
+                        </thead>
+                        <tbody id="stockTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="border-t pt-4">
+                <h5 class="font-bold text-sm text-gray-700 mb-2">سجل فواتير الشراء (Factures d'achat)</h5>
+                <div id="purchaseInvoicesContainer" class="space-y-2">
+                    <p class="text-gray-400 text-sm text-center py-3">لا توجد فواتير شراء مسجلة بعد.</p>
+                </div>
+            </div>
+            <button onclick="closeAdminWindow('stock')" class="w-full bg-gray-100 text-gray-700 py-2.5 rounded-xl font-bold text-sm">إغلاق</button>
+        </div>
+    </div>
+
+    <!-- نافذة البيع المباشر (POS) -->
+    <div id="windowPos" class="admin-window fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-40 p-4">
+        <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto space-y-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h4 class="font-bold text-lg text-gray-800"><i class="fa-solid fa-cash-register text-indigo-600 ml-2"></i> نقطة بيع مباشرة (POS)</h4>
+                <button onclick="closeAdminWindow('pos')" class="text-gray-400 hover:text-gray-600 text-lg font-bold">&times;</button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+                <input type="text" id="posClientName" placeholder="اسم الحانوت" class="border p-3 rounded-xl text-sm">
+                <input type="text" id="posClientPhone" placeholder="رقم الهاتف" class="border p-3 rounded-xl text-sm">
+                <input type="text" id="posClientAddress" placeholder="العنوان" class="border p-3 rounded-xl text-sm">
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+                <button onclick="selectPosOperator('Ooredoo')" class="bg-red-500 text-white p-3 rounded-xl font-bold text-sm shadow">أوريدو</button>
+                <button onclick="selectPosOperator('Telecom')" class="bg-blue-500 text-white p-3 rounded-xl font-bold text-sm shadow">تيليكوم</button>
+                <button onclick="selectPosOperator('Orange')" class="bg-orange-500 text-white p-3 rounded-xl font-bold text-sm shadow">أورنج</button>
+                <button onclick="selectPosOperator('Lycamobile')" class="bg-purple-500 text-white p-3 rounded-xl font-bold text-sm shadow">لايت / شحن رصيد</button>
+            </div>
+            <div id="posProductsSection" class="hidden space-y-4 border-t pt-4">
+                <h5 id="posSelectedOperatorTitle" class="font-bold text-gray-700"></h5>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="posCardsGrid"></div>
+                <div class="flex flex-col md:flex-row justify-between items-center border-t pt-4 gap-4">
+                    <span id="posCartTotal" class="text-xl font-extrabold text-emerald-600">0.000 د.ت</span>
+                    <div class="flex items-center gap-3">
+                        <select id="posPaymentStatus" class="border p-2.5 rounded-xl font-bold text-sm bg-gray-50">
+                            <option value="Payé">خلاص كاش (Payé)</option>
+                            <option value="Crédit">كريدي كلي (Crédit)</option>
+                        </select>
+                        <button onclick="window.submitPosOrder()" class="bg-emerald-600 text-white px-6 py-2.5 rounded-xl font-bold hover:bg-emerald-700 shadow-md">تأكيد البيع</button>
+                    </div>
+                </div>
+            </div>
+            <button onclick="closeAdminWindow('pos')" class="w-full bg-gray-100 text-gray-700 py-2.5 rounded-xl font-bold text-sm mt-4">إغلاق</button>
+        </div>
+    </div>
+
+    <!-- نافذة إدارة الكريدي -->
+    <div id="windowCredits" class="admin-window fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-40 p-4">
+        <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto space-y-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h4 class="font-bold text-lg text-gray-800"><i class="fa-solid fa-hand-holding-dollar text-indigo-600 ml-2"></i> إدارة الكريدي والديون</h4>
+                <button onclick="closeAdminWindow('credits')" class="text-gray-400 hover:text-gray-600 text-lg font-bold">&times;</button>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-right border-collapse">
+                    <thead>
+                        <tr class="border-b bg-gray-50 text-gray-600 text-sm">
+                            <th class="p-3">اسم الحانوت</th>
+                            <th class="p-3">رقم الهاتف</th>
+                            <th class="p-3">إجمالي الكريدي (د.ت)</th>
+                            <th class="p-3">إجراء الخلاص</th>
+                        </tr>
+                    </thead>
+                    <tbody id="creditsTableBody"></tbody>
+                </table>
+            </div>
+            <button onclick="closeAdminWindow('credits')" class="w-full bg-gray-100 text-gray-700 py-2.5 rounded-xl font-bold text-sm">إغلاق</button>
+        </div>
+    </div>
+
+    <!-- نافذة كشف حساب الحوانت (Relevés) -->
+    <div id="windowClients" class="admin-window fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-40 p-4">
+        <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto space-y-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h4 class="font-bold text-lg text-gray-800"><i class="fa-solid fa-address-book text-indigo-600 ml-2"></i> كشف حساب الحوانت (Relevés)</h4>
+                <button onclick="closeAdminWindow('clients')" class="text-gray-400 hover:text-gray-600 text-lg font-bold">&times;</button>
+            </div>
+            <select id="selectClientReleve" onchange="loadClientReleve()" class="border p-3 rounded-xl w-full mb-4 text-sm font-semibold">
+                <option value="">اختر الحانوت لعرض الكشف...</option>
+            </select>
+            <div id="clientReleveSummary" class="space-y-4">
+                <p class="text-gray-400 text-sm text-center py-4">الرجاء اختيار حانوت لعرض الفواتير...</p>
+            </div>
+            <button onclick="closeAdminWindow('clients')" class="w-full bg-gray-100 text-gray-700 py-2.5 rounded-xl font-bold text-sm">إغلاق</button>
+        </div>
+    </div>
+
+    <!-- نافذة تنبيهات الحوانت -->
+    <div id="windowBroadcast" class="admin-window fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-40 p-4">
+        <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-md w-full mx-4 space-y-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h4 class="font-bold text-lg text-gray-800"><i class="fa-solid fa-bullhorn text-indigo-600 ml-2"></i> تنبيهات الحوانت</h4>
+                <button onclick="closeAdminWindow('broadcast')" class="text-gray-400 hover:text-gray-600 text-lg font-bold">&times;</button>
+            </div>
+            <p class="text-xs text-gray-500">اكتب رسالة تنبيه ستظهر مباشرة لكل الحوانت عندما يفتحون المنظومة:</p>
+            <textarea id="broadcastMessageInput" rows="4" placeholder="اكتب نص التنبيه هنا..." class="border p-3 rounded-xl w-full text-sm outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+            <button onclick="sendBroadcastMessage()" class="w-full bg-indigo-600 text-white py-2.5 rounded-xl font-bold text-sm shadow hover:bg-indigo-700">إرسال التنبيه الآن</button>
+            <button onclick="closeAdminWindow('broadcast')" class="w-full bg-gray-100 text-gray-700 py-2.5 rounded-xl font-bold text-sm">إغلاق</button>
+        </div>
+    </div>
+
+    <!-- نافذة إدارة الأسعار -->
+    <div id="windowTariffs" class="admin-window fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-40 p-4">
+        <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto space-y-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h4 class="font-bold text-lg text-gray-800"><i class="fa-solid fa-tags text-indigo-600 ml-2"></i> إدارة الأسعار</h4>
+                <button onclick="closeAdminWindow('tariffs')" class="text-gray-400 hover:text-gray-600 text-lg font-bold">&times;</button>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-right border-collapse">
+                    <thead>
+                        <tr class="border-b bg-gray-50 text-gray-600 text-sm">
+                            <th class="p-3">المشغل</th>
+                            <th class="p-3">الفئة</th>
+                            <th class="p-3">سعر الشراء</th>
+                            <th class="p-3">سعر البيع</th>
+                            <th class="p-3">إجراء</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tariffsTableBody"></tbody>
+                </table>
+            </div>
+            <button onclick="closeAdminWindow('tariffs')" class="w-full bg-gray-100 text-gray-700 py-2.5 rounded-xl font-bold text-sm">إغلاق</button>
+        </div>
+    </div>
+
+    <!-- ================= النوافذ المنبثقة الإضافية (Modals) ================= -->
+
+    <!-- نافذة تسجيل فاتورة شراء جديدة -->
+    <div id="purchaseInvoiceModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto space-y-4">
             <div class="flex justify-between items-center border-b pb-3">
                 <h3 class="font-bold text-lg text-gray-800"><i class="fa-solid fa-file-invoice-dollar text-indigo-600 ml-2"></i> تسجيل فاتورة شراء جديدة</h3>
                 <button onclick="closePurchaseModal()" class="text-gray-400 hover:text-gray-600 text-lg font-bold">&times;</button>
             </div>
-            <div class="space-y-3 max-h-60 overflow-y-auto" id="purchaseModalItemsContainer">
-                <!-- تعبئة تلقائية أصناف الكوارط وشحن الرصيد مع سعر الشراء والكمية -->
-            </div>
+            <div class="space-y-3 max-h-60 overflow-y-auto" id="purchaseModalItemsContainer"></div>
             <div class="border-t pt-3 flex justify-between items-center">
                 <span class="font-bold text-gray-700">المجموع الجملي للفاتورة: <span id="purchaseModalTotal" class="text-emerald-600 text-lg font-extrabold">0.000 د.ت</span></span>
             </div>
@@ -332,8 +400,8 @@
     </div>
 
     <!-- نافذة تفاصيل فاتورة شراء قديمة -->
-    <div id="purchaseDetailModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50">
-        <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-lg w-full mx-4 space-y-4">
+    <div id="purchaseDetailModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto space-y-4">
             <div class="flex justify-between items-center border-b pb-3">
                 <h3 class="font-bold text-lg text-gray-800"><i class="fa-solid fa-receipt text-indigo-600 ml-2"></i> تفاصيل فاتورة الشراء</h3>
                 <button onclick="closePurchaseDetailModal()" class="text-gray-400 hover:text-gray-600 text-lg font-bold">&times;</button>
@@ -344,8 +412,8 @@
     </div>
 
     <!-- نافذة تفاصيل الفاتورة في كشف الحساب -->
-    <div id="releveDetailModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50">
-        <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-md w-full mx-4 space-y-4">
+    <div id="releveDetailModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto space-y-4">
             <div class="flex justify-between items-center border-b pb-3">
                 <h3 class="font-bold text-lg text-gray-800"><i class="fa-solid fa-file-invoice text-indigo-600 ml-2"></i> تفاصيل الفاتورة</h3>
                 <button onclick="closeReleveDetailModal()" class="text-gray-400 hover:text-gray-600 text-lg font-bold">&times;</button>
@@ -359,8 +427,8 @@
         </div>
     </div>
 
-    <!-- نافذة الإشعارات النظيفة بدلاً من الـ Alert القديم -->
-    <div id="customAlertModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50">
+    <!-- نافذة الإشعارات النظيفة -->
+    <div id="customAlertModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
         <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-sm w-full mx-4 space-y-4 text-center">
             <div id="customAlertIcon" class="bg-indigo-100 text-indigo-600 w-12 h-12 rounded-2xl flex items-center justify-center mx-auto text-xl">
                 <i class="fa-solid fa-circle-info"></i>
@@ -371,7 +439,8 @@
         </div>
     </div>
 
-    <div id="adminPasswordModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50">
+    <!-- نافذة كلمة سر الأدمن -->
+    <div id="adminPasswordModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
         <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-sm w-full mx-4 space-y-4">
             <h3 class="font-bold text-lg text-gray-800 text-center"><i class="fa-solid fa-lock text-indigo-600 ml-2"></i> دخول لوحة الإدارة</h3>
             <p class="text-xs text-gray-500 text-center">أدخل كلمة المرور السرية للأدمن</p>
@@ -383,7 +452,8 @@
         </div>
     </div>
 
-    <div id="recetteModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50">
+    <!-- نافذة المداخيل والمرابيح -->
+    <div id="recetteModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
         <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-md w-full mx-4 space-y-4">
             <div class="flex justify-between items-center border-b pb-3">
                 <h3 class="font-bold text-lg text-gray-800"><i class="fa-solid fa-chart-line text-emerald-600 ml-2"></i> تفاصيل المداخيل والمرابيح</h3>
@@ -412,8 +482,9 @@
         </div>
     </div>
 
-    <div id="orderInvoiceModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50">
-        <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-lg w-full mx-4 space-y-4">
+    <!-- نافذة فاتورة الطلب -->
+    <div id="orderInvoiceModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto space-y-4">
             <div class="flex justify-between items-center border-b pb-3">
                 <h3 class="font-bold text-lg text-gray-800"><i class="fa-solid fa-receipt text-indigo-600 ml-2"></i> فاتورة الطلب</h3>
                 <button onclick="closeOrderInvoiceModal()" class="text-gray-400 hover:text-gray-600 text-lg font-bold">&times;</button>
@@ -429,8 +500,9 @@
         </div>
     </div>
 
-    <div id="editOrderModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50">
-        <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-lg w-full mx-4 space-y-4">
+    <!-- نافذة تعديل الطلب -->
+    <div id="editOrderModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto space-y-4">
             <h3 class="font-bold text-lg text-gray-800"><i class="fa-solid fa-pen-to-square text-indigo-600 ml-2"></i> مراجعة وتعديل الكميات</h3>
             <div id="editOrderItemsContainer" class="space-y-3 max-h-60 overflow-y-auto"></div>
             <div class="flex justify-between items-center border-t pt-3">
@@ -443,7 +515,8 @@
         </div>
     </div>
 
-    <div id="paymentChoiceModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50">
+    <!-- نافذة اختيار طريقة الخلاص -->
+    <div id="paymentChoiceModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
         <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-md w-full mx-4 space-y-4 text-center">
             <div class="bg-indigo-50 text-indigo-600 w-12 h-12 rounded-2xl flex items-center justify-center mx-auto text-xl">
                 <i class="fa-solid fa-cash-register"></i>
@@ -459,7 +532,8 @@
         </div>
     </div>
 
-    <div id="trancheInputModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50">
+    <!-- نافذة الخلاص الجزئي -->
+    <div id="trancheInputModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
         <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-sm w-full mx-4 space-y-4 text-center">
             <h3 class="font-bold text-lg text-gray-800">إدخال مبلغ الخلاص الجزئي</h3>
             <p id="trancheMaxAmountText" class="text-xs text-gray-500"></p>
@@ -471,7 +545,8 @@
         </div>
     </div>
 
-    <div id="payCreditModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50">
+    <!-- نافذة خلاص الديون -->
+    <div id="payCreditModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
         <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-sm w-full mx-4 space-y-4 text-center">
             <h3 class="font-bold text-lg text-gray-800" id="payCreditTitle">تسجيل خلاص دين</h3>
             <input type="number" step="0.001" id="payCreditAmountInput" placeholder="المبلغ المدفوع..." class="border p-3 rounded-xl w-full text-center text-lg font-bold outline-none focus:ring-2 focus:ring-indigo-500">
@@ -482,7 +557,7 @@
         </div>
     </div>
 
-    <!-- سكربت الفايربيز الموحد -->
+    <!-- سكربت الفايربيز -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, onSnapshot, query, orderBy, where, writeBatch } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -808,7 +883,6 @@
             if (pass === 'admin123' || pass === '1234') {
                 closeAdminModal();
                 showSection('adminDashboard');
-                localStorage.setItem('activeAdminTab', 'orders');
             } else {
                 showCustomAlert('خطأ', 'كلمة مرور الأدمن غير صحيحة!');
             }
@@ -818,6 +892,7 @@
             document.getElementById('clientAuthSection').classList.add('hidden');
             document.getElementById('clientDashboardSection').classList.add('hidden');
             document.getElementById('adminDashboardSection').classList.add('hidden');
+            document.querySelectorAll('.admin-window').forEach(el => el.classList.add('hidden'));
 
             if (section === 'clientAuth') {
                 if (window.currentClient) {
@@ -829,26 +904,25 @@
             } else if (section === 'adminDashboard') {
                 document.getElementById('adminDashboardSection').classList.remove('hidden');
                 renderAdminTariffs();
-                let savedTab = localStorage.getItem('activeAdminTab') || 'orders';
-                switchAdminTab(savedTab);
                 processAdminData();
             }
         }
 
-        function switchAdminTab(tab) {
-            document.querySelectorAll('.admin-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.admin-tab').forEach(el => {
-                el.className = "admin-tab w-full text-right bg-gray-50 text-gray-700 hover:bg-gray-100 px-4 py-3 rounded-xl text-sm font-semibold transition";
-            });
+        // فتح نوافذ الأدمن المستقلة لكل زر بحد ذاته
+        function openAdminWindow(pageName) {
+            document.querySelectorAll('.admin-window').forEach(el => el.classList.add('hidden'));
+            const targetWindow = document.getElementById(`window${capitalize(pageName)}`);
+            if (targetWindow) {
+                targetWindow.classList.remove('hidden');
+                processAdminData();
+            }
+        }
 
-            const targetContent = document.getElementById(`admin${capitalize(tab)}Content`);
-            const targetTab = document.getElementById(`tabAdmin${capitalize(tab)}`);
-
-            if (targetContent) targetContent.classList.remove('hidden');
-            if (targetTab) targetTab.className = "admin-tab w-full text-right bg-indigo-600 text-white px-4 py-3 rounded-xl text-sm font-semibold shadow-sm transition";
-
-            localStorage.setItem('activeAdminTab', tab);
-            processAdminData();
+        function closeAdminWindow(pageName) {
+            const targetWindow = document.getElementById(`window${capitalize(pageName)}`);
+            if (targetWindow) {
+                targetWindow.classList.add('hidden');
+            }
         }
 
         function capitalize(s) {
@@ -863,7 +937,6 @@
             return 'Orders';
         }
 
-        // إرسال تنبيه عام للحوانت
         function sendBroadcastMessage() {
             let msg = document.getElementById('broadcastMessageInput').value.trim();
             if (!msg) {
@@ -873,6 +946,7 @@
             localStorage.setItem('broadcastMessage', msg);
             showCustomAlert('نجاح', 'تم إرسال التنبيه بنجاح لجميع الحوانت!');
             document.getElementById('broadcastMessageInput').value = '';
+            closeAdminWindow('broadcast');
         }
 
         function checkBroadcastBanner() {
@@ -885,7 +959,6 @@
             }
         }
 
-        // نافذة التنبيهات النظيفة بدلاً من الـ Alert
         function showCustomAlert(title, message) {
             document.getElementById('customAlertTitle').innerText = title;
             document.getElementById('customAlertMessage').innerText = message;
@@ -1281,7 +1354,6 @@
             window.purchaseInvoices.unshift(newInvoice);
             localStorage.setItem('purchaseInvoices', JSON.stringify(window.purchaseInvoices));
 
-            // تحديث الكميات في الستوك
             items.forEach(i => {
                 if (!window.stockPurchases[i.id]) window.stockPurchases[i.id] = 0;
                 window.stockPurchases[i.id] += i.qty;
@@ -1312,7 +1384,7 @@
             document.getElementById('purchaseDetailModal').classList.add('hidden');
         }
 
-        // معالجة بيانات الأدمن وتحديث الجداول
+        // معالجة بيانات الأدمن وجلبها للنافذة المفتوحة
         function processAdminData() {
             let dayTotal = 0;
             let monthTotal = 0;
@@ -1375,15 +1447,10 @@
             document.getElementById('modalRecetteMonth').innerText = monthTotal.toFixed(3) + ' د.ت';
             document.getElementById('modalTotalBenefice').innerText = totalBenefice.toFixed(3) + ' د.ت';
             document.getElementById('modalTotalCredit').innerText = totalCredit.toFixed(3) + ' د.ت';
-            document.getElementById('adminPendingOrders').innerText = pendingCount;
 
             const ordersContainer = document.getElementById('ordersListContainer');
             if (ordersContainer) {
-                if (ordersHtml) {
-                    ordersContainer.innerHTML = ordersHtml;
-                } else {
-                    ordersContainer.innerHTML = '<p class="text-gray-400 text-center py-6">لا توجد طلبات معلقة للتحضير حالياً.</p>';
-                }
+                ordersContainer.innerHTML = ordersHtml || '<p class="text-gray-400 text-center py-6">لا توجد طلبات معلقة للتحضير حالياً.</p>';
             }
 
             let statsHtml = '';
@@ -1420,7 +1487,6 @@
             const stockBody = document.getElementById('stockTableBody');
             if (stockBody) stockBody.innerHTML = stockHtml;
 
-            // عرض فواتير الشراء
             let invoicesHtml = '';
             window.purchaseInvoices.forEach(inv => {
                 invoicesHtml += `
@@ -1469,7 +1535,6 @@
             if (typeof loadClientReleve === 'function') loadClientReleve();
         }
 
-        // كشف حساب الحوانت: عرض الفواتير بملخص اليوم والمبلغ ومن غير تفاصيل إلا بالضغط
         function loadClientReleve() {
             const clientName = document.getElementById('selectClientReleve').value;
             const summaryDiv = document.getElementById('clientReleveSummary');

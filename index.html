@@ -106,7 +106,7 @@
                 </div>
             </div>
 
-            <!-- أزرار اختيار المشغلين بحجم مدمج ومريح -->
+            <!-- أزرار اختيار المشغلين -->
             <div class="grid grid-cols-3 gap-3">
                 <button onclick="selectOperator('Ooredoo')" class="bg-gradient-to-r from-red-500 to-rose-600 text-white p-3 rounded-xl font-bold shadow-md shadow-rose-200 hover:scale-[1.02] transition flex flex-col items-center justify-center gap-1 text-xs md:text-sm">
                     <i class="fa-solid fa-signal text-lg"></i> أوريدو
@@ -119,7 +119,7 @@
                 </button>
             </div>
 
-            <!-- فئات المنتجات (مع دعم الكتابة المباشرة للرصيد المباشر وتثبيت المجموع في الأسفل) -->
+            <!-- فئات المنتجات -->
             <div id="productsSection" class="bg-white p-5 rounded-2xl shadow-sm border border-indigo-50 hidden space-y-4">
                 <h3 id="selectedOperatorTitle" class="text-base font-bold text-gray-800 border-b pb-2"></h3>
                 
@@ -810,9 +810,16 @@
             for (let id in window.cart) {
                 if (window.cart[id] > 0) {
                     const item = window.tariffs.find(t => t.id === id);
-                    itemsOrdered.push({ ...item, qty: window.cart[id] });
-                    totalSell += item.sell * window.cart[id];
-                    totalBuy += item.buy * window.cart[id];
+                    if (item.id.includes('recharge')) {
+                        let amount = window.cart[id];
+                        itemsOrdered.push({ ...item, qty: 1, sell: amount, buy: amount, name: `شحن رصيد مباشر (${amount} د.ت)` });
+                        totalSell += amount;
+                        totalBuy += amount;
+                    } else {
+                        itemsOrdered.push({ ...item, qty: window.cart[id] });
+                        totalSell += item.sell * window.cart[id];
+                        totalBuy += item.buy * window.cart[id];
+                    }
                 }
             }
 
@@ -841,7 +848,7 @@
                 showCustomAlert('نجاح', 'تم إرسال طلبك بنجاح إلى الإدارة في انتظار التحضير والتسليم!');
                 window.cart = {};
                 document.querySelectorAll('[id^="qty_"]').forEach(el => {
-                    if (el.tagName === 'INPUT') el.value = '0';
+                    if (el.tagName === 'INPUT') el.value = '';
                     else el.innerText = '0';
                 });
                 calculateTotal();
@@ -873,9 +880,16 @@
             for (let id in window.posCart) {
                 if (window.posCart[id] > 0) {
                     const item = window.tariffs.find(t => t.id === id);
-                    itemsOrdered.push({ ...item, qty: window.posCart[id] });
-                    totalSell += item.sell * window.posCart[id];
-                    totalBuy += item.buy * window.posCart[id];
+                    if (item.id.includes('recharge')) {
+                        let amount = window.posCart[id];
+                        itemsOrdered.push({ ...item, qty: 1, sell: amount, buy: amount, name: `شحن رصيد مباشر (${amount} د.ت)` });
+                        totalSell += amount;
+                        totalBuy += amount;
+                    } else {
+                        itemsOrdered.push({ ...item, qty: window.posCart[id] });
+                        totalSell += item.sell * window.posCart[id];
+                        totalBuy += item.buy * window.posCart[id];
+                    }
                 }
             }
 
@@ -1211,7 +1225,7 @@
             let html = `<div class="bg-indigo-50 p-3 rounded-xl mb-3 text-xs"><p class="font-bold text-gray-800">التاريخ: ${orderDate}</p><p class="text-gray-500">الحالة: ${paymentStatus} (${status})</p></div><div class="space-y-2">`;
             
             items.forEach(i => {
-                html += `<div class="flex justify-between items-center bg-gray-50 p-2.5 rounded-xl border text-sm"><span>[${i.operator}] ${i.name}</span><span class="font-bold">× ${i.qty}</span></div>`;
+                html += `<div class="flex justify-between items-center bg-gray-50 p-2.5 rounded-xl border text-sm"><span>${i.name}</span><span class="font-bold">${i.sell ? i.sell.toFixed(3) + ' د.ت' : '× ' + i.qty}</span></div>`;
             });
             html += `</div>`;
 
@@ -1271,7 +1285,7 @@
             let html = `<div class="bg-indigo-50 p-3 rounded-xl mb-3 text-xs"><p class="font-bold text-gray-800">الحانوت: ${order.clientName} (${order.clientPhone})</p><p class="text-gray-500">العنوان: ${order.clientAddress}</p></div><div class="space-y-2">`;
             
             order.items.forEach(i => {
-                html += `<div class="flex justify-between items-center bg-gray-50 p-2.5 rounded-xl border text-sm"><span>[${i.operator}] ${i.name}</span><span class="font-bold">× ${i.qty}</span></div>`;
+                html += `<div class="flex justify-between items-center bg-gray-50 p-2.5 rounded-xl border text-sm"><span>${i.name}</span><span class="font-bold">${i.sell ? i.sell.toFixed(3) + ' د.ت' : '× ' + i.qty}</span></div>`;
             });
             html += `</div>`;
 
@@ -1310,29 +1324,21 @@
             let total = 0;
 
             window.editingItems.forEach((item, index) => {
-                total += item.sell * item.qty;
+                total += (item.sell && item.id.includes('recharge')) ? item.sell : (item.sell * item.qty);
                 html += `
                     <div class="flex justify-between items-center bg-gray-50 p-3 rounded-xl border">
                         <div>
-                            <p class="font-bold text-sm text-gray-800">[${item.operator}] ${item.name}</p>
-                            <p class="text-xs text-indigo-600">${item.sell > 0 ? item.sell.toFixed(3) + ' د.ت للقطعة' : 'شحن رصيد'}</p>
+                            <p class="font-bold text-sm text-gray-800">${item.name}</p>
+                            <p class="text-xs text-indigo-600">${item.id.includes('recharge') ? 'رصيد مباشر' : item.sell.toFixed(3) + ' د.ت للقطعة'}</p>
                         </div>
                         <div class="flex items-center gap-2">
-                            <button onclick="updateEditQty(${index}, -1)" class="bg-white border w-7 h-7 rounded-lg font-bold">-</button>
-                            <span class="font-bold text-sm w-6 text-center">${item.qty}</span>
-                            <button onclick="updateEditQty(${index}, 1)" class="bg-indigo-600 text-white w-7 h-7 rounded-lg font-bold">+</button>
+                            <span class="font-bold text-sm">${item.id.includes('recharge') ? item.sell + ' د.ت' : '× ' + item.qty}</span>
                         </div>
                     </div>
                 `;
             });
             container.innerHTML = html;
             document.getElementById('editOrderTotal').innerText = total.toFixed(3) + ' د.ت';
-        }
-
-        function updateEditQty(index, change) {
-            window.editingItems[index].qty += change;
-            if (window.editingItems[index].qty < 0) window.editingItems[index].qty = 0;
-            renderEditItems();
         }
 
         function closeEditModal() {
@@ -1345,14 +1351,15 @@
             let totalSell = 0;
             let totalBuy = 0;
             window.editingItems.forEach(i => {
-                totalSell += i.sell * i.qty;
-                totalBuy += i.buy * i.qty;
+                let itemTotal = i.id.includes('recharge') ? i.sell : (i.sell * i.qty);
+                totalSell += itemTotal;
+                totalBuy += itemTotal;
             });
 
             try {
                 const orderRef = window.doc(window.db, "orders", window.editingOrderId);
                 await window.updateDoc(orderRef, {
-                    items: window.editingItems.filter(i => i.qty > 0),
+                    items: window.editingItems.filter(i => i.id.includes('recharge') ? i.sell > 0 : i.qty > 0),
                     totalSell: totalSell,
                     totalBuy: totalBuy,
                     benefice: totalSell - totalBuy,
@@ -1462,19 +1469,23 @@
             window.allOrders.forEach(o => {
                 if (o.status === 'مكتمل' || o.status === 'مكتمل (مباشر)') {
                     o.items.forEach(i => {
-                        if (!salesCounts[i.id]) salesCounts[i.id] = 0;
-                        salesCounts[i.id] += i.qty;
+                        if (!i.id.includes('recharge')) {
+                            if (!salesCounts[i.id]) salesCounts[i.id] = 0;
+                            salesCounts[i.id] += i.qty;
+                        }
                     });
                 }
             });
 
             window.tariffs.forEach(t => {
-                let purchased = window.stockPurchases[t.id] || 0;
-                let sold = salesCounts[t.id] || 0;
-                let remaining = purchased - sold;
-                if (remaining > 0) {
-                    totalCapitalBuy += remaining * t.buy;
-                    totalStockSell += remaining * t.sell;
+                if (!t.id.includes('recharge')) {
+                    let purchased = window.stockPurchases[t.id] || 0;
+                    let sold = salesCounts[t.id] || 0;
+                    let remaining = purchased - sold;
+                    if (remaining > 0) {
+                        totalCapitalBuy += remaining * t.buy;
+                        totalStockSell += remaining * t.sell;
+                    }
                 }
             });
 
@@ -1639,520 +1650,6 @@
 
         function closeRecetteModal() {
             document.getElementById('recetteModal').classList.add('hidden');
-        }
-
-        function selectOperator(operator) {
-            window.currentOperator = operator;
-            document.getElementById('productsSection').classList.remove('hidden');
-            document.getElementById('selectedOperatorTitle').innerText = `اختر الكميات لـ: ${operator}`;
-            
-            const opTariffs = window.tariffs.filter(t => t.operator === operator);
-            let gridHtml = '';
-            opTariffs.forEach(t => {
-                let currentQty = window.cart[t.id] || 0;
-                let isRecharge = t.id.includes('recharge');
-                
-                if (isRecharge) {
-                    gridHtml += `
-                        <div class="bg-indigo-50/70 p-3 rounded-2xl border border-indigo-200 flex flex-col justify-between col-span-2">
-                            <div>
-                                <span class="text-xs text-indigo-500 font-semibold">${t.operator}</span>
-                                <h4 class="font-bold text-gray-800 text-sm">${t.name}</h4>
-                            </div>
-                            <div class="mt-2 flex items-center gap-2">
-                                <input type="number" min="0" step="0.001" id="qty_${t.id}" value="${currentQty}" oninput="updateRechargeQty('${t.id}', this.value)" placeholder="المبلغ بـ د.ت" class="border p-2 rounded-xl w-full text-center font-extrabold text-sm bg-white">
-                                <span class="text-xs text-gray-500 font-bold">د.ت</span>
-                            </div>
-                        </div>
-                    `;
-                } else {
-                    gridHtml += `
-                        <div class="bg-indigo-50/50 p-3 rounded-2xl border border-indigo-100 flex flex-col justify-between">
-                            <div>
-                                <span class="text-xs text-indigo-500 font-semibold">${t.operator}</span>
-                                <h4 class="font-bold text-gray-800 text-sm">${t.name}</h4>
-                                <p class="text-emerald-600 font-extrabold text-xs">${t.sell.toFixed(3)} د.ت</p>
-                            </div>
-                            <div class="mt-3 flex items-center justify-between">
-                                <button onclick="updateQty('${t.id}', -1)" class="bg-white border text-gray-700 hover:bg-gray-100 w-8 h-8 rounded-xl font-bold shadow-sm">-</button>
-                                <span id="qty_${t.id}" class="font-extrabold text-sm">${currentQty}</span>
-                                <button onclick="updateQty('${t.id}', 1)" class="bg-indigo-600 text-white hover:bg-indigo-700 w-8 h-8 rounded-xl font-bold shadow-sm">+</button>
-                            </div>
-                        </div>
-                    `;
-                }
-            });
-            document.getElementById('cardsGrid').innerHTML = gridHtml;
-            calculateTotal();
-        }
-
-        function updateQty(id, change) {
-            if (!window.cart[id]) window.cart[id] = 0;
-            window.cart[id] += change;
-            if (window.cart[id] < 0) window.cart[id] = 0;
-            let qtyEl = document.getElementById(`qty_${id}`);
-            if (qtyEl) qtyEl.innerText = window.cart[id];
-            calculateTotal();
-        }
-
-        function updateRechargeQty(id, val) {
-            let amount = parseFloat(val) || 0;
-            window.cart[id] = amount;
-            calculateTotal();
-        }
-
-        function calculateTotal() {
-            let total = 0;
-            for (let id in window.cart) {
-                const item = window.tariffs.find(t => t.id === id);
-                if (item) {
-                    if (item.id.includes('recharge')) {
-                        total += window.cart[id] || 0;
-                    } else if (item.sell > 0) {
-                        total += item.sell * window.cart[id];
-                    }
-                }
-            }
-            document.getElementById('cartTotal').innerText = total.toFixed(3) + ' د.ت';
-        }
-
-        function selectPosOperator(operator) {
-            window.posOperator = operator;
-            document.getElementById('posProductsSection').classList.remove('hidden');
-            document.getElementById('posSelectedOperatorTitle').innerText = `اختر للبيع المباشر: ${operator}`;
-            
-            const opTariffs = window.tariffs.filter(t => t.operator === operator);
-            let gridHtml = '';
-            opTariffs.forEach(t => {
-                let currentPosQty = window.posCart[t.id] || 0;
-                let isRecharge = t.id.includes('recharge');
-
-                if (isRecharge) {
-                    gridHtml += `
-                        <div class="bg-gray-50 p-3 rounded-xl border flex flex-col justify-between col-span-2">
-                            <div>
-                                <span class="text-xs text-gray-500">${t.name}</span>
-                            </div>
-                            <div class="mt-2 flex items-center gap-2">
-                                <input type="number" min="0" step="0.001" id="pos_qty_${t.id}" value="${currentPosQty}" oninput="updatePosRechargeQty('${t.id}', this.value)" placeholder="المبلغ بـ د.ت" class="border p-2 rounded-xl w-full text-center font-extrabold text-sm bg-white">
-                                <span class="text-xs text-gray-500 font-bold">د.ت</span>
-                            </div>
-                        </div>
-                    `;
-                } else {
-                    gridHtml += `
-                        <div class="bg-gray-50 p-3 rounded-xl border flex flex-col justify-between">
-                            <div>
-                                <span class="text-xs text-gray-500">${t.name}</span>
-                                <p class="text-emerald-600 font-bold text-xs">${t.sell.toFixed(3)} د.ت</p>
-                            </div>
-                            <div class="mt-2 flex items-center justify-between">
-                                <button onclick="updatePosQty('${t.id}', -1)" class="bg-white border w-7 h-7 rounded font-bold">-</button>
-                                <span id="pos_qty_${t.id}" class="font-bold">${currentPosQty}</span>
-                                <button onclick="updatePosQty('${t.id}', 1)" class="bg-indigo-600 text-white w-7 h-7 rounded font-bold">+</button>
-                            </div>
-                        </div>
-                    `;
-                }
-            });
-            document.getElementById('posCardsGrid').innerHTML = gridHtml;
-        }
-
-        function updatePosQty(id, change) {
-            if (!window.posCart[id]) window.posCart[id] = 0;
-            window.posCart[id] += change;
-            if (window.posCart[id] < 0) window.posCart[id] = 0;
-            let posQtyEl = document.getElementById(`pos_qty_${id}`);
-            if (posQtyEl) posQtyEl.innerText = window.posCart[id];
-            calculatePosTotal();
-        }
-
-        function updatePosRechargeQty(id, val) {
-            let amount = parseFloat(val) || 0;
-            window.posCart[id] = amount;
-            calculatePosTotal();
-        }
-
-        function calculatePosTotal() {
-            let total = 0;
-            for (let i in window.posCart) {
-                const item = window.tariffs.find(t => t.id === i);
-                if (item) {
-                    if (item.id.includes('recharge')) {
-                        total += window.posCart[i] || 0;
-                    } else if (item.sell > 0) {
-                        total += item.sell * window.posCart[i];
-                    }
-                }
-            }
-            document.getElementById('posCartTotal').innerText = total.toFixed(3) + ' د.ت';
-        }
-
-        // تفاصيل إدارة فواتير الشراء
-        function openPurchaseModal() {
-            let container = document.getElementById('purchaseModalItemsContainer');
-            let html = '';
-            window.tariffs.forEach(t => {
-                html += `
-                    <div class="flex justify-between items-center bg-gray-50 p-3 rounded-xl border gap-2">
-                        <div class="flex-1">
-                            <p class="font-bold text-xs text-indigo-900">[${t.operator}] ${t.name}</p>
-                            <div class="flex items-center gap-2 mt-1">
-                                <input type="number" step="0.001" placeholder="سعر الشراء" id="p_buy_${t.id}" value="${t.buy}" oninput="calculatePurchaseTotal()" class="border p-1.5 rounded-lg w-24 text-center text-xs">
-                                <span class="text-xs text-gray-400">د.ت</span>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-xs font-bold text-gray-600">الكمية:</span>
-                            <input type="number" min="0" value="0" id="p_qty_${t.id}" oninput="calculatePurchaseTotal()" class="border p-1.5 rounded-lg w-20 text-center font-bold text-sm">
-                        </div>
-                    </div>
-                `;
-            });
-            container.innerHTML = html;
-            document.getElementById('purchaseModalTotal').innerText = '0.000 د.ت';
-            document.getElementById('purchaseInvoiceModal').classList.remove('hidden');
-        }
-
-        function closePurchaseModal() {
-            document.getElementById('purchaseInvoiceModal').classList.add('hidden');
-        }
-
-        function calculatePurchaseTotal() {
-            let total = 0;
-            window.tariffs.forEach(t => {
-                let qty = parseInt(document.getElementById(`p_qty_${t.id}`).value) || 0;
-                let buyPrice = parseFloat(document.getElementById(`p_buy_${t.id}`).value) || 0;
-                total += qty * buyPrice;
-            });
-            document.getElementById('purchaseModalTotal').innerText = total.toFixed(3) + ' د.ت';
-        }
-
-        function savePurchaseInvoice() {
-            let items = [];
-            let totalAmount = 0;
-
-            window.tariffs.forEach(t => {
-                let qty = parseInt(document.getElementById(`p_qty_${t.id}`).value) || 0;
-                let buyPrice = parseFloat(document.getElementById(`p_buy_${t.id}`).value) || 0;
-                if (qty > 0) {
-                    items.push({ ...t, qty, buyPrice });
-                    totalAmount += qty * buyPrice;
-                }
-            });
-
-            if (items.length === 0) {
-                showCustomAlert('تنبيه', 'لم تكتب المقادير أو الكميات! الرجاء إدخال كمية لشحن رصيد واحد على الأقل.');
-                return;
-            }
-
-            let newInvoice = {
-                id: Date.now().toString(),
-                date: new Date().toISOString(),
-                items: items,
-                totalAmount: totalAmount
-            };
-
-            window.purchaseInvoices.unshift(newInvoice);
-            localStorage.setItem('purchaseInvoices', JSON.stringify(window.purchaseInvoices));
-
-            items.forEach(i => {
-                if (!window.stockPurchases[i.id]) window.stockPurchases[i.id] = 0;
-                window.stockPurchases[i.id] += i.qty;
-            });
-            localStorage.setItem('stockPurchases', JSON.stringify(window.stockPurchases));
-
-            showCustomAlert('نجاح', 'تم تسجيل فاتورة الشراء بنجاح وتحديث المخزون!');
-            closePurchaseModal();
-            processAdminData();
-        }
-
-        function deletePurchaseInvoice(invoiceId) {
-            let invIndex = window.purchaseInvoices.findIndex(i => i.id === invoiceId);
-            if (invIndex === -1) return;
-
-            let inv = window.purchaseInvoices[invIndex];
-
-            inv.items.forEach(i => {
-                if (window.stockPurchases[i.id]) {
-                    window.stockPurchases[i.id] -= i.qty;
-                    if (window.stockPurchases[i.id] < 0) window.stockPurchases[i.id] = 0;
-                }
-            });
-            localStorage.setItem('stockPurchases', JSON.stringify(window.stockPurchases));
-
-            window.purchaseInvoices.splice(invIndex, 1);
-            localStorage.setItem('purchaseInvoices', JSON.stringify(window.purchaseInvoices));
-
-            showCustomAlert('نجاح', 'تم حذف فاتورة الشراء وتعديل المخزون بنجاح!');
-            processAdminData();
-        }
-
-        function openPurchaseDetail(invoiceId) {
-            let inv = window.purchaseInvoices.find(i => i.id === invoiceId);
-            if (!inv) return;
-            let container = document.getElementById('purchaseDetailContent');
-            let html = `<div class="bg-indigo-50 p-3 rounded-xl mb-3 text-xs font-bold text-gray-800">تاريخ الفاتورة: ${new Date(inv.date).toLocaleString()}</div><div class="space-y-2">`;
-            
-            inv.items.forEach(i => {
-                html += `<div class="flex justify-between items-center bg-gray-50 p-2.5 rounded-xl border text-sm"><span>[${i.operator}] ${i.name} (سعر الشراء: ${i.buyPrice.toFixed(3)})</span><span class="font-bold">× ${i.qty}</span></div>`;
-            });
-            html += `</div><div class="border-t pt-2 mt-2 font-bold text-right text-emerald-600">المجموع: ${inv.totalAmount.toFixed(3)} د.ت</div>`;
-            
-            container.innerHTML = html;
-            document.getElementById('purchaseDetailModal').classList.remove('hidden');
-        }
-
-        function closePurchaseDetailModal() {
-            document.getElementById('purchaseDetailModal').classList.add('hidden');
-        }
-
-        function processAdminData() {
-            let dayTotal = 0;
-            let monthTotal = 0;
-            let totalBenefice = 0;
-            let totalCredit = 0;
-
-            const today = new Date().toISOString().slice(0, 10);
-            const thisMonth = new Date().toISOString().slice(0, 7);
-
-            let ordersHtml = '';
-            let clientsMap = {};
-            let salesCounts = {};
-
-            if (window.allRegisteredClients && window.allRegisteredClients.length > 0) {
-                window.allRegisteredClients.forEach(c => {
-                    clientsMap[c.name] = { phone: c.phone, credit: 0 };
-                });
-            }
-
-            window.allOrders.forEach((o) => {
-                if (!clientsMap[o.clientName]) {
-                    clientsMap[o.clientName] = { phone: o.clientPhone || 'غير متوفر', credit: 0 };
-                }
-
-                if (o.status === 'مكتمل' || o.status === 'مكتمل (مباشر)') {
-                    if (o.paidAmount) dayTotal += (o.date.slice(0, 10) === today ? o.paidAmount : 0);
-                    if (o.paidAmount) monthTotal += (o.date.slice(0, 7) === thisMonth ? o.paidAmount : 0);
-                    
-                    if (o.benefice) totalBenefice += o.benefice;
-
-                    let currentCred = o.creditAmount !== undefined ? o.creditAmount : (o.paymentStatus === 'Crédit' ? o.totalSell : 0);
-                    totalCredit += currentCred;
-                    clientsMap[o.clientName].credit += currentCred;
-
-                    o.items.forEach(i => {
-                        if (!salesCounts[i.id]) salesCounts[i.id] = { operator: i.operator, name: i.name, qty: 0 };
-                        salesCounts[i.id].qty += i.qty;
-                    });
-                }
-
-                if (o.status === 'قيد الانتظار للتحضير') {
-                    ordersHtml += `
-                        <button onclick="openOrderInvoice('${o.id}')" class="w-full text-right bg-indigo-50/70 hover:bg-indigo-100 border border-indigo-200 p-4 rounded-2xl flex justify-between items-center transition shadow-sm mb-2">
-                            <div class="flex items-center gap-3">
-                                <div class="bg-indigo-600 text-white w-10 h-10 rounded-xl flex items-center justify-center font-bold">
-                                    <i class="fa-solid fa-store"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold text-gray-900 text-base">${o.clientName}</h4>
-                                    <p class="text-xs text-gray-500">${o.clientAddress || ''} - هاتف: ${o.clientPhone}</p>
-                                </div>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <span class="font-extrabold text-indigo-600 text-sm">${o.totalSell.toFixed(3)} د.ت</span>
-                                <span class="bg-indigo-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow">فتح الفاتورة</span>
-                            </div>
-                        </button>
-                    `;
-                }
-            });
-
-            document.getElementById('modalRecetteDay').innerText = dayTotal.toFixed(3) + ' د.ت';
-            document.getElementById('modalRecetteMonth').innerText = monthTotal.toFixed(3) + ' د.ت';
-            document.getElementById('modalTotalBenefice').innerText = totalBenefice.toFixed(3) + ' د.ت';
-            document.getElementById('modalTotalCredit').innerText = totalCredit.toFixed(3) + ' د.ت';
-
-            const ordersContainer = document.getElementById('ordersListContainer');
-            if (ordersContainer) {
-                ordersContainer.innerHTML = ordersHtml || '<p class="text-gray-400 text-center py-6">لا توجد طلبات معلقة للتحضير حالياً.</p>';
-            }
-
-            let statsHtml = '';
-            for (let id in salesCounts) {
-                let s = salesCounts[id];
-                statsHtml += `
-                    <tr class="border-b text-sm">
-                        <td class="p-3 font-semibold text-indigo-900">${s.operator}</td>
-                        <td class="p-3">${s.name}</td>
-                        <td class="p-3 font-extrabold text-emerald-600">${s.qty} قطعة</td>
-                    </tr>
-                `;
-            }
-            const statsBody = document.getElementById('salesStatsTableBody');
-            if (statsBody) {
-                statsBody.innerHTML = statsHtml || `<tr><td colspan="3" class="text-center py-4 text-gray-400">لا توجد مبيعات مكتملة بعد.</td></tr>`;
-            }
-
-            let stockHtml = '';
-            window.tariffs.forEach(t => {
-                let sold = salesCounts[t.id] ? salesCounts[t.id].qty : 0;
-                let purchased = window.stockPurchases[t.id] || 0;
-                let remainingStock = purchased - sold;
-
-                stockHtml += `
-                    <tr class="border-b text-sm">
-                        <td class="p-3 font-semibold">${t.operator}</td>
-                        <td class="p-3">${t.name}</td>
-                        <td class="p-3 font-bold">${purchased} قطعة</td>
-                        <td class="p-3 font-extrabold ${remainingStock > 5 ? 'text-emerald-600' : 'text-rose-600'}">${remainingStock} قطعة</td>
-                    </tr>
-                `;
-            });
-            const stockBody = document.getElementById('stockTableBody');
-            if (stockBody) stockBody.innerHTML = stockHtml;
-
-            let invoicesHtml = '';
-            window.purchaseInvoices.forEach(inv => {
-                invoicesHtml += `
-                    <div class="bg-gray-50 border p-3 rounded-2xl transition flex justify-between items-center text-sm shadow-sm">
-                        <div onclick="openPurchaseDetail('${inv.id}')" class="flex-1 cursor-pointer">
-                            <span class="font-bold text-indigo-900"><i class="fa-solid fa-file-invoice ml-1"></i> فاتورة شراء بتاريخ: ${new Date(inv.date).toLocaleDateString()}</span>
-                            <span class="font-extrabold text-emerald-600 block mt-1">${inv.totalAmount.toFixed(3)} د.ت</span>
-                        </div>
-                        <div>
-                            <button onclick="deletePurchaseInvoice('${inv.id}')" class="bg-rose-50 hover:bg-rose-100 text-rose-600 px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1 shadow-sm">
-                                <i class="fa-solid fa-trash-can"></i> حذف الفاتورة
-                            </button>
-                        </div>
-                    </div>
-                `;
-            });
-            const invContainer = document.getElementById('purchaseInvoicesContainer');
-            if (invContainer) {
-                invContainer.innerHTML = invoicesHtml || '<p class="text-gray-400 text-sm text-center py-3">لا توجد فواتير شراء مسجلة بعد.</p>';
-            }
-
-            let creditsTableHtml = '';
-            let clientsListHtml = '<option value="">اختر الحانوت لعرض الكشف...</option>';
-            let posClientsListHtml = '<option value="">اختر الحانوت...</option>';
-            
-            for (let cName in clientsMap) {
-                let cData = clientsMap[cName];
-                clientsListHtml += `<option value="${cName}">${cName}</option>`;
-                posClientsListHtml += `<option value="${cName}">${cName}</option>`;
-                
-                creditsTableHtml += `
-                    <tr class="border-b text-sm">
-                        <td class="p-3 font-semibold">${cName}</td>
-                        <td class="p-3">${cData.phone}</td>
-                        <td class="p-3 font-extrabold ${cData.credit > 0 ? 'text-rose-600' : 'text-emerald-600'}">${cData.credit.toFixed(3)} د.ت</td>
-                        <td class="p-3">
-                            <button onclick="openPayCreditModal('${cName}')" class="bg-indigo-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold hover:bg-indigo-700 shadow-sm">تسجيل خلاص (Solder)</button>
-                        </td>
-                    </tr>
-                `;
-            }
-            const creditsBody = document.getElementById('creditsTableBody');
-            if (creditsBody) creditsBody.innerHTML = creditsTableHtml;
-
-            const selectReleve = document.getElementById('selectClientReleve');
-            if (selectReleve) {
-                let currentVal = selectReleve.value;
-                selectReleve.innerHTML = clientsListHtml;
-                selectReleve.value = currentVal;
-            }
-
-            const posSelect = document.getElementById('posRegisteredClientSelect');
-            if (posSelect) {
-                let currentPosVal = posSelect.value;
-                posSelect.innerHTML = posClientsListHtml;
-                posSelect.value = currentPosVal;
-            }
-
-            if (typeof loadClientReleve === 'function') loadClientReleve();
-        }
-
-        function loadClientReleve() {
-            const selectEl = document.getElementById('selectClientReleve');
-            if (!selectEl) return;
-            const clientName = selectEl.value;
-            const summaryDiv = document.getElementById('clientReleveSummary');
-            if (!clientName) {
-                summaryDiv.innerHTML = '<p class="text-gray-400 text-sm text-center py-4">الرجاء اختيار حانوت لعرض الفواتير...</p>';
-                return;
-            }
-
-            let clientOrders = window.allOrders.filter(o => o.clientName === clientName);
-            if (clientOrders.length === 0) {
-                summaryDiv.innerHTML = '<p class="text-gray-400 text-sm text-center py-4">لا توجد فواتير مسجلة لهذا الحانوت.</p>';
-                return;
-            }
-
-            let html = `<p class="text-xs text-gray-500 font-bold mb-2">اضغط على أي فاتورة لعرض تفاصيلها:</p><div class="space-y-2">`;
-            
-            clientOrders.forEach(o => {
-                let dateStr = new Date(o.date).toLocaleDateString('ar-TN', { year: 'numeric', month: 'numeric', day: 'numeric' });
-                let timeStr = new Date(o.date).toLocaleTimeString('ar-TN', { hour: '2-digit', minute: '2-digit' });
-
-                html += `
-                    <div onclick='openReleveDetailModal(${JSON.stringify(o.items)}, ${o.totalSell})' class="bg-gray-50 hover:bg-indigo-50/50 border border-gray-200 p-4 rounded-2xl cursor-pointer transition flex justify-between items-center shadow-sm">
-                        <div>
-                            <span class="text-xs font-bold text-indigo-600"><i class="fa-regular fa-calendar ml-1"></i> ${dateStr} - ${timeStr}</span>
-                            <p class="text-xs text-gray-500 mt-1">الحالة: <span class="font-bold text-gray-800">${o.paymentStatus}</span></p>
-                        </div>
-                        <div class="text-left">
-                            <span class="font-extrabold text-emerald-600 text-base">${o.totalSell.toFixed(3)} د.ت</span>
-                            <i class="fa-solid fa-chevron-left text-xs text-gray-400 mr-2"></i>
-                        </div>
-                    </div>
-                `;
-            });
-            html += `</div>`;
-            summaryDiv.innerHTML = html;
-        }
-
-        window.openReleveDetailModal = function(items, totalSell) {
-            let container = document.getElementById('releveModalItemsContainer');
-            let html = '';
-            items.forEach(i => {
-                html += `<div class="flex justify-between items-center bg-gray-50 p-2.5 rounded-xl border text-sm"><span>[${i.operator}] ${i.name}</span><span class="font-bold">× ${i.qty}</span></div>`;
-            });
-            container.innerHTML = html;
-            document.getElementById('releveModalTotal').innerText = totalSell.toFixed(3) + ' د.ت';
-            document.getElementById('releveDetailModal').classList.remove('hidden');
-        };
-
-        function closeReleveDetailModal() {
-            document.getElementById('releveDetailModal').classList.add('hidden');
-        }
-
-        function renderAdminTariffs() {
-            let html = '';
-            window.tariffs.forEach(t => {
-                html += `
-                    <tr class="border-b text-sm">
-                        <td class="p-3 font-semibold">${t.operator}</td>
-                        <td class="p-3">${t.name}</td>
-                        <td class="p-3"><input type="number" step="0.001" value="${t.buy}" id="buy_${t.id}" class="border p-1.5 rounded-xl w-24 text-center"></td>
-                        <td class="p-3"><input type="number" step="0.001" value="${t.sell}" id="sell_${t.id}" class="border p-1.5 rounded-xl w-24 text-center"></td>
-                        <td class="p-3"><button onclick="updateTariff('${t.id}')" class="bg-indigo-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow-sm">حفظ</button></td>
-                    </tr>
-                `;
-            });
-            const tariffsBody = document.getElementById('tariffsTableBody');
-            if (tariffsBody) tariffsBody.innerHTML = html;
-        }
-
-        function updateTariff(id) {
-            const newBuy = parseFloat(document.getElementById(`buy_${id}`).value);
-            const newSell = parseFloat(document.getElementById(`sell_${id}`).value);
-            const tariff = window.tariffs.find(t => t.id === id);
-            if (tariff) {
-                tariff.buy = newBuy;
-                tariff.sell = newSell;
-                showCustomAlert('نجاح', 'تم تحديث السعر بنجاح!');
-            }
         }
     </script>
 </body>

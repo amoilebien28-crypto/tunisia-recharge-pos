@@ -142,7 +142,7 @@
             </div>
 
             <div class="bg-white p-6 rounded-3xl shadow-sm border space-y-3">
-                <p class="text-xs font-bold text-gray-400 mb-2">اختر القسم المطلوبة فتحه:</p>
+                <p class="text-xs font-bold text-gray-400 mb-2">اختر القسم المطلوب فتحه:</p>
                 
                 <button onclick="openAdminWindow('orders')" class="w-full text-right bg-indigo-600 hover:bg-indigo-700 text-white p-4 rounded-2xl font-bold flex justify-between items-center transition shadow-md">
                     <span><i class="fa-solid fa-box-archive ml-2"></i> طلبات التجار (التحضير)</span>
@@ -741,6 +741,7 @@
                 closePaymentChoiceModal();
                 closeTrancheModal();
                 closeOrderInvoiceModal();
+                processAdminData();
             } catch (e) {
                 console.error("Error delivering order:", e);
                 showCustomAlert('خطأ', 'حدث خطأ أثناء الحفظ.');
@@ -802,12 +803,14 @@
                 document.getElementById('posClientPhone').value = '';
                 document.getElementById('posClientAddress').value = '';
                 document.getElementById('posProductsSection').classList.add('hidden');
+                processAdminData();
             } catch (e) {
                 console.error("Error pos order:", e);
                 showCustomAlert('خطأ', 'حدث خطأ أثناء الحفظ.');
             }
         };
 
+        // المزامنة الفورية مع الفايربيز وتحديث كافة البيانات والجداول تلقائياً
         onSnapshot(query(collection(db, "orders"), orderBy("date", "desc")), (snapshot) => {
             window.allOrders = [];
             snapshot.forEach((docSnap) => {
@@ -851,6 +854,7 @@
                 await batch.commit();
                 showCustomAlert('نجاح', 'تم تسجيل الخلاص بنجاح وتحديث الكريدي!');
                 closePayCreditModal();
+                processAdminData();
             } catch (e) {
                 console.error("Error paying credit:", e);
                 showCustomAlert('خطأ', 'حدث خطأ أثناء التحديث.');
@@ -908,7 +912,7 @@
             }
         }
 
-        // فتح نوافذ الأدمن المستقلة لكل زر بحد ذاته
+        // فتح نوافذ الأدمن المستقلة لكل زر بحد ذاته مع تحديث البيانات فوراً
         function openAdminWindow(pageName) {
             document.querySelectorAll('.admin-window').forEach(el => el.classList.add('hidden'));
             const targetWindow = document.getElementById(`window${capitalize(pageName)}`);
@@ -1241,6 +1245,7 @@
                 });
                 showCustomAlert('نجاح', 'تم تحديث الطلب بنجاح!');
                 closeEditModal();
+                processAdminData();
             } catch (e) {
                 console.error("Error updating order:", e);
                 showCustomAlert('خطأ', 'حدث خطأ عند تعديل الكمية: ' + e.message);

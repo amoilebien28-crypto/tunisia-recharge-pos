@@ -1651,6 +1651,155 @@
         function closeRecetteModal() {
             document.getElementById('recetteModal').classList.add('hidden');
         }
+
+        // الدوال المسؤولة عن تشغيل شحن الرصيد المباشر (أصل المشكل)
+        function updateRechargeQty(id, val) {
+            let amount = parseFloat(val) || 0;
+            window.cart[id] = amount;
+            calculateTotal();
+        }
+
+        function updatePosRechargeQty(id, val) {
+            let amount = parseFloat(val) || 0;
+            window.posCart[id] = amount;
+            calculatePosTotal();
+        }
+
+        function selectOperator(operator) {
+            window.currentOperator = operator;
+            document.getElementById('productsSection').classList.remove('hidden');
+            document.getElementById('selectedOperatorTitle').innerText = `اختر الكميات لـ: ${operator}`;
+            
+            const opTariffs = window.tariffs.filter(t => t.operator === operator);
+            let gridHtml = '';
+            opTariffs.forEach(t => {
+                let currentQty = window.cart[t.id] || 0;
+                let isRecharge = t.id.includes('recharge');
+                
+                if (isRecharge) {
+                    gridHtml += `
+                        <div class="bg-indigo-50/70 p-3 rounded-2xl border border-indigo-200 flex flex-col justify-between col-span-2">
+                            <div>
+                                <span class="text-xs text-indigo-500 font-semibold">${t.operator}</span>
+                                <h4 class="font-bold text-gray-800 text-sm">${t.name}</h4>
+                            </div>
+                            <div class="mt-2 flex items-center gap-2">
+                                <input type="number" min="0" step="0.001" id="qty_${t.id}" value="${currentQty || ''}" oninput="updateRechargeQty('${t.id}', this.value)" placeholder="المبلغ بـ د.ت" class="border p-2 rounded-xl w-full text-center font-extrabold text-sm bg-white">
+                                <span class="text-xs text-gray-500 font-bold">د.ت</span>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    gridHtml += `
+                        <div class="bg-indigo-50/50 p-3 rounded-2xl border border-indigo-100 flex flex-col justify-between">
+                            <div>
+                                <span class="text-xs text-indigo-500 font-semibold">${t.operator}</span>
+                                <h4 class="font-bold text-gray-800 text-sm">${t.name}</h4>
+                                <p class="text-emerald-600 font-extrabold text-xs">${t.sell.toFixed(3)} د.ت</p>
+                            </div>
+                            <div class="mt-3 flex items-center justify-between">
+                                <button onclick="updateQty('${t.id}', -1)" class="bg-white border text-gray-700 hover:bg-gray-100 w-8 h-8 rounded-xl font-bold shadow-sm">-</button>
+                                <span id="qty_${t.id}" class="font-extrabold text-sm">${currentQty}</span>
+                                <button onclick="updateQty('${t.id}', 1)" class="bg-indigo-600 text-white hover:bg-indigo-700 w-8 h-8 rounded-xl font-bold shadow-sm">+</button>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+            document.getElementById('cardsGrid').innerHTML = gridHtml;
+            calculateTotal();
+        }
+
+        function updateQty(id, change) {
+            if (!window.cart[id]) window.cart[id] = 0;
+            window.cart[id] += change;
+            if (window.cart[id] < 0) window.cart[id] = 0;
+            let qtyEl = document.getElementById(`qty_${id}`);
+            if (qtyEl) qtyEl.innerText = window.cart[id];
+            calculateTotal();
+        }
+
+        function calculateTotal() {
+            let total = 0;
+            for (let id in window.cart) {
+                const item = window.tariffs.find(t => t.id === id);
+                if (item) {
+                    if (item.id.includes('recharge')) {
+                        total += window.cart[id] || 0;
+                    } else if (item.sell > 0) {
+                        total += item.sell * window.cart[id];
+                    }
+                }
+            }
+            document.getElementById('cartTotal').innerText = total.toFixed(3) + ' د.ت';
+        }
+
+        function selectPosOperator(operator) {
+            window.posOperator = operator;
+            document.getElementById('posProductsSection').classList.remove('hidden');
+            document.getElementById('posSelectedOperatorTitle').innerText = `اختر للبيع المباشر: ${operator}`;
+            
+            const opTariffs = window.tariffs.filter(t => t.operator === operator);
+            let gridHtml = '';
+            opTariffs.forEach(t => {
+                let currentPosQty = window.posCart[t.id] || 0;
+                let isRecharge = t.id.includes('recharge');
+
+                if (isRecharge) {
+                    gridHtml += `
+                        <div class="bg-gray-50 p-3 rounded-xl border flex flex-col justify-between col-span-2">
+                            <div>
+                                <span class="text-xs text-gray-500">${t.name}</span>
+                            </div>
+                            <div class="mt-2 flex items-center gap-2">
+                                <input type="number" min="0" step="0.001" id="pos_qty_${t.id}" value="${currentPosQty || ''}" oninput="updatePosRechargeQty('${t.id}', this.value)" placeholder="المبلغ بـ د.ت" class="border p-2 rounded-xl w-full text-center font-extrabold text-sm bg-white">
+                                <span class="text-xs text-gray-500 font-bold">د.ت</span>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    gridHtml += `
+                        <div class="bg-gray-50 p-3 rounded-xl border flex flex-col justify-between">
+                            <div>
+                                <span class="text-xs text-gray-500">${t.name}</span>
+                                <p class="text-emerald-600 font-bold text-xs">${t.sell.toFixed(3)} د.ت</p>
+                            </div>
+                            <div class="mt-2 flex items-center justify-between">
+                                <button onclick="updatePosQty('${t.id}', -1)" class="bg-white border w-7 h-7 rounded font-bold">-</button>
+                                <span id="pos_qty_${t.id}" class="font-bold">${currentPosQty}</span>
+                                <button onclick="updatePosQty('${t.id}', 1)" class="bg-indigo-600 text-white w-7 h-7 rounded font-bold">+</button>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+            document.getElementById('posCardsGrid').innerHTML = gridHtml;
+            calculatePosTotal();
+        }
+
+        function updatePosQty(id, change) {
+            if (!window.posCart[id]) window.posCart[id] = 0;
+            window.posCart[id] += change;
+            if (window.posCart[id] < 0) window.posCart[id] = 0;
+            let posQtyEl = document.getElementById(`pos_qty_${id}`);
+            if (posQtyEl) posQtyEl.innerText = window.posCart[id];
+            calculatePosTotal();
+        }
+
+        function calculatePosTotal() {
+            let total = 0;
+            for (let i in window.posCart) {
+                const item = window.tariffs.find(t => t.id === i);
+                if (item) {
+                    if (item.id.includes('recharge')) {
+                        total += window.posCart[i] || 0;
+                    } else if (item.sell > 0) {
+                        total += item.sell * window.posCart[i];
+                    }
+                }
+            }
+            document.getElementById('posCartTotal').innerText = total.toFixed(3) + ' د.ت';
+        }
     </script>
 </body>
 </html>

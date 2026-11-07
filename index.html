@@ -312,7 +312,7 @@
         </div>
     </div>
 
-    <!-- نافذة البيع المباشر (POS) - خيارين فقط (Payé أو Crédit) -->
+    <!-- نافذة البيع المباشر (POS) -->
     <div id="windowPos" class="admin-window fixed inset-0 bg-indigo-900/40 backdrop-blur-md hidden flex items-center justify-center z-40 p-2 md:p-6">
         <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-5xl w-full h-[95vh] flex flex-col justify-between overflow-hidden">
             <div class="overflow-y-auto pr-1 flex-1 space-y-4">
@@ -652,6 +652,22 @@
                     <button onclick="saveEditedOrder()" class="bg-indigo-600 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-md">حفظ التعديل</button>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- نافذة اختيار طريقة الخلاص (تحتوي على خيارين فقط: Payé أو Crédit) -->
+    <div id="paymentChoiceModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-md w-full mx-4 space-y-4 text-center">
+            <div class="bg-indigo-50 text-indigo-600 w-12 h-12 rounded-2xl flex items-center justify-center mx-auto text-xl">
+                <i class="fa-solid fa-cash-register"></i>
+            </div>
+            <h3 class="font-bold text-xl text-gray-800">اختر طريقة الخلاص</h3>
+            <p id="paymentChoiceTotalText" class="text-sm font-bold text-indigo-600"></p>
+            <div class="space-y-3 pt-2">
+                <button onclick="selectPaymentType('Payé')" class="w-full bg-emerald-600 text-white py-3.5 rounded-xl font-bold hover:bg-emerald-700 shadow-md">خلاص كاش بالحاضر (Payé)</button>
+                <button onclick="selectPaymentType('Crédit')" class="w-full bg-rose-600 text-white py-3.5 rounded-xl font-bold hover:bg-rose-700 shadow-md">كريدي كامل (Crédit)</button>
+            </div>
+            <button onclick="closePaymentChoiceModal()" class="w-full bg-gray-100 text-gray-600 py-2.5 rounded-xl font-bold text-sm mt-2">إلغاء</button>
         </div>
     </div>
 
@@ -1175,14 +1191,14 @@
             document.getElementById('orderInvoiceModal').classList.add('hidden');
         }
 
-        // تم إصلاح التداخل لكي يفتح نافذة التعديل بسلاسة
         function openEditFromInvoice() {
-            document.getElementById('orderInvoiceModal').classList.add('hidden');
+            closeOrderInvoiceModal();
             openEditOrderModal(window.activeInvoiceOrderId);
         }
 
+        // تم إصلاح زر تأكيد التسليم ليفتح نافذة خيارات الخلاص مباشرة
         function confirmDeliveryFromInvoice() {
-            document.getElementById('orderInvoiceModal').classList.add('hidden');
+            closeOrderInvoiceModal();
             openPaymentChoiceModal(window.activeInvoiceOrderId, window.activeDeliveryTotal);
         }
 

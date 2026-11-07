@@ -123,163 +123,152 @@
         <!-- ================= 3. لوحة تحكم الأدمن (Admin Dashboard) ================= -->
         <div id="adminDashboardSection" class="hidden space-y-6">
             <div class="flex justify-between items-center bg-white p-5 rounded-2xl shadow-sm border">
-                <h3 class="font-bold text-xl text-indigo-900"><i class="fa-solid fa-shield-halved text-indigo-600 ml-2"></i> لوحة تحكم الإدارة الشاملة</h3>
-                <button onclick="showSection('clientAuth')" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-xl text-xs font-bold hover:bg-gray-200 transition">إغلاق لوحة التحكم</button>
-            </div>
-
-            <!-- إحصائيات الأدمن -->
-            <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
-                <div class="bg-white p-5 rounded-2xl shadow-sm border border-indigo-50">
-                    <p class="text-gray-400 text-xs font-semibold">مداخيل اليوم (Payé)</p>
-                    <h3 id="adminRecetteDay" class="text-2xl font-extrabold text-gray-800 mt-1">0.000 د.ت</h3>
-                </div>
-                <div class="bg-white p-5 rounded-2xl shadow-sm border border-indigo-50">
-                    <p class="text-gray-400 text-xs font-semibold">مداخيل الشهر (Payé)</p>
-                    <h3 id="adminRecetteMonth" class="text-2xl font-extrabold text-gray-800 mt-1">0.000 د.ت</h3>
-                </div>
-                <div class="bg-white p-5 rounded-2xl shadow-sm border border-indigo-50">
-                    <p class="text-gray-400 text-xs font-semibold">إجمالي الأرباح (Bénéfices)</p>
-                    <h3 id="adminTotalBenefice" class="text-2xl font-extrabold text-emerald-600 mt-1">0.000 د.ت</h3>
-                </div>
-                <div class="bg-white p-5 rounded-2xl shadow-sm border border-indigo-50">
-                    <p class="text-gray-400 text-xs font-semibold">إجمالي ديون الكريدي</p>
-                    <h3 id="adminTotalCredit" class="text-2xl font-extrabold text-rose-600 mt-1">0.000 د.ت</h3>
-                </div>
-                <div class="bg-white p-5 rounded-2xl shadow-sm border border-indigo-50">
-                    <p class="text-gray-400 text-xs font-semibold">الطلبات قيد الانتظار</p>
-                    <h3 id="adminPendingOrders" class="text-2xl font-extrabold text-indigo-600 mt-1">0</h3>
+                <h3 class="font-bold text-xl text-indigo-900"><i class="fa-solid fa-shield-halved text-indigo-600 ml-2"></i> لوحة تحكم الإدارة</h3>
+                <div class="flex gap-2">
+                    <!-- زر المداخيل والمرابيح المصغر -->
+                    <button onclick="openRecetteModal()" class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-4 py-2 rounded-xl text-xs font-bold hover:bg-emerald-100 transition flex items-center gap-2">
+                        <i class="fa-solid fa-chart-line"></i> المداخيل والمرابيح
+                    </button>
+                    <button onclick="showSection('clientAuth')" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-xl text-xs font-bold hover:bg-gray-200 transition">إغلاق</button>
                 </div>
             </div>
 
-            <!-- أزرار التنقل بين أقسام الأدمن (أضيفت: إحصائيات المبيعات + إدارة المخزون) -->
-            <div class="flex gap-2 border-b pb-3 overflow-x-auto">
-                <button onclick="switchAdminTab('orders')" id="tabAdminOrders" class="admin-tab bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-md shadow-indigo-100">طلبات التجار (التحضير)</button>
-                <button onclick="switchAdminTab('stats')" id="tabAdminStats" class="admin-tab bg-white text-gray-600 px-5 py-2.5 rounded-xl text-sm font-semibold border">إحصائيات المبيعات</button>
-                <button onclick="switchAdminTab('stock')" id="tabAdminStock" class="admin-tab bg-white text-gray-600 px-5 py-2.5 rounded-xl text-sm font-semibold border">إدارة الشراء والمخزون (Stock)</button>
-                <button onclick="switchAdminTab('pos')" id="tabAdminPos" class="admin-tab bg-white text-gray-600 px-5 py-2.5 rounded-xl text-sm font-semibold border">البيع المباشر (POS)</button>
-                <button onclick="switchAdminTab('credits')" id="tabAdminCredits" class="admin-tab bg-white text-gray-600 px-5 py-2.5 rounded-xl text-sm font-semibold border">إدارة الكريدي والديون</button>
-                <button onclick="switchAdminTab('clients')" id="tabAdminClients" class="admin-tab bg-white text-gray-600 px-5 py-2.5 rounded-xl text-sm font-semibold border">كشف حساب الحوانت (Relevés)</button>
-                <button onclick="switchAdminTab('tariffs')" id="tabAdminTariffs" class="admin-tab bg-white text-gray-600 px-5 py-2.5 rounded-xl text-sm font-semibold border">إدارة الأسعار</button>
-            </div>
+            <!-- تخطيط لوحة الأدمن: قائمة جانبية عمودية (طولية وفوق بعضها) للمحتوى -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <!-- القائمة الجانبية (أزرار فوق بعضها بشكل طولي) -->
+                <div class="bg-white p-4 rounded-2xl shadow-sm border space-y-2 h-fit">
+                    <p class="text-xs font-bold text-gray-400 mb-3 px-2">قائمة الإدارة:</p>
+                    <button onclick="switchAdminTab('orders')" id="tabAdminOrders" class="admin-tab w-full text-right bg-indigo-600 text-white px-4 py-3 rounded-xl text-sm font-semibold shadow-sm transition">طلبات التجار (التحضير)</button>
+                    <button onclick="switchAdminTab('stats')" id="tabAdminStats" class="admin-tab w-full text-right bg-gray-50 text-gray-700 hover:bg-gray-100 px-4 py-3 rounded-xl text-sm font-semibold transition">إحصائيات المبيعات</button>
+                    <button onclick="switchAdminTab('stock')" id="tabAdminStock" class="admin-tab w-full text-right bg-gray-50 text-gray-700 hover:bg-gray-100 px-4 py-3 rounded-xl text-sm font-semibold transition">إدارة الشراء والمخزون (Stock)</button>
+                    <button onclick="switchAdminTab('pos')" id="tabAdminPos" class="admin-tab w-full text-right bg-gray-50 text-gray-700 hover:bg-gray-100 px-4 py-3 rounded-xl text-sm font-semibold transition">البيع المباشر (POS)</button>
+                    <button onclick="switchAdminTab('credits')" id="tabAdminCredits" class="admin-tab w-full text-right bg-gray-50 text-gray-700 hover:bg-gray-100 px-4 py-3 rounded-xl text-sm font-semibold transition">إدارة الكريدي والديون</button>
+                    <button onclick="switchAdminTab('clients')" id="tabAdminClients" class="admin-tab w-full text-right bg-gray-50 text-gray-700 hover:bg-gray-100 px-4 py-3 rounded-xl text-sm font-semibold transition">كشف حساب الحوانت (Relevés)</button>
+                    <button onclick="switchAdminTab('tariffs')" id="tabAdminTariffs" class="admin-tab w-full text-right bg-gray-50 text-gray-700 hover:bg-gray-100 px-4 py-3 rounded-xl text-sm font-semibold transition">إدارة الأسعار</button>
+                </div>
 
-            <!-- تاب الطلبات الواردة -->
-            <div id="adminOrdersContent" class="admin-content space-y-4">
-                <div class="bg-white rounded-2xl shadow-sm border p-5">
-                    <p class="text-xs text-gray-400 mb-3 font-bold">اضغط على اسم الحانوت لفتح الفاتورة ومراجعتها أو تعديلها:</p>
-                    <div id="ordersListContainer" class="space-y-2">
-                        <p class="text-gray-400 text-center py-6">جاري تحميل الطلبات...</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- تاب إحصائيات المبيعات (Statistiques des ventes) -->
-            <div id="adminStatsContent" class="admin-content hidden space-y-4 bg-white p-6 rounded-2xl shadow-sm border">
-                <h4 class="font-bold text-lg text-gray-800 mb-3"><i class="fa-solid fa-chart-pie text-indigo-600 ml-2"></i> إحصائيات كميات المبيعات حسب المشغل والفئة</h4>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-right border-collapse">
-                        <thead>
-                            <tr class="border-b bg-gray-50 text-gray-600 text-sm">
-                                <th class="p-3">المشغل (Opérateur)</th>
-                                <th class="p-3">الفئة / النوع</th>
-                                <th class="p-3">الكمية الإجمالي المباعة</th>
-                            </tr>
-                        </thead>
-                        <tbody id="salesStatsTableBody"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- تاب إدارة الشراء والمخزون (Stock Management) -->
-            <div id="adminStockContent" class="admin-content hidden space-y-4 bg-white p-6 rounded-2xl shadow-sm border">
-                <h4 class="font-bold text-lg text-gray-800 mb-3"><i class="fa-solid fa-boxes-stacked text-indigo-600 ml-2"></i> إدارة المخزون والمشتريات (Stock)</h4>
-                <p class="text-xs text-gray-500 mb-4">قم بإدخال كميات الشراء الجديدة لتغذية المخزون. يتم خصم المبيعات تلقائياً عند تأكيد التسليم.</p>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-right border-collapse">
-                        <thead>
-                            <tr class="border-b bg-gray-50 text-gray-600 text-sm">
-                                <th class="p-3">المشغل</th>
-                                <th class="p-3">الفئة / النوع</th>
-                                <th class="p-3">كمية الشراء الجديدة (إضافة)</th>
-                                <th class="p-3">الكمية المتبقية في المخزون (Stock Restant)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="stockTableBody"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- تاب البيع المباشر (POS) -->
-            <div id="adminPosContent" class="admin-content hidden space-y-4 bg-white p-6 rounded-2xl shadow-sm border">
-                <h4 class="font-bold text-lg text-gray-800 mb-3"><i class="fa-solid fa-cash-register text-indigo-600 ml-2"></i> نقطة بيع مباشرة (Sur place)</h4>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
-                    <input type="text" id="posClientName" placeholder="اسم الحانوت" class="border p-3 rounded-xl text-sm">
-                    <input type="text" id="posClientPhone" placeholder="رقم الهاتف" class="border p-3 rounded-xl text-sm">
-                    <input type="text" id="posClientAddress" placeholder="العنوان" class="border p-3 rounded-xl text-sm">
-                </div>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
-                    <button onclick="selectPosOperator('Ooredoo')" class="bg-red-500 text-white p-3 rounded-xl font-bold text-sm shadow">أوريدو</button>
-                    <button onclick="selectPosOperator('Telecom')" class="bg-blue-500 text-white p-3 rounded-xl font-bold text-sm shadow">تيليكوم</button>
-                    <button onclick="selectPosOperator('Orange')" class="bg-orange-500 text-white p-3 rounded-xl font-bold text-sm shadow">أورنج</button>
-                    <button onclick="selectPosOperator('Lycamobile')" class="bg-purple-500 text-white p-3 rounded-xl font-bold text-sm shadow">لايت / شحن رصيد</button>
-                </div>
-                <div id="posProductsSection" class="hidden space-y-4 border-t pt-4">
-                    <h5 id="posSelectedOperatorTitle" class="font-bold text-gray-700"></h5>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="posCardsGrid"></div>
-                    <div class="flex flex-col md:flex-row justify-between items-center border-t pt-4 gap-4">
-                        <span id="posCartTotal" class="text-xl font-extrabold text-emerald-600">0.000 د.ت</span>
-                        <div class="flex items-center gap-3">
-                            <select id="posPaymentStatus" class="border p-2.5 rounded-xl font-bold text-sm bg-gray-50">
-                                <option value="Payé">خلاص كاش (Payé)</option>
-                                <option value="Crédit">كريدي كلي (Crédit)</option>
-                            </select>
-                            <button onclick="window.submitPosOrder()" class="bg-emerald-600 text-white px-6 py-2.5 rounded-xl font-bold hover:bg-emerald-700 shadow-md">تأكيد البيع</button>
+                <!-- مساحة العرض الرئيسية للأدمن -->
+                <div class="md:col-span-3 space-y-4">
+                    <!-- تاب الطلبات الواردة -->
+                    <div id="adminOrdersContent" class="admin-content space-y-4">
+                        <div class="bg-white rounded-2xl shadow-sm border p-5">
+                            <p class="text-xs text-gray-400 mb-3 font-bold">اضغط على اسم الحانوت لفتح الفاتورة ومراجعتها أو تعديلها:</p>
+                            <div id="ordersListContainer" class="space-y-2">
+                                <p class="text-gray-400 text-center py-6">جاري تحميل الطلبات...</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <!-- تاب إدارة الكريدي -->
-            <div id="adminCreditsContent" class="admin-content hidden space-y-4">
-                <div class="bg-white rounded-2xl shadow-sm border p-5 overflow-x-auto">
-                    <table class="w-full text-right border-collapse">
-                        <thead>
-                            <tr class="border-b bg-gray-50 text-gray-600 text-sm">
-                                <th class="p-3">اسم الحانوت</th>
-                                <th class="p-3">رقم الهاتف</th>
-                                <th class="p-3">إجمالي الكريدي (د.ت)</th>
-                                <th class="p-3">إجراء الخلاص</th>
-                            </tr>
-                        </thead>
-                        <tbody id="creditsTableBody"></tbody>
-                    </table>
-                </div>
-            </div>
+                    <!-- تاب إحصائيات المبيعات -->
+                    <div id="adminStatsContent" class="admin-content hidden space-y-4 bg-white p-6 rounded-2xl shadow-sm border">
+                        <h4 class="font-bold text-lg text-gray-800 mb-3"><i class="fa-solid fa-chart-pie text-indigo-600 ml-2"></i> إحصائيات كميات المبيعات حسب المشغل والفئة</h4>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-right border-collapse">
+                               <thead>
+                                    <tr class="border-b bg-gray-50 text-gray-600 text-sm">
+                                        <th class="p-3">المشغل (Opérateur)</th>
+                                        <th class="p-3">الفئة / النوع</th>
+                                        <th class="p-3">الكمية الإجمالي المباعة</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="salesStatsTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
 
-            <!-- تاب Relevé par client للأدمن -->
-            <div id="adminClientsContent" class="admin-content hidden space-y-4">
-                <div class="bg-white rounded-2xl shadow-sm border p-5">
-                    <select id="selectClientReleve" onchange="loadClientReleve()" class="border p-3 rounded-xl w-full md:w-1/3 mb-4 text-sm font-semibold">
-                        <option value="">اختر الحانوت لعرض الكشف...</option>
-                    </select>
-                    <div id="clientReleveDetails" class="space-y-3"></div>
-                </div>
-            </div>
+                    <!-- تاب إدارة الشراء والمخزون -->
+                    <div id="adminStockContent" class="admin-content hidden space-y-4 bg-white p-6 rounded-2xl shadow-sm border">
+                        <h4 class="font-bold text-lg text-gray-800 mb-3"><i class="fa-solid fa-boxes-stacked text-indigo-600 ml-2"></i> إدارة المخزون والمشتريات (Stock)</h4>
+                        <p class="text-xs text-gray-500 mb-4">قم بإدخال كميات الشراء الجديدة لتغذية المخزون. يتم خصم المبيعات تلقائياً عند تأكيد التسليم.</p>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-right border-collapse">
+                                <thead>
+                                    <tr class="border-b bg-gray-50 text-gray-600 text-sm">
+                                        <th class="p-3">المشغل</th>
+                                        <th class="p-3">الفئة / النوع</th>
+                                        <th class="p-3">كمية الشراء الجديدة (إضافة)</th>
+                                        <th class="p-3">الكمية المتبقية في المخزون (Stock Restant)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="stockTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
 
-            <!-- تاب إدارة الأسعار -->
-            <div id="adminTariffsContent" class="admin-content hidden space-y-4">
-                <div class="bg-white rounded-2xl shadow-sm border p-5 overflow-x-auto">
-                    <table class="w-full text-right border-collapse">
-                        <thead>
-                            <tr class="border-b bg-gray-50 text-gray-600 text-sm">
-                                <th class="p-3">المشغل</th>
-                                <th class="p-3">الفئة</th>
-                                <th class="p-3">سعر الشراء (Prix d'achat)</th>
-                                <th class="p-3">سعر البيع (Prix de vente)</th>
-                                <th class="p-3">إجراء</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tariffsTableBody"></tbody>
-                    </table>
+                    <!-- تاب البيع المباشر (POS) -->
+                    <div id="adminPosContent" class="admin-content hidden space-y-4 bg-white p-6 rounded-2xl shadow-sm border">
+                        <h4 class="font-bold text-lg text-gray-800 mb-3"><i class="fa-solid fa-cash-register text-indigo-600 ml-2"></i> نقطة بيع مباشرة (Sur place)</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+                            <input type="text" id="posClientName" placeholder="اسم الحانوت" class="border p-3 rounded-xl text-sm">
+                            <input type="text" id="posClientPhone" placeholder="رقم الهاتف" class="border p-3 rounded-xl text-sm">
+                            <input type="text" id="posClientAddress" placeholder="العنوان" class="border p-3 rounded-xl text-sm">
+                        </div>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+                            <button onclick="selectPosOperator('Ooredoo')" class="bg-red-500 text-white p-3 rounded-xl font-bold text-sm shadow">أوريدو</button>
+                            <button onclick="selectPosOperator('Telecom')" class="bg-blue-500 text-white p-3 rounded-xl font-bold text-sm shadow">تيليكوم</button>
+                            <button onclick="selectPosOperator('Orange')" class="bg-orange-500 text-white p-3 rounded-xl font-bold text-sm shadow">أورنج</button>
+                            <button onclick="selectPosOperator('Lycamobile')" class="bg-purple-500 text-white p-3 rounded-xl font-bold text-sm shadow">لايت / شحن رصيد</button>
+                        </div>
+                        <div id="posProductsSection" class="hidden space-y-4 border-t pt-4">
+                            <h5 id="posSelectedOperatorTitle" class="font-bold text-gray-700"></h5>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="posCardsGrid"></div>
+                            <div class="flex flex-col md:flex-row justify-between items-center border-t pt-4 gap-4">
+                                <span id="posCartTotal" class="text-xl font-extrabold text-emerald-600">0.000 د.ت</span>
+                                <div class="flex items-center gap-3">
+                                    <select id="posPaymentStatus" class="border p-2.5 rounded-xl font-bold text-sm bg-gray-50">
+                                        <option value="Payé">خلاص كاش (Payé)</option>
+                                        <option value="Crédit">كريدي كلي (Crédit)</option>
+                                    </select>
+                                    <button onclick="window.submitPosOrder()" class="bg-emerald-600 text-white px-6 py-2.5 rounded-xl font-bold hover:bg-emerald-700 shadow-md">تأكيد البيع</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- تاب إدارة الكريدي -->
+                    <div id="adminCreditsContent" class="admin-content hidden space-y-4">
+                        <div class="bg-white rounded-2xl shadow-sm border p-5 overflow-x-auto">
+                            <table class="w-full text-right border-collapse">
+                                <thead>
+                                    <tr class="border-b bg-gray-50 text-gray-600 text-sm">
+                                        <th class="p-3">اسم الحانوت</th>
+                                        <th class="p-3">رقم الهاتف</th>
+                                        <th class="p-3">إجمالي الكريدي (د.ت)</th>
+                                        <th class="p-3">إجراء الخلاص</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="creditsTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- تاب Relevé par client للأدمن -->
+                    <div id="adminClientsContent" class="admin-content hidden space-y-4">
+                        <div class="bg-white rounded-2xl shadow-sm border p-5">
+                            <select id="selectClientReleve" onchange="loadClientReleve()" class="border p-3 rounded-xl w-full md:w-1/3 mb-4 text-sm font-semibold">
+                                <option value="">اختر الحانوت لعرض الكشف...</option>
+                            </select>
+                            <div id="clientReleveDetails" class="space-y-3"></div>
+                        </div>
+                    </div>
+
+                    <!-- تاب إدارة الأسعار -->
+                    <div id="adminTariffsContent" class="admin-content hidden space-y-4">
+                        <div class="bg-white rounded-2xl shadow-sm border p-5 overflow-x-auto">
+                            <table class="w-full text-right border-collapse">
+                                <thead>
+                                    <tr class="border-b bg-gray-50 text-gray-600 text-sm">
+                                        <th class="p-3">المشغل</th>
+                                        <th class="p-3">الفئة</th>
+                                        <th class="p-3">سعر الشراء (Prix d'achat)</th>
+                                        <th class="p-3">سعر البيع (Prix de vente)</th>
+                                        <th class="p-3">إجراء</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tariffsTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -298,6 +287,37 @@
                 <button onclick="closeAdminModal()" class="flex-1 bg-gray-100 text-gray-700 py-2.5 rounded-xl font-bold text-sm">إلغاء</button>
                 <button onclick="verifyAdminPassword()" class="flex-1 bg-indigo-600 text-white py-2.5 rounded-xl font-bold text-sm shadow-md">دخول</button>
             </div>
+        </div>
+    </div>
+
+    <!-- نافذة المداخيل والمرابيح المنبثقة الصغرى -->
+    <div id="recetteModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-md w-full mx-4 space-y-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 class="font-bold text-lg text-gray-800"><i class="fa-solid fa-chart-line text-emerald-600 ml-2"></i> تفاصيل المداخيل والمرابيح</h3>
+                <button onclick="closeRecetteModal()" class="text-gray-400 hover:text-gray-600 text-lg font-bold">&times;</button>
+            </div>
+            
+            <div class="space-y-3">
+                <div class="bg-indigo-50 p-3 rounded-xl flex justify-between items-center">
+                    <span class="text-xs text-gray-600">مداخيل اليوم (الخالصة Payé)</span>
+                    <span id="modalRecetteDay" class="font-bold text-indigo-900">0.000 د.ت</span>
+                </div>
+                <div class="bg-indigo-50 p-3 rounded-xl flex justify-between items-center">
+                    <span class="text-xs text-gray-600">مداخيل الشهر (الخالصة Payé)</span>
+                    <span id="modalRecetteMonth" class="font-bold text-indigo-900">0.000 د.ت</span>
+                </div>
+                <div class="bg-emerald-50 p-3 rounded-xl flex justify-between items-center border border-emerald-100">
+                    <span class="text-xs text-emerald-700 font-bold">إجمالي الأرباح الصافية (Bénéfices)</span>
+                    <span id="modalTotalBenefice" class="font-extrabold text-emerald-600 text-lg">0.000 د.ت</span>
+                </div>
+                <div class="bg-rose-50 p-3 rounded-xl flex justify-between items-center border border-rose-100">
+                    <span class="text-xs text-rose-700 font-bold">إجمالي ديون الكريدي المتخلدة</span>
+                    <span id="modalTotalCredit" class="font-extrabold text-rose-600 text-lg">0.000 د.ت</span>
+                </div>
+            </div>
+
+            <button onclick="closeRecetteModal()" class="w-full bg-indigo-600 text-white py-2.5 rounded-xl font-bold text-sm shadow-md">إغلاق</button>
         </div>
     </div>
 
@@ -748,6 +768,14 @@
             showSection('clientAuth');
         }
 
+        function openRecetteModal() {
+            document.getElementById('recetteModal').classList.remove('hidden');
+        }
+
+        function closeRecetteModal() {
+            document.getElementById('recetteModal').classList.add('hidden');
+        }
+
         function openOrderInvoice(orderId) {
             let order = window.allOrders.find(o => o.id === orderId);
             if (!order) return;
@@ -1065,7 +1093,6 @@
             let clientsMap = {};
             let clientsListHtml = '<option value="">اختر الحانوت لعرض الكشف...</option>';
             
-            // حساب المبيعات المباعة حسب الصنف لإحصائيات المبيعات والمخزون
             let salesCounts = {};
 
             window.allOrders.forEach((o) => {
@@ -1083,7 +1110,6 @@
                     totalCredit += currentCred;
                     clientsMap[o.clientName].credit += currentCred;
 
-                    // تجميع المبيعات حسب الصنف
                     o.items.forEach(i => {
                         if (!salesCounts[i.id]) salesCounts[i.id] = { operator: i.operator, name: i.name, qty: 0 };
                         salesCounts[i.id].qty += i.qty;
@@ -1112,10 +1138,11 @@
                 }
             });
 
-            document.getElementById('adminRecetteDay').innerText = dayTotal.toFixed(3) + ' د.ت';
-            document.getElementById('adminRecetteMonth').innerText = monthTotal.toFixed(3) + ' د.ت';
-            document.getElementById('adminTotalBenefice').innerText = totalBenefice.toFixed(3) + ' د.ت';
-            document.getElementById('adminTotalCredit').innerText = totalCredit.toFixed(3) + ' د.ت';
+            // تحديث قيم النافذة المصغرة للمداخيل والمرابيح
+            document.getElementById('modalRecetteDay').innerText = dayTotal.toFixed(3) + ' د.ت';
+            document.getElementById('modalRecetteMonth').innerText = monthTotal.toFixed(3) + ' د.ت';
+            document.getElementById('modalTotalBenefice').innerText = totalBenefice.toFixed(3) + ' د.ت';
+            document.getElementById('modalTotalCredit').innerText = totalCredit.toFixed(3) + ' د.ت';
             document.getElementById('adminPendingOrders').innerText = pendingCount;
 
             if (ordersHtml) {
@@ -1124,7 +1151,6 @@
                 document.getElementById('ordersListContainer').innerHTML = '<p class="text-gray-400 text-center py-6">لا توجد طلبات معلقة للتحضير حالياً.</p>';
             }
 
-            // جدول إحصائيات المبيعات
             let statsHtml = '';
             for (let id in salesCounts) {
                 let s = salesCounts[id];
@@ -1138,7 +1164,6 @@
             }
             document.getElementById('salesStatsTableBody').innerHTML = statsHtml || `<tr><td colspan="3" class="text-center py-4 text-gray-400">لا توجد مبيعات مكتملة بعد.</td></tr>`;
 
-            // جدول إدارة الشراء والمخزون
             let stockHtml = '';
             window.tariffs.forEach(t => {
                 let sold = salesCounts[t.id] ? salesCounts[t.id].qty : 0;
@@ -1238,30 +1263,30 @@
         function switchAdminTab(tab) {
             document.querySelectorAll('.admin-content').forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('.admin-tab').forEach(el => {
-                el.className = "admin-tab bg-white text-gray-600 px-5 py-2.5 rounded-xl text-sm font-semibold border";
+                el.className = "admin-tab w-full text-right bg-gray-50 text-gray-700 hover:bg-gray-100 px-4 py-3 rounded-xl text-sm font-semibold transition";
             });
 
             if (tab === 'orders') {
                 document.getElementById('adminOrdersContent').classList.remove('hidden');
-                document.getElementById('tabAdminOrders').className = "admin-tab bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-md shadow-indigo-100";
+                document.getElementById('tabAdminOrders').className = "admin-tab w-full text-right bg-indigo-600 text-white px-4 py-3 rounded-xl text-sm font-semibold shadow-sm transition";
             } else if (tab === 'stats') {
                 document.getElementById('adminStatsContent').classList.remove('hidden');
-                document.getElementById('tabAdminStats').className = "admin-tab bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-md shadow-indigo-100";
+                document.getElementById('tabAdminStats').className = "admin-tab w-full text-right bg-indigo-600 text-white px-4 py-3 rounded-xl text-sm font-semibold shadow-sm transition";
             } else if (tab === 'stock') {
                 document.getElementById('adminStockContent').classList.remove('hidden');
-                document.getElementById('tabAdminStock').className = "admin-tab bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-md shadow-indigo-100";
+                document.getElementById('tabAdminStock').className = "admin-tab w-full text-right bg-indigo-600 text-white px-4 py-3 rounded-xl text-sm font-semibold shadow-sm transition";
             } else if (tab === 'pos') {
                 document.getElementById('adminPosContent').classList.remove('hidden');
-                document.getElementById('tabAdminPos').className = "admin-tab bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-md shadow-indigo-100";
+                document.getElementById('tabAdminPos').className = "admin-tab w-full text-right bg-indigo-600 text-white px-4 py-3 rounded-xl text-sm font-semibold shadow-sm transition";
             } else if (tab === 'credits') {
                 document.getElementById('adminCreditsContent').classList.remove('hidden');
-                document.getElementById('tabAdminCredits').className = "admin-tab bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-md shadow-indigo-100";
+                document.getElementById('tabAdminCredits').className = "admin-tab w-full text-right bg-indigo-600 text-white px-4 py-3 rounded-xl text-sm font-semibold shadow-sm transition";
             } else if (tab === 'clients') {
                 document.getElementById('adminClientsContent').classList.remove('hidden');
-                document.getElementById('tabAdminClients').className = "admin-tab bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-md shadow-indigo-100";
+                document.getElementById('tabAdminClients').className = "admin-tab w-full text-right bg-indigo-600 text-white px-4 py-3 rounded-xl text-sm font-semibold shadow-sm transition";
             } else if (tab === 'tariffs') {
                 document.getElementById('adminTariffsContent').classList.remove('hidden');
-                document.getElementById('tabAdminTariffs').className = "admin-tab bg-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-md shadow-indigo-100";
+                document.getElementById('tabAdminTariffs').className = "admin-tab w-full text-right bg-indigo-600 text-white px-4 py-3 rounded-xl text-sm font-semibold shadow-sm transition";
             }
         }
 

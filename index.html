@@ -672,6 +672,7 @@
             }
         };
 
+        // جلب البيانات واستدعاء المعالجة فوراً Real-time
         onSnapshot(query(collection(db, "orders"), orderBy("date", "desc")), (snapshot) => {
             window.allOrders = [];
             snapshot.forEach((docSnap) => {
@@ -747,6 +748,8 @@
             if (pass === 'admin123' || pass === '1234') {
                 closeAdminModal();
                 showSection('adminDashboard');
+                // تسجيل حالة في المتصفح لكي يعمل زر الرجوع بسلاسة
+                history.pushState({ page: 'adminHome' }, '', '');
             } else {
                 alert('كلمة مرور الأدمن غير صحيحة!');
             }
@@ -771,7 +774,7 @@
             }
         }
 
-        // فتح صفحة فرعية للأدمن مع منع الخروج العشوائي وزر رجوع سليم
+        // فتح صفحة فرعية للأدمن مع تفعيل الـ History API لزر الرجوع
         function openAdminPage(pageName) {
             document.getElementById('adminDashboardSection').classList.add('hidden');
             document.querySelectorAll('.admin-subpage').forEach(el => el.classList.add('hidden'));
@@ -784,11 +787,30 @@
             else if (pageName === 'clients') document.getElementById('subPageClients').classList.remove('hidden');
             else if (pageName === 'tariffs') document.getElementById('subPageTariffs').classList.remove('hidden');
 
-            // تحديث بيانات الفايربيز فوراً لتظهر في الصفحة المفتوحة
+            // إضافة حالة للتاريخ لكي يستجيب زر الرجوع في الهاتف بدقة
+            history.pushState({ page: pageName }, '', '');
+
+            // تحديث البيانات فوراً لكي تظهر الداتا دائماً
             if (typeof processAdminData === 'function') processAdminData();
         }
 
-        // زر الرجوع للقائمة الرئيسية للأدمن
+        // التحكم في زر الرجوع بالمتصفح (لعدم الخروج التام من التطبيق)
+        window.addEventListener('popstate', function(event) {
+            let adminSection = document.getElementById('adminDashboardSection');
+            let isAnySubPageOpen = Array.from(document.querySelectorAll('.admin-subpage')).some(el => !el.classList.contains('hidden'));
+
+            if (isAnySubPageOpen) {
+                // إذا كنا في صفحة فرعية، نرجع للقائمة الرئيسية للأدمن
+                document.querySelectorAll('.admin-subpage').forEach(el => el.classList.add('hidden'));
+                adminSection.classList.remove('hidden');
+                history.pushState({ page: 'adminHome' }, '', '');
+            } else {
+                // إذا كنا في القائمة الرئيسية للأدمن، نسمح بالخروج لواجهة التجار
+                showSection('clientAuth');
+            }
+        });
+
+        // زر الرجوع اليدوي داخل الصفحات الفرعية
         function backToAdminHome() {
             document.querySelectorAll('.admin-subpage').forEach(el => el.classList.add('hidden'));
             document.getElementById('adminDashboardSection').classList.remove('hidden');
@@ -1125,6 +1147,7 @@
             alert('تم تحديث المخزون بنجاح!');
         }
 
+        // دالة تحديث بيانات الأدمن والجداول (تعمل بسلاسة في كل الصفحات الفرعية)
         function processAdminData() {
             let dayTotal = 0;
             let monthTotal = 0;
@@ -1189,10 +1212,13 @@
             document.getElementById('modalTotalCredit').innerText = totalCredit.toFixed(3) + ' د.ت';
             document.getElementById('adminPendingOrders').innerText = pendingCount;
 
-            if (ordersHtml) {
-                document.getElementById('ordersListContainer').innerHTML = ordersHtml;
-            } else {
-                document.getElementById('ordersListContainer').innerHTML = '<p class="text-gray-400 text-center py-6">لا توجد طلبات معلقة للتحضير حالياً.</p>';
+            const ordersContainer = document.getElementById('ordersListContainer');
+            if (ordersContainer) {
+                if (ordersHtml) {
+                    ordersContainer.innerHTML = ordersHtml;
+                } else {
+                    ordersContainer.innerHTML = '<p class="text-gray-400 text-center py-6">لا توجد طلبات معلقة للتحضير حالياً.</p>';
+                }
             }
 
             let statsHtml = '';
@@ -1206,7 +1232,10 @@
                     </tr>
                 `;
             }
-            document.getElementById('salesStatsTableBody').innerHTML = statsHtml || `<tr><td colspan="3" class="text-center py-4 text-gray-400">لا توجد مبيعات مكتملة بعد.</td></tr>`;
+            const statsBody = document.getElementById('salesStatsTableBody');
+            if (statsBody) {
+                statsBody.innerHTML = statsHtml || `<tr><td colspan="3" class="text-center py-4 text-gray-400">لا توجد مبيعات مكتملة بعد.</td></tr>`;
+            }
 
             let stockHtml = '';
             window.tariffs.forEach(t => {
@@ -1226,7 +1255,8 @@
                     </tr>
                 `;
             });
-            document.getElementById('stockTableBody').innerHTML = stockHtml;
+            const stockBody = document.getElementById('stockTableBody');
+            if (stockBody) stockBody.innerHTML = stockHtml;
 
             let creditsTableHtml = '';
             for (let cName in clientsMap) {
@@ -1244,8 +1274,13 @@
                     </tr>
                 `;
             }
-            document.getElementById('creditsTableBody').innerHTML = creditsTableHtml;
-            document.getElementById('selectClientReleve').innerHTML = clientsListHtml;
+            const creditsBody = document.getElementById('creditsTableBody');
+            if (creditsBody) creditsBody.innerHTML = creditsTableHtml;
+
+            const selectReleve = document.getElementById('selectClientReleve');
+            if (selectReleve && selectReleve.options.length <= 1) {
+                selectReleve.innerHTML = clientsListHtml;
+            }
         }
 
         function loadClientReleve() {
@@ -1317,7 +1352,8 @@
                     </tr>
                 `;
             });
-            document.getElementById('tariffsTableBody').innerHTML = html;
+            const tariffsBody = document.getElementById('tariffsTableBody');
+            if (tariffsBody) tariffsBody.innerHTML = html;
         }
 
         function updateTariff(id) {

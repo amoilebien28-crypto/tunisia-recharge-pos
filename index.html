@@ -120,7 +120,7 @@
             </div>
         </div>
 
-        <!-- ================= 3. لوحة تحكم الأدمن الرئيسية (القائمة الرئيسية للأزرار) ================= -->
+        <!-- ================= 3. لوحة تحكم الأدمن الرئيسية ================= -->
         <div id="adminDashboardSection" class="hidden space-y-6 max-w-2xl mx-auto">
             <div class="flex justify-between items-center bg-white p-5 rounded-2xl shadow-sm border">
                 <h3 class="font-bold text-xl text-indigo-900"><i class="fa-solid fa-shield-halved text-indigo-600 ml-2"></i> لوحة تحكم الإدارة</h3>
@@ -132,7 +132,6 @@
                 </div>
             </div>
 
-            <!-- القائمة الرئيسية للأزرار (طولية وفوق بعضها بوضوح) -->
             <div class="bg-white p-6 rounded-3xl shadow-sm border space-y-3">
                 <p class="text-xs font-bold text-gray-400 mb-2">اختر القسم المطلوب:</p>
                 
@@ -173,22 +172,20 @@
             </div>
         </div>
 
-        <!-- ================= 4. صفحات الأدمن الفرعية المستقلة (مع زر رجوع آمن لا يخرج من التطبيق) ================= -->
+        <!-- ================= 4. صفحات الأدمن الفرعية المستقلة ================= -->
         
-        <!-- صفحة طلبات التجار -->
         <div id="subPageOrders" class="admin-subpage hidden space-y-4 max-w-3xl mx-auto bg-white p-6 rounded-3xl shadow-sm border">
             <div class="flex justify-between items-center border-b pb-3">
-                <button onclick="backToAdminHome()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-xl text-xs font-bold transition"><i class="fa-solid fa-arrow-right ml-1"></i> رجوع لقائمة الإدارة</button>
+                <button onclick="backToAdminHome()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-xl text-xs font-bold transition"><i class="fa-solid fa-arrow-right ml-1"></i> رجوع للقائمة الرئيسية</button>
                 <h4 class="font-bold text-lg text-gray-800">طلبات التجار (التحضير)</h4>
             </div>
             <p class="text-xs text-gray-400 font-bold">اضغط على اسم الحانوت لفتح الفاتورة ومراجعتها أو تعديلها:</p>
             <div id="ordersListContainer" class="space-y-2"></div>
         </div>
 
-        <!-- صفحة إحصائيات المبيعات -->
         <div id="subPageStats" class="admin-subpage hidden space-y-4 max-w-3xl mx-auto bg-white p-6 rounded-3xl shadow-sm border">
             <div class="flex justify-between items-center border-b pb-3">
-                <button onclick="backToAdminHome()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-xl text-xs font-bold transition"><i class="fa-solid fa-arrow-right ml-1"></i> رجوع لقائمة الإدارة</button>
+                <button onclick="backToAdminHome()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-xl text-xs font-bold transition"><i class="fa-solid fa-arrow-right ml-1"></i> رجوع للقائمة الرئيسية</button>
                 <h4 class="font-bold text-lg text-gray-800">إحصائيات كميات المبيعات</h4>
             </div>
             <div class="overflow-x-auto">
@@ -205,10 +202,9 @@
             </div>
         </div>
 
-        <!-- صفحة إدارة المخزون -->
         <div id="subPageStock" class="admin-subpage hidden space-y-4 max-w-3xl mx-auto bg-white p-6 rounded-3xl shadow-sm border">
             <div class="flex justify-between items-center border-b pb-3">
-                <button onclick="backToAdminHome()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-xl text-xs font-bold transition"><i class="fa-solid fa-arrow-right ml-1"></i> رجوع لقائمة الإدارة</button>
+                <button onclick="backToAdminHome()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-xl text-xs font-bold transition"><i class="fa-solid fa-arrow-right ml-1"></i> رجوع للقائمة الرئيسية</button>
                 <h4 class="font-bold text-lg text-gray-800">إدارة المخزون والمشتريات (Stock)</h4>
             </div>
             <p class="text-xs text-gray-500">قم بإدخال كميات الشراء الجديدة لتغذية المخزون. يتم خصم المبيعات تلقائياً عند تأكيد التسليم.</p>
@@ -227,10 +223,9 @@
             </div>
         </div>
 
-        <!-- صفحة البيع المباشر (POS) -->
         <div id="subPagePos" class="admin-subpage hidden space-y-4 max-w-3xl mx-auto bg-white p-6 rounded-3xl shadow-sm border">
             <div class="flex justify-between items-center border-b pb-3">
-                <button onclick="backToAdminHome()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-xl text-xs font-bold transition"><i class="fa-solid fa-arrow-right ml-1"></i> رجوع لقائمة الإدارة</button>
+                <button onclick="backToAdminHome()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-xl text-xs font-bold transition"><i class="fa-solid fa-arrow-right ml-1"></i> رجوع للقائمة الرئيسية</button>
                 <h4 class="font-bold text-lg text-gray-800">نقطة بيع مباشرة (POS)</h4>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
@@ -260,10 +255,9 @@
             </div>
         </div>
 
-        <!-- صفحة إدارة الكريدي -->
         <div id="subPageCredits" class="admin-subpage hidden space-y-4 max-w-3xl mx-auto bg-white p-6 rounded-3xl shadow-sm border">
             <div class="flex justify-between items-center border-b pb-3">
-                <button onclick="backToAdminHome()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-xl text-xs font-bold transition"><i class="fa-solid fa-arrow-right ml-1"></i> رجوع لقائمة الإدارة</button>
+                <button onclick="backToAdminHome()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-xl text-xs font-bold transition"><i class="fa-solid fa-arrow-right ml-1"></i> رجوع للقائمة الرئيسية</button>
                 <h4 class="font-bold text-lg text-gray-800">إدارة الكريدي والديون</h4>
             </div>
             <div class="overflow-x-auto">
@@ -281,10 +275,9 @@
             </div>
         </div>
 
-        <!-- صفحة كشف حساب الحوانت -->
         <div id="subPageClients" class="admin-subpage hidden space-y-4 max-w-3xl mx-auto bg-white p-6 rounded-3xl shadow-sm border">
             <div class="flex justify-between items-center border-b pb-3">
-                <button onclick="backToAdminHome()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-xl text-xs font-bold transition"><i class="fa-solid fa-arrow-right ml-1"></i> رجوع لقائمة الإدارة</button>
+                <button onclick="backToAdminHome()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-xl text-xs font-bold transition"><i class="fa-solid fa-arrow-right ml-1"></i> رجوع للقائمة الرئيسية</button>
                 <h4 class="font-bold text-lg text-gray-800">كشف حساب الحوانت (Relevés)</h4>
             </div>
             <select id="selectClientReleve" onchange="loadClientReleve()" class="border p-3 rounded-xl w-full md:w-1/2 mb-4 text-sm font-semibold">
@@ -293,10 +286,9 @@
             <div id="clientReleveDetails" class="space-y-3"></div>
         </div>
 
-        <!-- صفحة إدارة الأسعار -->
         <div id="subPageTariffs" class="admin-subpage hidden space-y-4 max-w-3xl mx-auto bg-white p-6 rounded-3xl shadow-sm border">
             <div class="flex justify-between items-center border-b pb-3">
-                <button onclick="backToAdminHome()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-xl text-xs font-bold transition"><i class="fa-solid fa-arrow-right ml-1"></i> رجوع لقائمة الإدارة</button>
+                <button onclick="backToAdminHome()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-xl text-xs font-bold transition"><i class="fa-solid fa-arrow-right ml-1"></i> رجوع للقائمة الرئيسية</button>
                 <h4 class="font-bold text-lg text-gray-800">إدارة الأسعار</h4>
             </div>
             <div class="overflow-x-auto">
@@ -779,7 +771,7 @@
             }
         }
 
-        // الانتقال لصفحة فرعية للأدمن بدون الخروج من التطبيق
+        // فتح صفحة فرعية للأدمن مع منع الخروج العشوائي وزر رجوع سليم
         function openAdminPage(pageName) {
             document.getElementById('adminDashboardSection').classList.add('hidden');
             document.querySelectorAll('.admin-subpage').forEach(el => el.classList.add('hidden'));
@@ -791,12 +783,16 @@
             else if (pageName === 'credits') document.getElementById('subPageCredits').classList.remove('hidden');
             else if (pageName === 'clients') document.getElementById('subPageClients').classList.remove('hidden');
             else if (pageName === 'tariffs') document.getElementById('subPageTariffs').classList.remove('hidden');
+
+            // تحديث بيانات الفايربيز فوراً لتظهر في الصفحة المفتوحة
+            if (typeof processAdminData === 'function') processAdminData();
         }
 
-        // الرجوع للقائمة الرئيسية للأدمن بلطف ومن غير إغلاق التطبيق
+        // زر الرجوع للقائمة الرئيسية للأدمن
         function backToAdminHome() {
             document.querySelectorAll('.admin-subpage').forEach(el => el.classList.add('hidden'));
             document.getElementById('adminDashboardSection').classList.remove('hidden');
+            if (typeof processAdminData === 'function') processAdminData();
         }
 
         function switchAuthTab(tab) {

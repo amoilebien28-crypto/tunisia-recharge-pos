@@ -88,7 +88,6 @@
                     <p class="text-xs text-gray-500 mt-1" id="welcomeClientDetails"></p>
                 </div>
                 <div class="flex gap-2 w-full md:w-auto">
-                    <!-- زر الواتساب للتواصل مع الإدارة -->
                     <button onclick="contactAdminWhatsApp()" class="flex-1 md:flex-none bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-sm">
                         <i class="fa-brands fa-whatsapp text-lg"></i> مراسلة الإدارة
                     </button>
@@ -174,6 +173,12 @@
                 <button onclick="openAdminWindow('purchases')" class="w-full text-right bg-gray-50 hover:bg-gray-100 border text-gray-800 p-4 rounded-2xl font-bold flex justify-between items-center transition">
                     <span><i class="fa-solid fa-file-invoice-dollar ml-2 text-indigo-600"></i> إدارة فواتير الشراء (Factures d'achat)</span>
                     <i class="fa-solid fa-chevron-left text-gray-400"></i>
+                </button>
+
+                <!-- زر رأس المال والمخزون النهائي الجديد -->
+                <button onclick="openCapitalModal()" class="w-full text-right bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white p-4 rounded-2xl font-bold flex justify-between items-center transition shadow-md">
+                    <span><i class="fa-solid fa-vault ml-2 text-yellow-200"></i> رأس المال والمخزون النهائي (Capital & Stock)</span>
+                    <i class="fa-solid fa-chevron-left"></i>
                 </button>
 
                 <button onclick="openAdminWindow('credits')" class="w-full text-right bg-gray-50 hover:bg-gray-100 border text-gray-800 p-4 rounded-2xl font-bold flex justify-between items-center transition">
@@ -292,16 +297,16 @@
         </div>
     </div>
 
-    <!-- نافذة البيع المباشر (POS كاسة متطورة على كامل الشاشة Plein Écran) -->
+    <!-- نافذة البيع المباشر (POS كاسة متطورة على كامل الشاشة مع تثبيت المجموع من لوطا وعدم تصفير الاختيارات) -->
     <div id="windowPos" class="admin-window fixed inset-0 bg-indigo-900/40 backdrop-blur-md hidden flex items-center justify-center z-40 p-2 md:p-6">
         <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-5xl w-full h-[95vh] flex flex-col justify-between overflow-hidden">
-            <div>
-                <div class="flex justify-between items-center border-b pb-3 mb-4">
+            <div class="overflow-y-auto pr-1 flex-1 space-y-4">
+                <div class="flex justify-between items-center border-b pb-3 sticky top-0 bg-white z-10">
                     <h4 class="font-extrabold text-xl text-indigo-900"><i class="fa-solid fa-cash-register text-emerald-600 ml-2"></i> نظام البيع المباشر (Caisse POS)</h4>
                     <button onclick="closeAdminWindow('pos')" class="text-gray-400 hover:text-gray-600 text-2xl font-bold">&times;</button>
                 </div>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 bg-indigo-50/50 p-4 rounded-2xl border">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-indigo-50/50 p-4 rounded-2xl border">
                     <div>
                         <label class="block text-xs font-bold text-gray-700 mb-1">اختر الحانوت المسجل:</label>
                         <div class="flex gap-2">
@@ -320,20 +325,21 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
                     <button onclick="selectPosOperator('Ooredoo')" class="bg-red-500 hover:bg-red-600 text-white p-3 rounded-2xl font-bold text-sm shadow">أوريدو</button>
                     <button onclick="selectPosOperator('Telecom')" class="bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-2xl font-bold text-sm shadow">تيليكوم</button>
                     <button onclick="selectPosOperator('Orange')" class="bg-orange-500 hover:bg-orange-600 text-white p-3 rounded-2xl font-bold text-sm shadow">أورنج</button>
                     <button onclick="selectPosOperator('Lycamobile')" class="bg-purple-500 hover:bg-purple-600 text-white p-3 rounded-2xl font-bold text-sm shadow">لايت / شحن رصيد</button>
                 </div>
 
-                <div id="posProductsSection" class="hidden space-y-3 border-t pt-3 overflow-y-auto max-h-[42vh]">
+                <div id="posProductsSection" class="hidden space-y-3 border-t pt-3">
                     <h5 id="posSelectedOperatorTitle" class="font-bold text-gray-700 text-sm"></h5>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="posCardsGrid"></div>
                 </div>
             </div>
 
-            <div class="border-t pt-4 flex flex-col md:flex-row justify-between items-center gap-4 bg-gray-50 p-4 rounded-2xl">
+            <!-- زر التأكيد والمجموع مثبتان في الأسفل بصفة دائمة -->
+            <div class="border-t pt-4 flex flex-col md:flex-row justify-between items-center gap-4 bg-gray-50 p-4 rounded-2xl mt-2">
                 <div>
                     <span class="text-gray-500 text-sm">المجموع الجملي للبيع:</span>
                     <span id="posCartTotal" class="text-2xl font-extrabold text-emerald-600 mr-2">0.000 د.ت</span>
@@ -343,6 +349,28 @@
                     <button onclick="window.submitPosOrder()" class="flex-1 md:flex-none bg-emerald-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-emerald-700 shadow-md">تأكيد عملية البيع</button>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- نافذة رأس المال والمخزون النهائي -->
+    <div id="capitalModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-md w-full mx-4 space-y-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 class="font-bold text-lg text-gray-800"><i class="fa-solid fa-vault text-amber-600 ml-2"></i> رأس المال والمخزون النهائي</h3>
+                <button onclick="closeCapitalModal()" class="text-gray-400 hover:text-gray-600 text-lg font-bold">&times;</button>
+            </div>
+            
+            <div class="space-y-3">
+                <div class="bg-indigo-50 p-3 rounded-xl flex justify-between items-center">
+                    <span class="text-xs text-gray-600">إجمالي رأس المال (تكلفة الشراء للسلع المتبقية)</span>
+                    <span id="modalTotalCapitalBuy" class="font-bold text-indigo-900">0.000 د.ت</span>
+                </div>
+                <div class="bg-emerald-50 p-3 rounded-xl flex justify-between items-center border border-emerald-100">
+                    <span class="text-xs text-emerald-700 font-bold">القيمة الإجمالية للمخزون (بسعر البيع)</span>
+                    <span id="modalTotalStockSell" class="font-extrabold text-emerald-600 text-lg">0.000 د.ت</span>
+                </div>
+            </div>
+            <button onclick="closeCapitalModal()" class="w-full bg-indigo-600 text-white py-2.5 rounded-xl font-bold text-sm shadow-md">إغلاق</button>
         </div>
     </div>
 
@@ -640,8 +668,8 @@
         window.doc = doc;
 
         window.currentClient = null;
-        window.currentOperator = '';
-        window.posOperator = '';
+        window.currentOperator = 'Ooredoo';
+        window.posOperator = 'Ooredoo';
         window.cart = {};
         window.posCart = {};
         window.allOrders = [];
@@ -867,7 +895,7 @@
                 showCustomAlert('نجاح', 'تم تسجيل عملية البيع المباشر بنجاح وتاريخ الحانوت!');
                 window.posCart = {};
                 selectEl.value = '';
-                document.getElementById('posProductsSection').classList.add('hidden');
+                selectPosOperator('Ooredoo');
                 processAdminData();
             } catch (e) {
                 console.error("Error pos order:", e);
@@ -1017,6 +1045,9 @@
             if (targetWindow) {
                 targetWindow.classList.remove('hidden');
                 processAdminData();
+                if (pageName === 'pos') {
+                    selectPosOperator('Ooredoo');
+                }
             }
         }
 
@@ -1038,6 +1069,40 @@
             if (s === 'broadcast') return 'Broadcast';
             if (s === 'tariffs') return 'Tariffs';
             return 'Orders';
+        }
+
+        // حساب وإظهار رأس المال والمخزون النهائي
+        function openCapitalModal() {
+            let totalCapitalBuy = 0;
+            let totalStockSell = 0;
+
+            let salesCounts = {};
+            window.allOrders.forEach(o => {
+                if (o.status === 'مكتمل' || o.status === 'مكتمل (مباشر)') {
+                    o.items.forEach(i => {
+                        if (!salesCounts[i.id]) salesCounts[i.id] = 0;
+                        salesCounts[i.id] += i.qty;
+                    });
+                }
+            });
+
+            window.tariffs.forEach(t => {
+                let purchased = window.stockPurchases[t.id] || 0;
+                let sold = salesCounts[t.id] || 0;
+                let remaining = purchased - sold;
+                if (remaining > 0) {
+                    totalCapitalBuy += remaining * t.buy;
+                    totalStockSell += remaining * t.sell;
+                }
+            });
+
+            document.getElementById('modalTotalCapitalBuy').innerText = totalCapitalBuy.toFixed(3) + ' د.ت';
+            document.getElementById('modalTotalStockSell').innerText = totalStockSell.toFixed(3) + ' د.ت';
+            document.getElementById('capitalModal').classList.remove('hidden');
+        }
+
+        function closeCapitalModal() {
+            document.getElementById('capitalModal').classList.add('hidden');
         }
 
         // إرسال رسالة عبر الواتساب للإدارة
@@ -1303,6 +1368,7 @@
             const opTariffs = window.tariffs.filter(t => t.operator === operator);
             let gridHtml = '';
             opTariffs.forEach(t => {
+                let currentQty = window.cart[t.id] || 0;
                 gridHtml += `
                     <div class="bg-indigo-50/50 p-4 rounded-2xl border border-indigo-100 flex flex-col justify-between">
                         <div>
@@ -1312,7 +1378,7 @@
                         </div>
                         <div class="mt-4 flex items-center justify-between">
                             <button onclick="updateQty('${t.id}', -1)" class="bg-white border text-gray-700 hover:bg-gray-100 w-9 h-9 rounded-xl font-bold shadow-sm">-</button>
-                            <span id="qty_${t.id}" class="font-extrabold text-lg">0</span>
+                            <span id="qty_${t.id}" class="font-extrabold text-lg">${currentQty}</span>
                             <button onclick="updateQty('${t.id}', 1)" class="bg-indigo-600 text-white hover:bg-indigo-700 w-9 h-9 rounded-xl font-bold shadow-sm">+</button>
                         </div>
                     </div>
@@ -1325,7 +1391,8 @@
             if (!window.cart[id]) window.cart[id] = 0;
             window.cart[id] += change;
             if (window.cart[id] < 0) window.cart[id] = 0;
-            document.getElementById(`qty_${id}`).innerText = window.cart[id];
+            let qtyEl = document.getElementById(`qty_${id}`);
+            if (qtyEl) qtyEl.innerText = window.cart[id];
             calculateTotal();
         }
 
@@ -1338,6 +1405,47 @@
                 }
             }
             document.getElementById('cartTotal').innerText = total.toFixed(3) + ' د.ت';
+        }
+
+        function selectPosOperator(operator) {
+            window.posOperator = operator;
+            document.getElementById('posProductsSection').classList.remove('hidden');
+            document.getElementById('posSelectedOperatorTitle').innerText = `اختر للبيع المباشر: ${operator}`;
+            
+            const opTariffs = window.tariffs.filter(t => t.operator === operator);
+            let gridHtml = '';
+            opTariffs.forEach(t => {
+                let currentPosQty = window.posCart[t.id] || 0;
+                gridHtml += `
+                    <div class="bg-gray-50 p-3 rounded-xl border flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs text-gray-500">${t.name}</span>
+                            <p class="text-emerald-600 font-bold text-sm">${t.sell > 0 ? t.sell.toFixed(3) + ' د.ت' : 'حسب الطلب'}</p>
+                        </div>
+                        <div class="mt-2 flex items-center justify-between">
+                            <button onclick="updatePosQty('${t.id}', -1)" class="bg-white border w-7 h-7 rounded font-bold">-</button>
+                            <span id="pos_qty_${t.id}" class="font-bold">${currentPosQty}</span>
+                            <button onclick="updatePosQty('${t.id}', 1)" class="bg-indigo-600 text-white w-7 h-7 rounded font-bold">+</button>
+                        </div>
+                    </div>
+                `;
+            });
+            document.getElementById('posCardsGrid').innerHTML = gridHtml;
+        }
+
+        function updatePosQty(id, change) {
+            if (!window.posCart[id]) window.posCart[id] = 0;
+            window.posCart[id] += change;
+            if (window.posCart[id] < 0) window.posCart[id] = 0;
+            let posQtyEl = document.getElementById(`pos_qty_${id}`);
+            if (posQtyEl) posQtyEl.innerText = window.posCart[id];
+            
+            let total = 0;
+            for (let i in window.posCart) {
+                const item = window.tariffs.find(t => t.id === i);
+                if (item && item.sell > 0) total += item.sell * window.posCart[i];
+            }
+            document.getElementById('posCartTotal').innerText = total.toFixed(3) + ' د.ت';
         }
 
         function renderClientOrders() {
@@ -1446,45 +1554,6 @@
                 console.error("Error updating order:", e);
                 showCustomAlert('خطأ', 'حدث خطأ عند تعديل الكمية: ' + e.message);
             }
-        }
-
-        function selectPosOperator(operator) {
-            window.posOperator = operator;
-            document.getElementById('posProductsSection').classList.remove('hidden');
-            document.getElementById('posSelectedOperatorTitle').innerText = `اختر للبيع المباشر: ${operator}`;
-            
-            const opTariffs = window.tariffs.filter(t => t.operator === operator);
-            let gridHtml = '';
-            opTariffs.forEach(t => {
-                gridHtml += `
-                    <div class="bg-gray-50 p-3 rounded-xl border flex flex-col justify-between">
-                        <div>
-                            <span class="text-xs text-gray-500">${t.name}</span>
-                            <p class="text-emerald-600 font-bold text-sm">${t.sell > 0 ? t.sell.toFixed(3) + ' د.ت' : 'حسب الطلب'}</p>
-                        </div>
-                        <div class="mt-2 flex items-center justify-between">
-                            <button onclick="updatePosQty('${t.id}', -1)" class="bg-white border w-7 h-7 rounded font-bold">-</button>
-                            <span id="pos_qty_${t.id}" class="font-bold">0</span>
-                            <button onclick="updatePosQty('${t.id}', 1)" class="bg-indigo-600 text-white w-7 h-7 rounded font-bold">+</button>
-                        </div>
-                    </div>
-                `;
-            });
-            document.getElementById('posCardsGrid').innerHTML = gridHtml;
-        }
-
-        function updatePosQty(id, change) {
-            if (!window.posCart[id]) window.posCart[id] = 0;
-            window.posCart[id] += change;
-            if (window.posCart[id] < 0) window.posCart[id] = 0;
-            document.getElementById(`pos_qty_${id}`).innerText = window.posCart[id];
-            
-            let total = 0;
-            for (let i in window.posCart) {
-                const item = window.tariffs.find(t => t.id === i);
-                if (item && item.sell > 0) total += item.sell * window.posCart[i];
-            }
-            document.getElementById('posCartTotal').innerText = total.toFixed(3) + ' د.ت';
         }
 
         // تفاصيل إدارة فواتير الشراء

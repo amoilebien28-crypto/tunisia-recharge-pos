@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منظومة توزيع الكوارط - تونس</title>
+    <title>منصة توزيع رصيد الهاتف الجوال - تونس</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome للأيقونات -->
@@ -15,7 +15,7 @@
     <header class="bg-indigo-600 text-white shadow-lg">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <h1 id="secretAdminTrigger" onclick="handleLogoClick()" class="text-xl font-bold cursor-pointer select-none flex items-center gap-2">
-                <i class="fa-solid fa-sim-card text-yellow-300"></i> منصة توزيع الكوارط (تونس)
+                <i class="fa-solid fa-mobile-screen-button text-yellow-300"></i> منصة توزيع رصيد الهاتف الجوال
             </h1>
             <div id="headerClientInfo" class="text-sm font-semibold"></div>
         </div>
@@ -30,7 +30,7 @@
                     <i class="fa-solid fa-store"></i>
                 </div>
                 <h2 class="text-2xl font-bold text-gray-800">بوابة الحانوت / التاجر</h2>
-                <p class="text-xs text-gray-500 mt-1">قم بتسجيل الدخول لطلب بطاقات الشحن بسهولة</p>
+                <p class="text-xs text-gray-500 mt-1">قم بتسجيل الدخول لطلب البطاقات وشحن الرصيد بسهولة</p>
             </div>
             
             <div class="flex bg-gray-100 p-1 rounded-xl">
@@ -81,20 +81,23 @@
                 <button onclick="clientLogout()" class="bg-rose-50 text-rose-600 px-4 py-2 rounded-xl text-xs font-bold hover:bg-rose-100 transition">تسجيل الخروج</button>
             </div>
 
-            <!-- أزرار اختيار المشغلين -->
-            <div class="grid grid-cols-3 gap-4">
-                <button onclick="selectOperator('Ooredoo')" class="bg-gradient-to-r from-red-500 to-rose-600 text-white p-5 rounded-2xl font-bold shadow-lg shadow-rose-200 hover:scale-[1.02] transition flex flex-col items-center justify-center gap-2">
+            <!-- أزرار اختيار المشغلين (بطاقات + شحن رصيد) -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <button onclick="selectOperator('Ooredoo')" class="bg-gradient-to-r from-red-500 to-rose-600 text-white p-4 rounded-2xl font-bold shadow-lg shadow-rose-200 hover:scale-[1.02] transition flex flex-col items-center justify-center gap-2">
                     <i class="fa-solid fa-signal text-2xl"></i> أوريدو (Ooredoo)
                 </button>
-                <button onclick="selectOperator('Telecom')" class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-5 rounded-2xl font-bold shadow-lg shadow-indigo-200 hover:scale-[1.02] transition flex flex-col items-center justify-center gap-2">
-                    <i class="fa-solid fa-globe text-2xl"></i> تيليكوم (Télécom)
+                <button onclick="selectOperator('Telecom')" class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-4 rounded-2xl font-bold shadow-lg shadow-indigo-200 hover:scale-[1.02] transition flex flex-col items-center justify-center gap-2">
+                    <i class="fa-solid fa-globe text-2xl"></i> تيليكوم (Telecom)
                 </button>
-                <button onclick="selectOperator('Orange')" class="bg-gradient-to-r from-orange-500 to-amber-600 text-white p-5 rounded-2xl font-bold shadow-lg shadow-amber-200 hover:scale-[1.02] transition flex flex-col items-center justify-center gap-2">
+                <button onclick="selectOperator('Orange')" class="bg-gradient-to-r from-orange-500 to-amber-600 text-white p-4 rounded-2xl font-bold shadow-lg shadow-amber-200 hover:scale-[1.02] transition flex flex-col items-center justify-center gap-2">
                     <i class="fa-solid fa-wifi text-2xl"></i> أورنج (Orange)
+                </button>
+                <button onclick="selectOperator('Lycamobile')" class="bg-gradient-to-r from-purple-500 to-pink-600 text-white p-4 rounded-2xl font-bold shadow-lg shadow-purple-200 hover:scale-[1.02] transition flex flex-col items-center justify-center gap-2">
+                    <i class="fa-solid fa-bolt text-2xl"></i> لايت / شحن رصيد
                 </button>
             </div>
 
-            <!-- فئات الكوارط -->
+            <!-- فئات المنتجات (كوارط وشحن رصيد) -->
             <div id="productsSection" class="bg-white p-6 rounded-2xl shadow-sm border border-indigo-50 hidden">
                 <h3 id="selectedOperatorTitle" class="text-lg font-bold text-gray-800 mb-4"></h3>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="cardsGrid"></div>
@@ -168,10 +171,11 @@
                     <input type="text" id="posClientPhone" placeholder="رقم الهاتف" class="border p-3 rounded-xl text-sm">
                     <input type="text" id="posClientAddress" placeholder="العنوان" class="border p-3 rounded-xl text-sm">
                 </div>
-                <div class="grid grid-cols-3 gap-3 mb-4">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
                     <button onclick="selectPosOperator('Ooredoo')" class="bg-red-500 text-white p-3 rounded-xl font-bold text-sm shadow">أوريدو</button>
                     <button onclick="selectPosOperator('Telecom')" class="bg-blue-500 text-white p-3 rounded-xl font-bold text-sm shadow">تيليكوم</button>
                     <button onclick="selectPosOperator('Orange')" class="bg-orange-500 text-white p-3 rounded-xl font-bold text-sm shadow">أورنج</button>
+                    <button onclick="selectPosOperator('Lycamobile')" class="bg-purple-500 text-white p-3 rounded-xl font-bold text-sm shadow">لايت / شحن رصيد</button>
                 </div>
                 <div id="posProductsSection" class="hidden space-y-4 border-t pt-4">
                     <h5 id="posSelectedOperatorTitle" class="font-bold text-gray-700"></h5>
@@ -237,7 +241,7 @@
 
     </main>
 
-    <!-- ================= النوافذ المنبثقة (Modals) الجميلة والنظيفة ================= -->
+    <!-- ================= النوافذ المنبثقة (Modals) ================= -->
 
     <!-- Modal سري لدخول الأدمن -->
     <div id="adminPasswordModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50">
@@ -267,7 +271,7 @@
         </div>
     </div>
 
-    <!-- Modal اختيار طريقة الخلاص عند التسليم (بدون رسائل المتصفح الخايبة) -->
+    <!-- Modal اختيار طريقة الخلاص عند التسليم -->
     <div id="paymentChoiceModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50">
         <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-md w-full mx-4 space-y-4 text-center">
             <div class="bg-indigo-50 text-indigo-600 w-12 h-12 rounded-2xl flex items-center justify-center mx-auto text-xl">
@@ -340,19 +344,33 @@
         window.activeDeliveryTotal = 0;
         window.activeCreditClientName = '';
 
+        // قائمة المنتجات: تشمل الكوارط وشحن الرصيد لجميع الشركات (Ooredoo, Telecom, Orange, Lycamobile/Light)
         window.tariffs = [
+            // Ooredoo
             { id: 'Ooredoo_1', operator: 'Ooredoo', name: 'Ticket 1D', buy: 0.950, sell: 1.000 },
             { id: 'Ooredoo_5', operator: 'Ooredoo', name: 'Carte 5D', buy: 4.750, sell: 5.000 },
             { id: 'Ooredoo_10', operator: 'Ooredoo', name: 'Carte 10D', buy: 9.500, sell: 10.000 },
             { id: 'Ooredoo_25', operator: 'Ooredoo', name: 'Carte 25D', buy: 23.750, sell: 25.000 },
+            { id: 'Ooredoo_recharge', operator: 'Ooredoo', name: 'شحن رصيد مباشر', buy: 0.000, sell: 0.000 }, // يتم إدخال المبلغ لاحقاً أو حسب الطلب
+            
+            // Telecom
             { id: 'Telecom_1', operator: 'Telecom', name: 'Ticket 1D', buy: 0.950, sell: 1.000 },
             { id: 'Telecom_5', operator: 'Telecom', name: 'Carte 5D', buy: 4.750, sell: 5.000 },
             { id: 'Telecom_10', operator: 'Telecom', name: 'Carte 10D', buy: 9.500, sell: 10.000 },
             { id: 'Telecom_25', operator: 'Telecom', name: 'Carte 25D', buy: 23.750, sell: 25.000 },
+            { id: 'Telecom_recharge', operator: 'Telecom', name: 'شحن رصيد مباشر', buy: 0.000, sell: 0.000 },
+
+            // Orange
             { id: 'Orange_1', operator: 'Orange', name: 'Ticket 1D', buy: 0.950, sell: 1.000 },
             { id: 'Orange_5', operator: 'Orange', name: 'Carte 5D', buy: 4.750, sell: 5.000 },
             { id: 'Orange_10', operator: 'Orange', name: 'Carte 10D', buy: 9.500, sell: 10.000 },
-            { id: 'Orange_25', operator: 'Orange', name: 'Carte 25D', buy: 23.750, sell: 25.000 }
+            { id: 'Orange_25', operator: 'Orange', name: 'Carte 25D', buy: 23.750, sell: 25.000 },
+            { id: 'Orange_recharge', operator: 'Orange', name: 'شحن رصيد مباشر', buy: 0.000, sell: 0.000 },
+
+            // Lycamobile / Light / شحن رصيد
+            { id: 'Lycamobile_5', operator: 'Lycamobile', name: 'بطاقة 5D', buy: 4.750, sell: 5.000 },
+            { id: 'Lycamobile_10', operator: 'Lycamobile', name: 'بطاقة 10D', buy: 9.500, sell: 10.000 },
+            { id: 'Lycamobile_recharge', operator: 'Lycamobile', name: 'شحن رصيد مباشر (لايت)', buy: 0.000, sell: 0.000 }
         ];
 
         window.clientRegister = async function() {
@@ -663,7 +681,6 @@
             showSection('clientAuth');
         }
 
-        // دوال فتح النوافذ المنبثقة الجميلة بدلاً من نافذة المتصفح القديمة
         function openPaymentChoiceModal(orderId, totalSell) {
             window.activeDeliveryOrderId = orderId;
             window.activeDeliveryTotal = totalSell;
@@ -741,7 +758,7 @@
                         <div>
                             <span class="text-xs text-indigo-500 font-semibold">${t.operator}</span>
                             <h4 class="font-bold text-gray-800 text-lg">${t.name}</h4>
-                            <p class="text-emerald-600 font-extrabold text-sm">${t.sell.toFixed(3)} د.ت</p>
+                            <p class="text-emerald-600 font-extrabold text-sm">${t.sell > 0 ? t.sell.toFixed(3) + ' د.ت' : 'حسب الطلب'}</p>
                         </div>
                         <div class="mt-4 flex items-center justify-between">
                             <button onclick="updateQty('${t.id}', -1)" class="bg-white border text-gray-700 hover:bg-gray-100 w-9 h-9 rounded-xl font-bold shadow-sm">-</button>
@@ -766,7 +783,9 @@
             let total = 0;
             for (let id in window.cart) {
                 const item = window.tariffs.find(t => t.id === id);
-                if (item) total += item.sell * window.cart[id];
+                if (item && item.sell > 0) {
+                    total += item.sell * window.cart[id];
+                }
             }
             document.getElementById('cartTotal').innerText = total.toFixed(3) + ' د.ت';
         }
@@ -827,7 +846,7 @@
                     <div class="flex justify-between items-center bg-gray-50 p-3 rounded-xl border">
                         <div>
                             <p class="font-bold text-sm text-gray-800">[${item.operator}] ${item.name}</p>
-                            <p class="text-xs text-indigo-600">${item.sell.toFixed(3)} د.ت للقطعة</p>
+                            <p class="text-xs text-indigo-600">${item.sell > 0 ? item.sell.toFixed(3) + ' د.ت للقطعة' : 'شحن رصيد'}</p>
                         </div>
                         <div class="flex items-center gap-2">
                             <button onclick="updateEditQty(${index}, -1)" class="bg-white border w-7 h-7 rounded-lg font-bold">-</button>
@@ -889,7 +908,7 @@
                     <div class="bg-gray-50 p-3 rounded-xl border flex flex-col justify-between">
                         <div>
                             <span class="text-xs text-gray-500">${t.name}</span>
-                            <p class="text-emerald-600 font-bold text-sm">${t.sell.toFixed(3)} د.ت</p>
+                            <p class="text-emerald-600 font-bold text-sm">${t.sell > 0 ? t.sell.toFixed(3) + ' د.ت' : 'حسب الطلب'}</p>
                         </div>
                         <div class="mt-2 flex items-center justify-between">
                             <button onclick="updatePosQty('${t.id}', -1)" class="bg-white border w-7 h-7 rounded font-bold">-</button>
@@ -911,7 +930,7 @@
             let total = 0;
             for (let i in window.posCart) {
                 const item = window.tariffs.find(t => t.id === i);
-                if (item) total += item.sell * window.posCart[i];
+                if (item && item.sell > 0) total += item.sell * window.posCart[i];
             }
             document.getElementById('posCartTotal').innerText = total.toFixed(3) + ' د.ت';
         }
@@ -951,6 +970,7 @@
                         if (i.operator === 'Ooredoo') badgeBg = 'bg-rose-50 text-rose-700 border border-rose-200';
                         else if (i.operator === 'Telecom') badgeBg = 'bg-blue-50 text-blue-700 border border-blue-200';
                         else if (i.operator === 'Orange') badgeBg = 'bg-amber-50 text-amber-700 border border-amber-200';
+                        else if (i.operator === 'Lycamobile') badgeBg = 'bg-purple-50 text-purple-700 border border-purple-200';
 
                         itemsDetail += `<span class="${badgeBg} px-2.5 py-1 rounded-xl text-xs ml-1 font-bold">[${i.operator}] ${i.name} (${i.qty})</span>`;
                     });

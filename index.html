@@ -714,6 +714,8 @@
         window.stockPurchases = JSON.parse(localStorage.getItem('stockPurchases') || '{}');
         window.adminPassword = localStorage.getItem('adminPassword') || 'admin123';
         window.activeCreditClientName = '';
+        window.activeDeliveryOrderId = null;
+        window.activeDeliveryTotal = 0;
 
         window.tariffs = [
             { id: 'Ooredoo_1', operator: 'Ooredoo', name: 'Ticket 1D', buy: 0.950, sell: 1.000 },
@@ -1652,20 +1654,20 @@
             document.getElementById('recetteModal').classList.add('hidden');
         }
 
-        // الدوال المسؤولة عن تشغيل شحن الرصيد المباشر (أصل المشكل)
-        function updateRechargeQty(id, val) {
+        // دوال شحن الرصيد المباشر والمشغلين
+        window.updateRechargeQty = function(id, val) {
             let amount = parseFloat(val) || 0;
             window.cart[id] = amount;
             calculateTotal();
-        }
+        };
 
-        function updatePosRechargeQty(id, val) {
+        window.updatePosRechargeQty = function(id, val) {
             let amount = parseFloat(val) || 0;
             window.posCart[id] = amount;
             calculatePosTotal();
-        }
+        };
 
-        function selectOperator(operator) {
+        window.selectOperator = function(operator) {
             window.currentOperator = operator;
             document.getElementById('productsSection').classList.remove('hidden');
             document.getElementById('selectedOperatorTitle').innerText = `اختر الكميات لـ: ${operator}`;
@@ -1708,16 +1710,16 @@
             });
             document.getElementById('cardsGrid').innerHTML = gridHtml;
             calculateTotal();
-        }
+        };
 
-        function updateQty(id, change) {
+        window.updateQty = function(id, change) {
             if (!window.cart[id]) window.cart[id] = 0;
             window.cart[id] += change;
             if (window.cart[id] < 0) window.cart[id] = 0;
             let qtyEl = document.getElementById(`qty_${id}`);
             if (qtyEl) qtyEl.innerText = window.cart[id];
             calculateTotal();
-        }
+        };
 
         function calculateTotal() {
             let total = 0;
@@ -1734,7 +1736,7 @@
             document.getElementById('cartTotal').innerText = total.toFixed(3) + ' د.ت';
         }
 
-        function selectPosOperator(operator) {
+        window.selectPosOperator = function(operator) {
             window.posOperator = operator;
             document.getElementById('posProductsSection').classList.remove('hidden');
             document.getElementById('posSelectedOperatorTitle').innerText = `اختر للبيع المباشر: ${operator}`;
@@ -1775,16 +1777,16 @@
             });
             document.getElementById('posCardsGrid').innerHTML = gridHtml;
             calculatePosTotal();
-        }
+        };
 
-        function updatePosQty(id, change) {
+        window.updatePosQty = function(id, change) {
             if (!window.posCart[id]) window.posCart[id] = 0;
             window.posCart[id] += change;
             if (window.posCart[id] < 0) window.posCart[id] = 0;
             let posQtyEl = document.getElementById(`pos_qty_${id}`);
             if (posQtyEl) posQtyEl.innerText = window.posCart[id];
             calculatePosTotal();
-        }
+        };
 
         function calculatePosTotal() {
             let total = 0;

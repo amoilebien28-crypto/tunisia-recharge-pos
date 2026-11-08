@@ -3,203 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة توزيع رصيد الهاتف الجوال - بوابة التجار</title>
+    <title>Tunisie Recharge - فضاء التاجر</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome للأيقونات -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen font-sans pb-12">
+<body class="bg-slate-100 min-h-screen font-sans pb-12 text-slate-800">
 
-    <!-- رأسية التطبيق -->
-    <header class="bg-indigo-600 text-white shadow-lg">
-        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <h1 class="text-xl font-bold flex items-center gap-2">
-                <i class="fa-solid fa-mobile-screen-button text-yellow-300"></i> منصة توزيع رصيد الهاتف الجوال - الحانوت
+    <!-- شاشة دخول التاجر برقم الهاتف وكلمة المرور -->
+    <div id="clientAuthScreen" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-md w-full space-y-6">
+            <div class="text-center space-y-2">
+                <div class="bg-emerald-50 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto text-emerald-600 text-2xl font-bold">
+                    <i class="fa-solid fa-store"></i>
+                </div>
+                <h2 class="text-2xl font-black text-slate-900">فضاء التاجر (الحانوت)</h2>
+                <p class="text-xs text-slate-500">الرجاء إدخال بيانات الدخول التي أعطاها لك الموزع</p>
+            </div>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">رقم الهاتف:</label>
+                    <input type="text" id="clientLoginPhone" placeholder="رقم الهاتف..." class="w-full border border-slate-300 p-3 rounded-xl text-sm font-bold bg-slate-50">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">كلمة المرور:</label>
+                    <input type="password" id="clientLoginPassword" placeholder="••••••••" class="w-full border border-slate-300 p-3 rounded-xl text-sm font-bold bg-slate-50">
+                </div>
+                <button onclick="handleClientLogin()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl font-bold shadow-sm transition">دخول إلى الحانوت</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- رأسية واجهة التاجر -->
+    <header class="bg-white text-slate-800 shadow-sm border-b border-slate-200">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold flex items-center gap-2 text-emerald-700">
+                <i class="fa-solid fa-store"></i> <span id="headerClientName">مرحباً بك</span>
             </h1>
-            <div id="headerClientInfo" class="text-sm font-semibold"></div>
+            <div class="flex gap-2">
+                <button onclick="logoutClient()" class="bg-rose-50 hover:bg-rose-100 text-rose-600 px-3 py-2 rounded-xl text-xs font-bold transition">
+                    <i class="fa-solid fa-right-from-bracket"></i> خروج
+                </button>
+            </div>
         </div>
     </header>
 
-    <main class="container mx-auto px-4 py-6">
+    <main class="container mx-auto px-4 py-8 max-w-2xl space-y-6">
 
-        <!-- تنبيه عام للحوانت -->
-        <div id="broadcastBanner" class="hidden max-w-4xl mx-auto mb-6 bg-amber-500 text-white p-4 rounded-2xl shadow-md flex items-center gap-3">
-            <i class="fa-solid fa-bullhorn text-2xl"></i>
-            <div>
-                <h4 class="font-bold text-sm">تنبيه هام من الإدارة:</h4>
-                <p id="broadcastBannerText" class="text-xs mt-0.5"></p>
-            </div>
-        </div>
-
-        <!-- ================= 1. واجهة دخول أو تسجيل التاجر ================= -->
-        <div id="clientAuthSection" class="max-w-md mx-auto space-y-4">
-            <div class="bg-white p-8 rounded-3xl shadow-xl border border-indigo-50 space-y-5">
-                <div class="text-center">
-                    <div class="bg-indigo-100 text-indigo-600 w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-3 text-2xl">
-                        <i class="fa-solid fa-store"></i>
-                    </div>
-                    <h2 class="text-2xl font-bold text-gray-800">بوابة الحانوت / التاجر</h2>
-                    <p class="text-xs text-gray-500 mt-1">قم بتسجيل الدخول لطلب البطاقات وشحن الرصيد بسهولة</p>
-                </div>
-                
-                <div class="flex bg-gray-100 p-1 rounded-xl">
-                    <button onclick="switchAuthTab('login')" id="tabLogin" class="flex-1 py-2 font-bold text-indigo-600 bg-white rounded-lg shadow-sm text-sm transition">تسجيل الدخول</button>
-                    <button onclick="switchAuthTab('register')" id="tabRegister" class="flex-1 py-2 font-semibold text-gray-500 text-sm transition">حساب جديد</button>
-                </div>
-
-                <div id="loginForm" class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-bold text-gray-600 mb-1">رقم الهاتف</label>
-                        <input type="text" id="loginPhone" placeholder="أدخل رقم الهاتف..." class="border border-gray-200 p-3 rounded-xl text-sm w-full focus:ring-2 focus:ring-indigo-500 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-600 mb-1">كلمة المرور</label>
-                        <input type="password" id="loginPassword" placeholder="أدخل كلمة المرور..." class="border border-gray-200 p-3 rounded-xl text-sm w-full focus:ring-2 focus:ring-indigo-500 outline-none">
-                    </div>
-                    <button onclick="window.clientLogin()" class="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 transition shadow-md shadow-indigo-200">دخول إلى واجهة الطلبات</button>
-                </div>
-
-                <div id="registerForm" class="space-y-3 hidden">
-                    <div>
-                        <label class="block text-xs font-bold text-gray-600 mb-1">اسم الحانوت</label>
-                        <input type="text" id="regName" placeholder="مثال: حانوت البركة..." class="border border-gray-200 p-2.5 rounded-xl text-sm w-full">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-600 mb-1">رقم الهاتف</label>
-                        <input type="text" id="regPhone" placeholder="رقم الهاتف الخاص بك..." class="border border-gray-200 p-2.5 rounded-xl text-sm w-full">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-600 mb-1">العنوان / المكان</label>
-                        <input type="text" id="regAddress" placeholder="المدينة، الحي..." class="border border-gray-200 p-2.5 rounded-xl text-sm w-full">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-600 mb-1">كلمة المرور</label>
-                        <input type="password" id="regPassword" placeholder="اختر كلمة مرور..." class="border border-gray-200 p-2.5 rounded-xl text-sm w-full">
-                    </div>
-                    <button onclick="window.clientRegister()" class="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold hover:bg-emerald-700 transition shadow-md shadow-emerald-200 mt-2">تسجيل الحساب الجديد</button>
-                </div>
-            </div>
-
-            <!-- الفقرة التفسيرية -->
-            <div class="bg-indigo-50/70 border border-indigo-100 p-4 rounded-2xl text-center text-xs text-indigo-900 leading-relaxed shadow-sm">
-                <p class="font-bold mb-1"><i class="fa-solid fa-circle-info text-indigo-600 ml-1"></i> حول المنصة:</p>
-                منصة توزيع رصيد الهاتف الجوال في تونس - الحل الأمثل لأصحاب الحوانت ومحلات المواد الغذائية لتسهيل طلب بطاقات الشحن (Ooredoo, Telecom, Orange) وشحن الأرصدة مباشرة.
-            </div>
-        </div>
-
-        <!-- ================= 2. واجهة طلبات التاجر وكشف الحساب ================= -->
-        <div id="clientDashboardSection" class="hidden space-y-6 max-w-4xl mx-auto">
-            <div class="bg-white p-4 rounded-2xl shadow-sm border border-indigo-50 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
-                <div>
-                    <h3 class="font-bold text-lg text-gray-800" id="welcomeClientName">مرحباً بالتاجر</h3>
-                    <p class="text-xs text-gray-500 mt-0.5" id="welcomeClientDetails"></p>
-                </div>
-                <div class="flex gap-2 w-full md:w-auto">
-                    <button onclick="openClientStatsModal()" class="flex-1 md:flex-none bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 shadow-sm">
-                        <i class="fa-solid fa-chart-bar"></i> الإحصائيات
-                    </button>
-                    <button onclick="contactAdminWhatsApp()" class="flex-1 md:flex-none bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 shadow-sm">
-                        <i class="fa-brands fa-whatsapp"></i> مراسلة الإدارة
-                    </button>
-                    <button onclick="clientLogout()" class="flex-1 md:flex-none bg-rose-50 text-rose-600 px-3 py-1.5 rounded-xl text-xs font-bold hover:bg-rose-100 transition">خروج</button>
-                </div>
-            </div>
-
-            <!-- أزرار اختيار المشغلين -->
+        <!-- بطاقة اختيار المشغل للطلب -->
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 space-y-4">
+            <h2 class="text-lg font-black text-slate-900">طلب بطاقات شحن أو رصيد</h2>
+            
             <div class="grid grid-cols-3 gap-3">
-                <button onclick="selectOperator('Ooredoo')" class="bg-gradient-to-r from-red-500 to-rose-600 text-white p-3 rounded-xl font-bold shadow-md shadow-rose-200 hover:scale-[1.02] transition flex flex-col items-center justify-center gap-1 text-xs md:text-sm">
-                    <i class="fa-solid fa-signal text-lg"></i> أوريدو
-                </button>
-                <button onclick="selectOperator('Telecom')" class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-3 rounded-xl font-bold shadow-md shadow-indigo-200 hover:scale-[1.02] transition flex flex-col items-center justify-center gap-1 text-xs md:text-sm">
-                    <i class="fa-solid fa-globe text-lg"></i> تيليكوم
-                </button>
-                <button onclick="selectOperator('Orange')" class="bg-gradient-to-r from-orange-500 to-amber-600 text-white p-3 rounded-xl font-bold shadow-md shadow-amber-200 hover:scale-[1.02] transition flex flex-col items-center justify-center gap-1 text-xs md:text-sm">
-                    <i class="fa-solid fa-wifi text-lg"></i> أورنج
-                </button>
+                <button onclick="selectClientOperator('Ooredoo')" class="bg-red-500 text-white p-3 rounded-xl font-bold text-sm shadow-sm">أوريدو</button>
+                <button onclick="selectClientOperator('Telecom')" class="bg-blue-500 text-white p-3 rounded-xl font-bold text-sm shadow-sm">تيليكوم</button>
+                <button onclick="selectClientOperator('Orange')" class="bg-orange-500 text-white p-3 rounded-xl font-bold text-sm shadow-sm">أورنج</button>
             </div>
 
-            <!-- فئات المنتجات (طريقة السبحة) -->
-            <div id="productsSection" class="bg-white p-5 rounded-2xl shadow-sm border border-indigo-50 hidden space-y-4">
-                <h3 id="selectedOperatorTitle" class="text-base font-bold text-gray-800 border-b pb-2"></h3>
-                
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 max-h-[55vh] overflow-y-auto p-1" id="cardsGrid"></div>
-
-                <div class="border-t pt-3 flex justify-between items-center bg-gray-50 p-3 rounded-xl sticky bottom-0 z-10 shadow-inner">
-                    <div>
-                        <span class="text-gray-500 text-xs">المجموع الإجمالي:</span>
-                        <span id="cartTotal" class="text-xl font-extrabold text-emerald-600 mr-2">0.000 د.ت</span>
-                    </div>
-                    <button onclick="window.submitOrder()" class="bg-indigo-600 text-white px-6 py-2.5 rounded-xl font-bold text-xs hover:bg-indigo-700 transition shadow-md shadow-indigo-200">إرسال الطلب (Commande)</button>
-                </div>
-            </div>
-
-            <!-- كشف حساب التاجر -->
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-indigo-50 space-y-4">
-                <h4 class="font-bold text-base text-gray-800"><i class="fa-solid fa-file-invoice-dollar text-indigo-600 ml-2"></i> كشف حسابي وسجل الطلبات (اضغط على أي طلب لعرض تفاصيله)</h4>
-                <div id="clientMyOrdersContainer" class="space-y-3">
-                    <p class="text-gray-400 text-sm text-center py-4">جاري تحميل سجلك...</p>
-                </div>
+            <!-- المنتجات الخاصة بالمشغل -->
+            <div id="clientProductsSection" class="hidden space-y-3 border-t pt-4">
+                <h3 id="clientSelectedOperatorTitle" class="font-bold text-slate-700 text-sm"></h3>
+                <div class="grid grid-cols-2 gap-3" id="clientCardsGrid"></div>
             </div>
         </div>
 
+        <!-- سلة الطلبات وزر الإرسال -->
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 space-y-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 class="font-bold text-slate-800">مجموع الطلبية:</h3>
+                <span id="clientCartTotal" class="text-xl font-extrabold text-emerald-600">0.000 د.ت</span>
+            </div>
+            <button onclick="submitClientOrder()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-xl font-bold shadow-sm transition">إرسال الطلب إلى البائع</button>
+        </div>
+
+        <!-- طلباتي السابقة -->
+        <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 space-y-4">
+            <h3 class="font-bold text-slate-800">طلباتي السابقة:</h3>
+            <div id="clientOrdersHistory" class="space-y-2">
+                <p class="text-slate-400 text-xs text-center py-2">لا توجد طلبات سابقة.</p>
+            </div>
+        </div>
     </main>
 
-    <!-- نافذة الإشعارات -->
-    <div id="customAlertModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
-        <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-sm w-full mx-4 space-y-4 text-center">
-            <h3 id="customAlertTitle" class="font-bold text-lg text-gray-800">تنبيه</h3>
-            <p id="customAlertMessage" class="text-xs text-gray-600"></p>
-            <button onclick="closeCustomAlert()" class="w-full bg-indigo-600 text-white py-2.5 rounded-xl font-bold text-sm shadow-md">حسناً / OK</button>
-        </div>
-    </div>
-
-    <!-- نافذة إحصائيات المشتريات الشهرية للتاجر -->
-    <div id="clientStatsModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
-        <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto space-y-4">
-            <div class="flex justify-between items-center border-b pb-3">
-                <h3 class="font-bold text-lg text-gray-800"><i class="fa-solid fa-chart-bar text-indigo-600 ml-2"></i> إحصائيات المشتريات الشهرية</h3>
-                <button onclick="closeClientStatsModal()" class="text-gray-400 hover:text-gray-600 text-lg font-bold">&times;</button>
-            </div>
-            <div class="overflow-x-auto">
-                <table class="w-full text-right border-collapse">
-                    <thead>
-                        <tr class="border-b bg-gray-50 text-gray-600 text-sm">
-                            <th class="p-3">الشهر</th>
-                            <th class="p-3">المجموع (د.ت)</th>
-                        </tr>
-                    </thead>
-                    <tbody id="clientMonthlyStatsBody"></tbody>
-                </table>
-            </div>
-            <div class="border-t pt-3 flex justify-between items-center font-bold">
-                <span class="text-gray-700">مجموع المشتريات السنوية:</span>
-                <span id="clientAnnualTotal" class="text-emerald-600 text-lg">0.000 د.ت</span>
-            </div>
-            <button onclick="closeClientStatsModal()" class="w-full bg-indigo-600 text-white py-2.5 rounded-xl font-bold text-sm shadow-md">إغلاق</button>
-        </div>
-    </div>
-
-    <!-- نافذة تفاصيل طلب التاجر -->
-    <div id="clientOrderDetailModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
-        <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto space-y-4">
-            <div class="flex justify-between items-center border-b pb-3">
-                <h3 class="font-bold text-lg text-gray-800"><i class="fa-solid fa-receipt text-indigo-600 ml-2"></i> تفاصيل الطلب</h3>
-                <button onclick="closeClientOrderDetailModal()" class="text-gray-400 hover:text-gray-600 text-lg font-bold">&times;</button>
-            </div>
-            <div id="clientOrderDetailContent" class="space-y-2"></div>
-            <div class="border-t pt-3 flex justify-between items-center font-bold">
-                <span class="text-gray-700">المجموع:</span>
-                <span id="clientOrderDetailTotal" class="text-emerald-600 text-lg">0.000 د.ت</span>
-            </div>
-            <button onclick="closeClientOrderDetailModal()" class="w-full bg-indigo-600 text-white py-2.5 rounded-xl font-bold text-sm shadow-md">إغلاق</button>
-        </div>
-    </div>
-
-    <!-- سكربت الفايربيز وتطبيق التجار -->
+    <!-- السكربت والربط بقاعدة البيانات -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, query, orderBy, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAYNDYcwlmX5rdnpXyGoHR48g-T6h_oHFk",
@@ -213,329 +104,141 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        window.db = db;
 
-        window.currentClient = null;
-        window.currentOperator = 'Ooredoo';
-        window.cart = {};
-        window.allOrders = [];
+        window.currentClient = JSON.parse(localStorage.getItem('currentClient') || 'null');
 
-        window.tariffs = [
-            { id: 'Ooredoo_1', operator: 'Ooredoo', name: '1 د.ت', sell: 1.000, color: 'bg-gray-100 border-gray-300 text-gray-900' },
-            { id: 'Ooredoo_5', operator: 'Ooredoo', name: '5 د.ت', sell: 5.000, color: 'bg-gray-100 border-gray-300 text-gray-900' },
-            { id: 'Ooredoo_10', operator: 'Ooredoo', name: '10 د.ت', sell: 10.000, color: 'bg-gray-100 border-gray-300 text-gray-900' },
-            { id: 'Ooredoo_25', operator: 'Ooredoo', name: '25 د.ت', sell: 25.000, color: 'bg-gray-100 border-gray-300 text-gray-900' },
-            { id: 'Ooredoo_recharge', operator: 'Ooredoo', name: 'شحن رصيد مباشر', sell: 0.000, color: 'bg-rose-50 border-rose-200 text-rose-900' },
-            
-            { id: 'Telecom_1', operator: 'Telecom', name: '1 د.ت', sell: 1.000, color: 'bg-gray-100 border-gray-300 text-gray-900' },
-            { id: 'Telecom_5', operator: 'Telecom', name: '5 د.ت', sell: 5.000, color: 'bg-gray-100 border-gray-300 text-gray-900' },
-            { id: 'Telecom_10', operator: 'Telecom', name: '10 د.ت', sell: 10.000, color: 'bg-gray-100 border-gray-300 text-gray-900' },
-            { id: 'Telecom_25', operator: 'Telecom', name: '25 د.ت', sell: 25.000, color: 'bg-gray-100 border-gray-300 text-gray-900' },
-            { id: 'Telecom_recharge', operator: 'Telecom', name: 'شحن رصيد مباشر', sell: 0.000, color: 'bg-rose-50 border-rose-200 text-rose-900' },
-
-            { id: 'Orange_1', operator: 'Orange', name: '1 د.ت', sell: 1.000, color: 'bg-gray-100 border-gray-300 text-gray-900' },
-            { id: 'Orange_5', operator: 'Orange', name: '5 د.ت', sell: 5.000, color: 'bg-gray-100 border-gray-300 text-gray-900' },
-            { id: 'Orange_10', operator: 'Orange', name: '10 د.ت', sell: 10.000, color: 'bg-gray-100 border-gray-300 text-gray-900' },
-            { id: 'Orange_25', operator: 'Orange', name: '25 د.ت', sell: 25.000, color: 'bg-gray-100 border-gray-300 text-gray-900' },
-            { id: 'Orange_recharge', operator: 'Orange', name: 'شحن رصيد مباشر', sell: 0.000, color: 'bg-rose-50 border-rose-200 text-rose-900' }
-        ];
-
-        window.clientRegister = async function() {
-            const name = document.getElementById('regName').value.trim();
-            const phone = document.getElementById('regPhone').value.trim();
-            const address = document.getElementById('regAddress').value.trim();
-            const password = document.getElementById('regPassword').value.trim();
-
-            if (!name || !phone || !password) {
-                showCustomAlert('تنبيه', 'الرجاء إدخال اسم الحانوت، رقم الهاتف، وكلمة المرور.');
-                return;
-            }
-
-            try {
-                const q = query(collection(db, "clients"), where("phone", "==", phone));
-                const querySnapshot = await getDocs(q);
-                if (!querySnapshot.empty) {
-                    showCustomAlert('تنبيه', 'رقم الهاتف مسجل مسبقاً، الرجاء تسجيل الدخول.');
-                    return;
-                }
-
-                await addDoc(collection(db, "clients"), {
-                    name, phone, address, password, date: new Date().toISOString()
-                });
-
-                showCustomAlert('نجاح', 'تم تسجيل الحساب بنجاح! يمكنك الدخول الآن.');
-                switchAuthTab('login');
-                document.getElementById('loginPhone').value = phone;
-            } catch (e) {
-                showCustomAlert('خطأ', 'حدث خطأ أثناء التسجيل.');
+        window.checkClientAuth = function() {
+            if (window.currentClient) {
+                document.getElementById('clientAuthScreen').classList.add('hidden');
+                document.getElementById('headerClientName').innerText = window.currentClient.name;
+                fetchClientOrders();
+            } else {
+                document.getElementById('clientAuthScreen').classList.remove('hidden');
             }
         };
 
-        window.clientLogin = async function() {
-            const phone = document.getElementById('loginPhone').value.trim();
-            const password = document.getElementById('loginPassword').value.trim();
-
-            if (!phone || !password) {
-                showCustomAlert('تنبيه', 'الرجاء إدخال رقم الهاتف وكلمة المرور.');
-                return;
-            }
-
+        window.handleClientLogin = async function() {
+            const phone = document.getElementById('clientLoginPhone').value.trim();
+            const password = document.getElementById('clientLoginPassword').value.trim();
             try {
                 const q = query(collection(db, "clients"), where("phone", "==", phone), where("password", "==", password));
-                const querySnapshot = await getDocs(q);
-
-                if (querySnapshot.empty) {
-                    showCustomAlert('خطأ', 'رقم الهاتف أو كلمة المرور غير صحيحة.');
-                    return;
-                }
-
-                querySnapshot.forEach((docSnap) => {
-                    window.currentClient = { id: docSnap.id, ...docSnap.data() };
-                });
-
-                document.getElementById('welcomeClientName').innerText = `مرحباً، ${window.currentClient.name}`;
-                document.getElementById('welcomeClientDetails').innerText = `الهاتف: ${window.currentClient.phone} | العنوان: ${window.currentClient.address}`;
-                
-                document.getElementById('clientAuthSection').classList.add('hidden');
-                document.getElementById('clientDashboardSection').classList.remove('hidden');
-                renderClientOrders();
-                checkBroadcastBanner();
-            } catch (e) {
-                showCustomAlert('خطأ', 'حدث خطأ أثناء الاتصال بقاعدة البيانات.');
-            }
-        };
-
-        window.submitOrder = async function() {
-            let itemsOrdered = [];
-            let totalSell = 0;
-
-            for (let id in window.cart) {
-                if (window.cart[id] > 0) {
-                    const item = window.tariffs.find(t => t.id === id);
-                    if (item.id.includes('recharge')) {
-                        let amount = window.cart[id];
-                        itemsOrdered.push({ ...item, qty: 1, sell: amount, name: `شحن رصيد مباشر (${amount} د.ت)` });
-                        totalSell += amount;
-                    } else {
-                        itemsOrdered.push({ ...item, qty: window.cart[id] });
-                        totalSell += item.sell * window.cart[id];
-                    }
-                }
-            }
-
-            if (itemsOrdered.length === 0) {
-                showCustomAlert('تنبيه', 'الرجاء اختيار كمية واحدة على الأقل.');
-                return;
-            }
-
-            const orderData = {
-                clientName: window.currentClient.name,
-                clientPhone: window.currentClient.phone,
-                clientAddress: window.currentClient.address,
-                items: itemsOrdered,
-                totalSell,
-                totalBuy: totalSell * 0.95, // تقديري
-                benefice: totalSell * 0.05,
-                paymentStatus: 'En attente',
-                paidAmount: 0,
-                creditAmount: totalSell,
-                date: new Date().toISOString(),
-                status: 'قيد الانتظار للتحضير'
-            };
-
-            try {
-                await addDoc(collection(db, "orders"), orderData);
-                showCustomAlert('نجاح', 'تم إرسال طلبك بنجاح إلى الإدارة!');
-                window.cart = {};
-                document.querySelectorAll('[id^="qty_"]').forEach(el => {
-                    if (el.tagName === 'INPUT') el.value = '';
-                    else el.innerText = '0';
-                });
-                calculateTotal();
-                renderClientOrders();
-            } catch (e) {
-                showCustomAlert('خطأ', 'حدث خطأ أثناء إرسال الطلب.');
-            }
-        };
-
-        onSnapshot(collection(db, "orders"), (snapshot) => {
-            window.allOrders = [];
-            snapshot.forEach((docSnap) => {
-                window.allOrders.push({ id: docSnap.id, ...docSnap.data() });
-            });
-            window.allOrders.sort((a, b) => new Date(b.date) - new Date(a.date));
-            if (window.currentClient) renderClientOrders();
-        });
-
-        window.selectOperator = function(operator) {
-            window.currentOperator = operator;
-            document.getElementById('productsSection').classList.remove('hidden');
-            document.getElementById('selectedOperatorTitle').innerText = `اختر الكميات لـ: ${operator}`;
-            
-            const opTariffs = window.tariffs.filter(t => t.operator === operator);
-            let gridHtml = '';
-            opTariffs.forEach(t => {
-                let currentQty = window.cart[t.id] || 0;
-                let isRecharge = t.id.includes('recharge');
-                
-                if (isRecharge) {
-                    gridHtml += `
-                        <div class="bg-rose-50/70 p-3 rounded-2xl border border-rose-200 flex flex-col justify-between col-span-2">
-                            <div>
-                                <span class="text-xs text-rose-700 font-bold">${t.operator}</span>
-                                <h4 class="font-extrabold text-gray-900 text-base">${t.name}</h4>
-                            </div>
-                            <div class="mt-2 flex items-center gap-2">
-                                <input type="number" min="0" step="0.001" id="qty_${t.id}" value="${currentQty || ''}" oninput="updateRechargeQty('${t.id}', this.value)" placeholder="المبلغ بـ د.ت" class="border p-2 rounded-xl w-full text-center font-extrabold text-base bg-white">
-                                <span class="text-xs text-gray-700 font-bold">د.ت</span>
-                            </div>
-                        </div>
-                    `;
+                const snap = await getDocs(q);
+                if (!snap.empty) {
+                    let cData;
+                    snap.forEach(d => cData = { id: d.id, ...d.data() });
+                    window.currentClient = cData;
+                    localStorage.setItem('currentClient', JSON.stringify(window.currentClient));
+                    window.checkClientAuth();
                 } else {
-                    gridHtml += `
-                        <div onclick="addCardQty('${t.id}')" class="${t.color} border-2 p-3 rounded-2xl flex flex-col justify-between cursor-pointer hover:shadow-md transition select-none relative">
-                            <button onclick="event.stopPropagation(); decreaseCardQty('${t.id}')" class="absolute top-2 left-2 bg-white/90 hover:bg-white text-gray-700 w-7 h-7 rounded-full font-black text-sm shadow flex items-center justify-center border">-</button>
-                            <div>
-                                <span class="text-xs font-bold opacity-75">${t.operator}</span>
-                                <h4 class="font-black text-xl tracking-wide mt-1">${t.name}</h4>
-                                <p class="font-extrabold text-sm mt-0.5">${t.sell.toFixed(3)} د.ت</p>
-                            </div>
-                            <div class="mt-4 text-center bg-white/80 py-1.5 rounded-xl border border-black/10">
-                                <span class="text-xs font-bold text-gray-700 ml-1">الكمية:</span>
-                                <span id="qty_${t.id}" class="font-black text-lg text-indigo-900">${currentQty}</span>
-                            </div>
-                        </div>
-                    `;
+                    alert('رقم الهاتف أو كلمة المرور غير صحيحة.');
                 }
-            });
-            document.getElementById('cardsGrid').innerHTML = gridHtml;
-            calculateTotal();
-        };
-
-        window.addCardQty = function(id) {
-            if (!window.cart[id]) window.cart[id] = 0;
-            window.cart[id] += 1;
-            document.getElementById(`qty_${id}`).innerText = window.cart[id];
-            calculateTotal();
-        };
-
-        window.decreaseCardQty = function(id) {
-            if (!window.cart[id]) window.cart[id] = 0;
-            window.cart[id] -= 1;
-            if (window.cart[id] < 0) window.cart[id] = 0;
-            document.getElementById(`qty_${id}`).innerText = window.cart[id];
-            calculateTotal();
-        };
-
-        window.updateRechargeQty = function(id, val) {
-            window.cart[id] = parseFloat(val) || 0;
-            calculateTotal();
-        };
-
-        function calculateTotal() {
-            let total = 0;
-            for (let id in window.cart) {
-                const item = window.tariffs.find(t => t.id === id);
-                if (item) {
-                    if (item.id.includes('recharge')) total += window.cart[id] || 0;
-                    else if (item.sell > 0) total += item.sell * window.cart[id];
-                }
+            } catch (e) {
+                alert('خطأ في الاتصال.');
             }
-            document.getElementById('cartTotal').innerText = total.toFixed(3) + ' د.ت';
-        }
+        };
 
-        window.renderClientOrders = function() {
-            let myOrders = window.allOrders.filter(o => o.clientName === window.currentClient.name);
-            let container = document.getElementById('clientMyOrdersContainer');
-            if (myOrders.length === 0) {
-                container.innerHTML = '<p class="text-gray-400 text-sm text-center py-4">لا توجد طلبات سابقة بعد.</p>';
-                return;
-            }
+        window.logoutClient = function() {
+            localStorage.removeItem('currentClient');
+            window.currentClient = null;
+            location.reload();
+        };
+
+        window.tariffs = [
+            { id: 'Ooredoo_1', operator: 'Ooredoo', name: '1 د.ت', sell: 1.000 },
+            { id: 'Ooredoo_5', operator: 'Ooredoo', name: '5 د.ت', sell: 5.000 },
+            { id: 'Telecom_1', operator: 'Telecom', name: '1 د.ت', sell: 1.000 },
+            { id: 'Telecom_5', operator: 'Telecom', name: '5 د.ت', sell: 5.000 },
+            { id: 'Orange_1', operator: 'Orange', name: '1 د.ت', sell: 1.000 },
+            { id: 'Orange_5', operator: 'Orange', name: '5 د.ت', sell: 5.000 }
+        ];
+        window.clientCart = {};
+
+        window.selectClientOperator = function(op) {
+            document.getElementById('clientProductsSection').classList.remove('hidden');
+            document.getElementById('clientSelectedOperatorTitle').innerText = `اختر للطلب: ${op}`;
             let html = '';
-            myOrders.forEach((o) => {
-                let badgeColor = 'bg-amber-100 text-amber-700';
-                if (o.paymentStatus === 'Payé') badgeColor = 'bg-emerald-100 text-emerald-700';
-                else if (o.paymentStatus === 'Crédit') badgeColor = 'bg-rose-100 text-rose-700';
-                else if (o.paymentStatus === 'Partiel') badgeColor = 'bg-indigo-100 text-indigo-700';
-
-                let dateFormatted = new Date(o.date).toLocaleString();
-                let itemsStr = encodeURIComponent(JSON.stringify(o.items));
+            window.tariffs.filter(t => t.operator === op).forEach(t => {
+                let qty = window.clientCart[t.id] || 0;
                 html += `
-                    <div onclick='openClientOrderDetail("${dateFormatted}", ${o.totalSell}, "${o.paymentStatus}", "${o.status}", decodeURIComponent("${itemsStr}"))' class="border border-gray-200 p-4 rounded-2xl bg-gray-50 hover:bg-indigo-50 cursor-pointer transition flex justify-between items-center shadow-sm">
-                        <div>
-                            <span class="text-xs font-bold text-indigo-600">${dateFormatted}</span>
-                            <p class="text-xs text-gray-500 mt-1">الحالة: <span class="px-2 py-0.5 rounded-full font-bold text-xs ${badgeColor}">${o.paymentStatus}</span></p>
-                        </div>
-                        <div class="text-left">
-                            <p class="font-extrabold text-emerald-600 text-base">${o.totalSell.toFixed(3)} د.ت</p>
-                        </div>
+                    <div onclick="addClientCardQty('${t.id}')" class="bg-slate-50 border p-3 rounded-xl cursor-pointer hover:shadow transition">
+                        <h4 class="font-bold">${t.name}</h4>
+                        <p class="text-xs text-slate-500">${t.sell} د.ت</p>
+                        <div class="mt-2 text-center bg-white py-1 rounded font-bold" id="client_qty_${t.id}">${qty}</div>
                     </div>
                 `;
             });
-            container.innerHTML = html;
+            document.getElementById('clientCardsGrid').innerHTML = html;
         };
 
-        window.openClientOrderDetail = function(orderDate, totalSell, paymentStatus, status, itemsJSON) {
-            let items = JSON.parse(itemsJSON);
-            let container = document.getElementById('clientOrderDetailContent');
-            let html = `<div class="bg-indigo-50 p-3 rounded-xl mb-3 text-xs"><p class="font-bold text-gray-800">التاريخ: ${orderDate}</p></div><div class="space-y-2">`;
-            items.forEach(i => html += `<div class="flex justify-between border p-2 rounded-xl text-sm"><span>${i.name}</span><span class="font-bold">${i.sell ? i.sell.toFixed(3) + ' د.ت' : '× ' + i.qty}</span></div>`);
-            html += `</div>`;
-            container.innerHTML = html;
-            document.getElementById('clientOrderDetailTotal').innerText = totalSell.toFixed(3) + ' د.ت';
-            document.getElementById('clientOrderDetailModal').classList.remove('hidden');
+        window.addClientCardQty = (id) => {
+            window.clientCart[id] = (window.clientCart[id] || 0) + 1;
+            document.getElementById(`client_qty_${id}`).innerText = window.clientCart[id];
+            calcClientTotal();
         };
 
-        window.closeClientOrderDetailModal = () => document.getElementById('clientOrderDetailModal').classList.add('hidden');
-        window.openClientStatsModal = () => {
-            let myOrders = window.allOrders.filter(o => o.clientName === window.currentClient.name);
-            let monthlyTotals = new Array(12).fill(0), annualTotal = 0;
-            myOrders.forEach(o => {
-                let m = new Date(o.date).getMonth();
-                monthlyTotals[m] += o.totalSell;
-                annualTotal += o.totalSell;
+        function calcClientTotal() {
+            let total = 0;
+            for (let id in window.clientCart) {
+                let item = window.tariffs.find(t => t.id === id);
+                if (item) total += item.sell * window.clientCart[id];
+            }
+            document.getElementById('clientCartTotal').innerText = total.toFixed(3) + ' د.ت';
+        }
+
+        window.submitClientOrder = async function() {
+            if (!window.currentClient) return;
+            let items = [], totalSell = 0, totalBuy = 0;
+            for (let id in window.clientCart) {
+                if (window.clientCart[id] > 0) {
+                    let item = window.tariffs.find(t => t.id === id);
+                    items.push({ ...item, qty: window.clientCart[id], buy: item.sell * 0.950 });
+                    totalSell += item.sell * window.clientCart[id];
+                    totalBuy += (item.sell * 0.950) * window.clientCart[id];
+                }
+            }
+            if (items.length === 0) { alert('اختر منتجاً أولاً.'); return; }
+
+            try {
+                await addDoc(collection(db, "orders"), {
+                    clientName: window.currentClient.name,
+                    clientPhone: window.currentClient.phone,
+                    vendeurId: window.currentClient.vendeurId,
+                    items, totalSell, totalBuy, benefice: totalSell - totalBuy,
+                    paymentStatus: 'Crédit', creditAmount: totalSell,
+                    date: new Date().toISOString(), status: 'قيد الانتظار'
+                });
+                alert('تم إرسال الطلب بنجاح إلى البائع!');
+                window.clientCart = {};
+                calcClientTotal();
+                document.getElementById('clientProductsSection').classList.add('hidden');
+            } catch (e) {
+                alert('خطأ في إرسال الطلب.');
+            }
+        };
+
+        function fetchClientOrders() {
+            if (!window.currentClient) return;
+            onSnapshot(collection(db, "orders"), (snap) => {
+                let historyHtml = '';
+                snap.forEach(d => {
+                    let o = d.data();
+                    if (o.clientName === window.currentClient.name) {
+                        historyHtml += `
+                            <div class="bg-slate-50 p-3 rounded-xl border flex justify-between items-center text-xs">
+                                <div>
+                                    <span class="font-bold text-slate-900">مجموع: ${o.totalSell} د.ت</span>
+                                    <p class="text-slate-400 mt-0.5">${new Date(o.date).toLocaleDateString()}</p>
+                                </div>
+                                <span class="bg-amber-100 text-amber-800 px-2 py-1 rounded font-bold">${o.status}</span>
+                            </div>
+                        `;
+                    }
+                });
+                document.getElementById('clientOrdersHistory').innerHTML = historyHtml || '<p class="text-slate-400 text-xs text-center py-2">لا توجد طلبات سابقة.</p>';
             });
-            let monthsNames = ["جانفي", "فيفري", "مارس", "أفريل", "ماي", "جون", "جويلية", "أوت", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
-            let html = '';
-            for (let i = 0; i < 12; i++) {
-                html += `<tr class="border-b text-sm"><td class="p-3 font-semibold">${monthsNames[i]}</td><td class="p-3 font-bold text-emerald-600">${monthlyTotals[i].toFixed(3)} د.ت</td></tr>`;
-            }
-            document.getElementById('clientMonthlyStatsBody').innerHTML = html;
-            document.getElementById('clientAnnualTotal').innerText = annualTotal.toFixed(3) + ' د.ت';
-            document.getElementById('clientStatsModal').classList.remove('hidden');
-        };
-        window.closeClientStatsModal = () => document.getElementById('clientStatsModal').classList.add('hidden');
-
-        window.switchAuthTab = function(tab) {
-            if (tab === 'login') {
-                document.getElementById('loginForm').classList.remove('hidden');
-                document.getElementById('registerForm').classList.add('hidden');
-                document.getElementById('tabLogin').className = "flex-1 py-2 font-bold text-indigo-600 bg-white rounded-lg shadow-sm text-sm transition";
-                document.getElementById('tabRegister').className = "flex-1 py-2 font-semibold text-gray-500 text-sm transition";
-            } else {
-                document.getElementById('loginForm').classList.add('hidden');
-                document.getElementById('registerForm').classList.remove('hidden');
-                document.getElementById('tabRegister').className = "flex-1 py-2 font-bold text-indigo-600 bg-white rounded-lg shadow-sm text-sm transition";
-                document.getElementById('tabLogin').className = "flex-1 py-2 font-semibold text-gray-500 text-sm transition";
-            }
-        };
-
-        window.clientLogout = () => { window.currentClient = null; window.cart = {}; location.reload(); };
-        window.contactAdminWhatsApp = () => { window.open(`https://wa.me/21698765432?text=${encodeURIComponent('مرحباً بالإدارة، أنا التاجر ' + window.currentClient.name)}`, '_blank'); };
-        window.closeCustomAlert = () => document.getElementById('customAlertModal').classList.add('hidden');
-        function showCustomAlert(title, message) {
-            document.getElementById('customAlertTitle').innerText = title;
-            document.getElementById('customAlertMessage').innerText = message;
-            document.getElementById('customAlertModal').classList.remove('hidden');
         }
 
-        function checkBroadcastBanner() {
-            let msg = localStorage.getItem('broadcastMessage');
-            if (msg) {
-                document.getElementById('broadcastBannerText').innerText = msg;
-                document.getElementById('broadcastBanner').classList.remove('hidden');
-            }
-        }
+        window.checkClientAuth();
     </script>
 </body>
 </html>

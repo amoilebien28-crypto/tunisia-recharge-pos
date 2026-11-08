@@ -78,7 +78,7 @@
                 <!-- شبكة الكروت (1، 5، 10، 25) -->
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="clientCardsGrid"></div>
 
-                <!-- خانة الشحن المباشر (اللايت / E-recharge بالكتابة المباشرة) -->
+                <!-- خانة الشحن المباشر (اللايت بالكتابة المباشرة) -->
                 <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2">
                     <label class="block text-xs font-bold text-slate-700"><i class="fa-solid fa-bolt text-amber-500 ml-1"></i> الشحن المباشر (اكتب المبلغ مباشرة):</label>
                     <div class="flex gap-2">
@@ -98,15 +98,27 @@
             </div>
         </div>
 
-        <!-- قسم الطلبيات السابقة وحالتها -->
+        <!-- قسم الطلبيات السابقة (سطور منظمة مع فتح التفاصيل بالنقر) -->
         <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 space-y-4">
-            <h3 class="font-extrabold text-slate-800 text-sm border-b pb-2"><i class="fa-solid fa-box-archive text-indigo-600 ml-1"></i> طلبياتي السابقة ومتابعتها</h3>
-            <div id="clientOrdersContainer" class="space-y-3">
+            <h3 class="font-extrabold text-slate-800 text-sm border-b pb-2"><i class="fa-solid fa-box-archive text-indigo-600 ml-1"></i> الطلبيات السابقة (انقر على أي طلب لعرض تفاصيله)</h3>
+            <div id="clientOrdersContainer" class="space-y-2">
                 <p class="text-slate-400 text-xs text-center py-4">لا توجد طلبات سابقة.</p>
             </div>
         </div>
 
     </main>
+
+    <!-- نافذة تفاصيل الطلبية السابقة للتاجر -->
+    <div id="clientOrderDetailModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs hidden flex items-center justify-center z-50 p-4 text-slate-800">
+        <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-md w-full space-y-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h4 class="font-bold text-base text-slate-900"><i class="fa-solid fa-file-invoice text-emerald-600 ml-2"></i> تفاصيل الطلبية</h4>
+                <button onclick="closeClientOrderDetail()" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
+            </div>
+            <div id="clientOrderDetailContent" class="space-y-3 text-xs"></div>
+            <button onclick="closeClientOrderDetail()" class="w-full bg-slate-800 text-white py-2.5 rounded-xl font-bold text-xs">إغلاق</button>
+        </div>
+    </div>
 
     <!-- السكربت والربط بقاعدة البيانات -->
     <script type="module">
@@ -128,6 +140,7 @@
         window.db = db;
 
         window.currentClient = JSON.parse(localStorage.getItem('currentClient') || 'null');
+        window.clientOrdersCache = [];
 
         window.tariffs = [
             { id: '1', operator: 'Ooredoo', name: 'بطاقة 1 د.ت', price: 1.000 },
@@ -173,12 +186,8 @@
                     window.currentClient = cData;
                     localStorage.setItem('currentClient', JSON.stringify(window.currentClient));
                     window.checkClientAuth();
-                } else {
-                    alert('رقم الهاتف أو كلمة المرور غير صحيحة.');
-                }
-            } catch (e) {
-                alert('خطأ في الاتصال.');
-            }
+                } else { alert('رقم الهاتف أو كلمة المرور غير صحيحة.'); }
+            } catch (e) { alert('خطأ في الاتصال.'); }
         };
 
         window.logoutClient = function() {
@@ -236,7 +245,7 @@
             let key = `${window.selectedOp}_Direct_${val}`;
             window.clientCart[key] = {
                 operator: window.selectedOp,
-                name: `شحن مباشر (Floussi) بقيمة ${val} د.ت`,
+                name: `شحن مباشر بقيمة ${val} د.ت`,
                 price: val,
                 qty: 1
             };
@@ -278,41 +287,35 @@
                 calcClientTotal();
                 if(window.selectedOp) selectClientOperator(window.selectedOp);
                 fetchClientData();
-            } catch (e) {
-                alert('خطأ أثناء إرسال الطلب.');
-            }
+            } catch (e) { alert('خطأ أثناء إرسال الطلب.'); }
         };
 
         function fetchClientData() {
             if (!window.currentClient) return;
 
-            // جلب طلبات هذا التاجر فقط وحساب الديون (الكريدي)
             onSnapshot(query(collection(db, "orders"), where("clientName", "==", window.currentClient.name)), (snap) => {
-                let ordersHtml = '';
+                window.clientOrdersCache = [];
                 let totalCredit = 0;
+                let ordersHtml = '';
 
                 snap.forEach(d => {
-                    let o = d.data();
+                    let o = { id: d.id, ...d.data() };
+                    window.clientOrdersCache.push(o);
                     if (o.creditAmount) totalCredit += o.creditAmount;
 
                     let isCompleted = o.status === 'مكتمل ومؤكد';
-                    let itemsList = '';
-                    if(o.items) {
-                        o.items.forEach(i => {
-                            itemsList += `<li class="text-[11px] text-slate-600">- ${i.name} (الكمية: ${i.qty})</li>`;
-                        });
-                    }
+                    let dateStr = o.date ? new Date(o.date).toLocaleDateString() : '';
 
+                    // عرض سطر منظم ونظيف لكل طلبية
                     ordersHtml += `
-                        <div class="bg-slate-50 p-4 rounded-2xl border space-y-2">
-                            <div class="flex justify-between items-center">
-                                <span class="font-bold text-xs text-slate-900">المجموع: ${o.totalSell} د.ت</span>
-                                <span class="text-[10px] px-2 py-0.5 rounded font-bold ${isCompleted ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
-                                    ${o.status}
-                                </span>
+                        <div onclick="openClientOrderDetail('${o.id}')" class="bg-slate-50 hover:bg-slate-100 cursor-pointer p-3 rounded-xl border flex justify-between items-center transition">
+                            <div>
+                                <p class="font-bold text-xs text-slate-900">تاريخ: ${dateStr} | المجموع: <strong class="text-emerald-600">${o.totalSell} د.ت</strong></p>
+                                <p class="text-[10px] text-slate-500 mt-0.5">انقر لعرض تفاصيل القطع</p>
                             </div>
-                            <ul class="space-y-0.5 bg-white p-2 rounded-xl border">${itemsList}</ul>
-                            <p class="text-[10px] text-slate-400">التاريخ: ${new Date(o.date).toLocaleString()}</p>
+                            <span class="text-xs px-2.5 py-1 rounded-lg font-bold ${isCompleted ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+                                ${o.status}
+                            </span>
                         </div>
                     `;
                 });
@@ -322,6 +325,34 @@
                 if(container) container.innerHTML = ordersHtml || '<p class="text-slate-400 text-xs text-center py-4">لا توجد طلبات سابقة.</p>';
             });
         }
+
+        window.openClientOrderDetail = function(orderId) {
+            let o = window.clientOrdersCache.find(item => item.id === orderId);
+            if (!o) return;
+
+            let itemsHtml = '<ul class="space-y-1 bg-slate-50 p-3 rounded-xl border">';
+            if (o.items && Array.isArray(o.items)) {
+                o.items.forEach(i => {
+                    itemsHtml += `<li class="flex justify-between items-center text-xs font-bold text-slate-800 border-b pb-1">
+                        <span><i class="fa-solid fa-tag text-emerald-600 ml-1"></i> ${i.operator || ''} - ${i.name}</span>
+                        <span class="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded">الكمية: ${i.qty}</span>
+                    </li>`;
+                });
+            }
+            itemsHtml += '</ul>';
+
+            document.getElementById('clientOrderDetailContent').innerHTML = `
+                <p class="font-bold text-slate-900">الحالة: <span class="text-indigo-600">${o.status}</span></p>
+                <p class="text-slate-500">التاريخ: ${new Date(o.date).toLocaleString()}</p>
+                <p class="font-black text-emerald-600 text-sm mt-1">المجموع الجملي: ${o.totalSell} د.ت</p>
+                <div class="mt-2"><p class="font-bold text-slate-700 mb-1">تفاصيل القطع المطلوبة:</p>${itemsHtml}</div>
+            `;
+            document.getElementById('clientOrderDetailModal').classList.remove('hidden');
+        };
+
+        window.closeClientOrderDetail = function() {
+            document.getElementById('clientOrderDetailModal').classList.add('hidden');
+        };
 
         window.checkClientAuth();
     </script>

@@ -1023,13 +1023,17 @@
         }
         fetchRegisteredClients();
 
-        onSnapshot(query(collection(db, "orders"), orderBy("date", "desc")), (snapshot) => {
+        // الاستماع للطلبات بدون تجميد
+        onSnapshot(collection(db, "orders"), (snapshot) => {
             window.allOrders = [];
             snapshot.forEach((docSnap) => {
                 window.allOrders.push({ id: docSnap.id, ...docSnap.data() });
             });
+            window.allOrders.sort((a, b) => new Date(b.date) - new Date(a.date));
             processAdminData();
             if (window.currentClient) renderClientOrders();
+        }, (error) => {
+            console.error("Error listening to orders:", error);
         });
     </script>
 
@@ -1140,6 +1144,17 @@
             }
         }
 
+        // منع زر السهم بالهاتف من الخروج من التطبيق وإغلاق النوافذ المفتوحة أولاً
+        window.addEventListener('popstate', (event) => {
+            let openModals = document.querySelectorAll('.admin-window:not(.hidden), #orderInvoiceModal:not(.hidden), #editOrderModal:not(.hidden), #paymentChoiceModal:not(.hidden), #trancheInputModal:not(.hidden), #payCreditModal:not(.hidden), #recetteModal:not(.hidden), #capitalModal:not(.hidden), #monthlyBeneficeModal:not(.hidden), #customAlertModal:not(.hidden)');
+            if (openModals.length > 0) {
+                event.preventDefault();
+                history.pushState(null, '', window.location.href);
+                openModals.forEach(m => m.classList.add('hidden'));
+            }
+        });
+        history.pushState(null, '', window.location.href);
+
         function capitalize(s) {
             if (s === 'orders') return 'Orders';
             if (s === 'stats') return 'Stats';
@@ -1212,17 +1227,74 @@
                 `;
             }
 
+            // التأكد من وجود عنصر الإحصائيات أو إنشائه إن لم يكن موجوداً
+            let modalEl = document.getElementById('clientStatsModal');
+            if (!modalEl) {
+                let div = document.createElement('div');
+                div.id = 'clientStatsModal';
+                div.className = 'fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4';
+                div.innerHTML = `
+                    <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto space-y-4">
+                        <div class="flex justify-between items-center border-b pb-3">
+                            <h3 class="font-bold text-lg text-gray-800"><i class="fa-solid fa-chart-bar text-indigo-600 ml-2"></i> إحصائيات المشتريات الشهرية</h3>
+                            <button onclick="closeClientStatsModal()" class="text-gray-400 hover:text-gray-600 text-lg font-bold">&times;</button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-right border-collapse">
+                                <thead>
+                                    <tr class="border-b bg-gray-50 text-gray-600 text-sm">
+                                        <th class="p-3">الشهر</th>
+                                        <th class="p-3">المجموع (د.ت)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="clientMonthlyStatsBody"></tbody>
+                            </table>
+                        </div>
+                        <div class="border-t pt-3 flex justify-between items-center font-bold">
+                            <span class="text-gray-700">مجموع المشتريات السنوية:</span>
+                            <span id="clientAnnualTotal" class="text-emerald-600 text-lg">0.000 د.ت</span>
+                        </div>
+                        <button onclick="closeClientStatsModal()" class="w-full bg-indigo-600 text-white py-2.5 rounded-xl font-bold text-sm shadow-md">إغلاق</button>
+                    </div>
+                `;
+                document.body.appendChild(div);
+            }
+
             document.getElementById('clientMonthlyStatsBody').innerHTML = html;
             document.getElementById('clientAnnualTotal').innerText = annualTotal.toFixed(3) + ' د.ت';
             document.getElementById('clientStatsModal').classList.remove('hidden');
         }
 
         function closeClientStatsModal() {
-            document.getElementById('clientStatsModal').classList.add('hidden');
+            let m = document.getElementById('clientStatsModal');
+            if (m) m.classList.add('hidden');
         }
 
         function openClientOrderDetail(orderDate, totalSell, paymentStatus, status, itemsJSON) {
             let items = JSON.parse(itemsJSON);
+            
+            let modalEl = document.getElementById('clientOrderDetailModal');
+            if (!modalEl) {
+                let div = document.createElement('div');
+                div.id = 'clientOrderDetailModal';
+                div.className = 'fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4';
+                div.innerHTML = `
+                    <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto space-y-4">
+                        <div class="flex justify-between items-center border-b pb-3">
+                            <h3 class="font-bold text-lg text-gray-800"><i class="fa-solid fa-receipt text-indigo-600 ml-2"></i> تفاصيل الطلب</h3>
+                            <button onclick="closeClientOrderDetailModal()" class="text-gray-400 hover:text-gray-600 text-lg font-bold">&times;</button>
+                        </div>
+                        <div id="clientOrderDetailContent" class="space-y-2"></div>
+                        <div class="border-t pt-3 flex justify-between items-center font-bold">
+                            <span class="text-gray-700">المجموع:</span>
+                            <span id="clientOrderDetailTotal" class="text-emerald-600 text-lg">0.000 د.ت</span>
+                        </div>
+                        <button onclick="closeClientOrderDetailModal()" class="w-full bg-indigo-600 text-white py-2.5 rounded-xl font-bold text-sm shadow-md">إغلاق</button>
+                    </div>
+                `;
+                document.body.appendChild(div);
+            }
+
             let container = document.getElementById('clientOrderDetailContent');
             let html = `<div class="bg-indigo-50 p-3 rounded-xl mb-3 text-xs"><p class="font-bold text-gray-800">التاريخ: ${orderDate}</p><p class="text-gray-500">الحالة: ${paymentStatus} (${status})</p></div><div class="space-y-2">`;
             
@@ -1237,7 +1309,8 @@
         }
 
         function closeClientOrderDetailModal() {
-            document.getElementById('clientOrderDetailModal').classList.add('hidden');
+            let m = document.getElementById('clientOrderDetailModal');
+            if (m) m.classList.add('hidden');
         }
 
         function renderClientOrders() {

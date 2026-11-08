@@ -748,22 +748,22 @@
         window.activeDeliveryTotal = 0;
 
         window.tariffs = [
-            { id: 'Ooredoo_1', operator: 'Ooredoo', name: 'Ticket 1D', buy: 0.950, sell: 1.000, color: 'bg-emerald-50 border-emerald-200 text-emerald-900' },
-            { id: 'Ooredoo_5', operator: 'Ooredoo', name: 'Carte 5D', buy: 4.750, sell: 5.000, color: 'bg-blue-50 border-blue-200 text-blue-900' },
-            { id: 'Ooredoo_10', operator: 'Ooredoo', name: 'Carte 10D', buy: 9.500, sell: 10.000, color: 'bg-amber-50 border-amber-200 text-amber-900' },
-            { id: 'Ooredoo_25', operator: 'Ooredoo', name: 'Carte 25D', buy: 23.750, sell: 25.000, color: 'bg-purple-50 border-purple-200 text-purple-900' },
+            { id: 'Ooredoo_1', operator: 'Ooredoo', name: '1 د.ت', buy: 0.950, sell: 1.000, color: 'bg-gray-100 border-gray-300 text-gray-900' },
+            { id: 'Ooredoo_5', operator: 'Ooredoo', name: '5 د.ت', buy: 4.750, sell: 5.000, color: 'bg-gray-100 border-gray-300 text-gray-900' },
+            { id: 'Ooredoo_10', operator: 'Ooredoo', name: '10 د.ت', buy: 9.500, sell: 10.000, color: 'bg-gray-100 border-gray-300 text-gray-900' },
+            { id: 'Ooredoo_25', operator: 'Ooredoo', name: '25 د.ت', buy: 23.750, sell: 25.000, color: 'bg-gray-100 border-gray-300 text-gray-900' },
             { id: 'Ooredoo_recharge', operator: 'Ooredoo', name: 'شحن رصيد مباشر', buy: 0.000, sell: 0.000, color: 'bg-rose-50 border-rose-200 text-rose-900' },
             
-            { id: 'Telecom_1', operator: 'Telecom', name: 'Ticket 1D', buy: 0.950, sell: 1.000, color: 'bg-emerald-50 border-emerald-200 text-emerald-900' },
-            { id: 'Telecom_5', operator: 'Telecom', name: 'Carte 5D', buy: 4.750, sell: 5.000, color: 'bg-blue-50 border-blue-200 text-blue-900' },
-            { id: 'Telecom_10', operator: 'Telecom', name: 'Carte 10D', buy: 9.500, sell: 10.000, color: 'bg-amber-50 border-amber-200 text-amber-900' },
-            { id: 'Telecom_25', operator: 'Telecom', name: 'Carte 25D', buy: 23.750, sell: 25.000, color: 'bg-purple-50 border-purple-200 text-purple-900' },
+            { id: 'Telecom_1', operator: 'Telecom', name: '1 د.ت', buy: 0.950, sell: 1.000, color: 'bg-gray-100 border-gray-300 text-gray-900' },
+            { id: 'Telecom_5', operator: 'Telecom', name: '5 د.ت', buy: 4.750, sell: 5.000, color: 'bg-gray-100 border-gray-300 text-gray-900' },
+            { id: 'Telecom_10', operator: 'Telecom', name: '10 د.ت', buy: 9.500, sell: 10.000, color: 'bg-gray-100 border-gray-300 text-gray-900' },
+            { id: 'Telecom_25', operator: 'Telecom', name: '25 د.ت', buy: 23.750, sell: 25.000, color: 'bg-gray-100 border-gray-300 text-gray-900' },
             { id: 'Telecom_recharge', operator: 'Telecom', name: 'شحن رصيد مباشر', buy: 0.000, sell: 0.000, color: 'bg-rose-50 border-rose-200 text-rose-900' },
 
-            { id: 'Orange_1', operator: 'Orange', name: 'Ticket 1D', buy: 0.950, sell: 1.000, color: 'bg-emerald-50 border-emerald-200 text-emerald-900' },
-            { id: 'Orange_5', operator: 'Orange', name: 'Carte 5D', buy: 4.750, sell: 5.000, color: 'bg-blue-50 border-blue-200 text-blue-900' },
-            { id: 'Orange_10', operator: 'Orange', name: 'Carte 10D', buy: 9.500, sell: 10.000, color: 'bg-amber-50 border-amber-200 text-amber-900' },
-            { id: 'Orange_25', operator: 'Orange', name: 'Carte 25D', buy: 23.750, sell: 25.000, color: 'bg-purple-50 border-purple-200 text-purple-900' },
+            { id: 'Orange_1', operator: 'Orange', name: '1 د.ت', buy: 0.950, sell: 1.000, color: 'bg-gray-100 border-gray-300 text-gray-900' },
+            { id: 'Orange_5', operator: 'Orange', name: '5 د.ت', buy: 4.750, sell: 5.000, color: 'bg-gray-100 border-gray-300 text-gray-900' },
+            { id: 'Orange_10', operator: 'Orange', name: '10 د.ت', buy: 9.500, sell: 10.000, color: 'bg-gray-100 border-gray-300 text-gray-900' },
+            { id: 'Orange_25', operator: 'Orange', name: '25 د.ت', buy: 23.750, sell: 25.000, color: 'bg-gray-100 border-gray-300 text-gray-900' },
             { id: 'Orange_recharge', operator: 'Orange', name: 'شحن رصيد مباشر', buy: 0.000, sell: 0.000, color: 'bg-rose-50 border-rose-200 text-rose-900' }
         ];
 
@@ -1762,7 +1762,7 @@
             calculatePosTotal();
         };
 
-        // طريقة السبحة (الضغط على الكارت بالكامل يزيد الكمية، وزر صغير للنقصان)
+        // طريقة السبحة للتاجر
         window.selectOperator = function(operator) {
             window.currentOperator = operator;
             document.getElementById('productsSection').classList.remove('hidden');
@@ -1790,14 +1790,14 @@
                 } else {
                     gridHtml += `
                         <div onclick="addCardQty('${t.id}')" class="${t.color} border-2 p-3 rounded-2xl flex flex-col justify-between cursor-pointer hover:shadow-md transition select-none relative">
-                            <button onclick="event.stopPropagation(); decreaseCardQty('${t.id}')" class="absolute top-2 left-2 bg-white/80 hover:bg-white text-gray-700 w-7 h-7 rounded-full font-extrabold text-xs shadow flex items-center justify-center border">-</button>
+                            <button onclick="event.stopPropagation(); decreaseCardQty('${t.id}')" class="absolute top-2 left-2 bg-white/90 hover:bg-white text-gray-700 w-7 h-7 rounded-full font-black text-sm shadow flex items-center justify-center border">-</button>
                             <div>
                                 <span class="text-xs font-bold opacity-75">${t.operator}</span>
                                 <h4 class="font-black text-xl tracking-wide mt-1">${t.name}</h4>
                                 <p class="font-extrabold text-sm mt-0.5">${t.sell.toFixed(3)} د.ت</p>
                             </div>
-                            <div class="mt-4 text-center bg-white/60 py-1.5 rounded-xl border border-black/5">
-                                <span class="text-xs font-bold text-gray-600 ml-1">الكمية:</span>
+                            <div class="mt-4 text-center bg-white/80 py-1.5 rounded-xl border border-black/10">
+                                <span class="text-xs font-bold text-gray-700 ml-1">الكمية:</span>
                                 <span id="qty_${t.id}" class="font-black text-lg text-indigo-900">${currentQty}</span>
                             </div>
                         </div>
@@ -1840,6 +1840,7 @@
             document.getElementById('cartTotal').innerText = total.toFixed(3) + ' د.ت';
         }
 
+        // طريقة السبحة للأدمن (POS)
         window.selectPosOperator = function(operator) {
             window.posOperator = operator;
             document.getElementById('posProductsSection').classList.remove('hidden');
@@ -1853,9 +1854,9 @@
 
                 if (isRecharge) {
                     gridHtml += `
-                        <div class="bg-gray-50 p-3 rounded-xl border flex flex-col justify-between col-span-2">
+                        <div class="bg-rose-50/70 p-3 rounded-xl border border-rose-200 flex flex-col justify-between col-span-2">
                             <div>
-                                <span class="text-xs text-gray-700 font-bold">${t.name}</span>
+                                <span class="text-xs text-rose-700 font-bold">${t.name}</span>
                             </div>
                             <div class="mt-2 flex items-center gap-2">
                                 <input type="number" min="0" step="0.001" id="pos_qty_${t.id}" value="${currentPosQty || ''}" oninput="updatePosRechargeQty('${t.id}', this.value)" placeholder="المبلغ بـ د.ت" class="border p-2 rounded-xl w-full text-center font-extrabold text-sm bg-white">
@@ -1866,12 +1867,12 @@
                 } else {
                     gridHtml += `
                         <div onclick="addPosCardQty('${t.id}')" class="${t.color} border-2 p-3 rounded-xl flex flex-col justify-between cursor-pointer hover:shadow transition select-none relative">
-                            <button onclick="event.stopPropagation(); decreasePosCardQty('${t.id}')" class="absolute top-2 left-2 bg-white/80 hover:bg-white text-gray-700 w-6 h-6 rounded-full font-bold text-xs shadow flex items-center justify-center border">-</button>
+                            <button onclick="event.stopPropagation(); decreasePosCardQty('${t.id}')" class="absolute top-2 left-2 bg-white/90 hover:bg-white text-gray-700 w-6 h-6 rounded-full font-black text-xs shadow flex items-center justify-center border">-</button>
                             <div>
                                 <h4 class="font-black text-lg">${t.name}</h4>
                                 <p class="font-extrabold text-xs mt-0.5">${t.sell.toFixed(3)} د.ت</p>
                             </div>
-                            <div class="mt-3 text-center bg-white/60 py-1 rounded-lg border">
+                            <div class="mt-3 text-center bg-white/80 py-1 rounded-lg border border-black/10">
                                 <span id="pos_qty_${t.id}" class="font-black text-base text-indigo-900">${currentPosQty}</span>
                             </div>
                         </div>
@@ -1913,6 +1914,246 @@
             }
             document.getElementById('posCartTotal').innerText = total.toFixed(3) + ' د.ت';
         }
+
+        // دالة عرض بيانات الأدمن (الطلبات، المداخيل، المخزون، الكريدي، وكشف الحساب)
+        function processAdminData() {
+            let dayTotal = 0;
+            let monthTotal = 0;
+            let totalBenefice = 0;
+            let totalCredit = 0;
+
+            const today = new Date().toISOString().slice(0, 10);
+            const thisMonth = new Date().toISOString().slice(0, 7);
+
+            let ordersHtml = '';
+            let clientsMap = {};
+            let salesCounts = {};
+
+            if (window.allRegisteredClients && window.allRegisteredClients.length > 0) {
+                window.allRegisteredClients.forEach(c => {
+                    clientsMap[c.name] = { phone: c.phone, credit: 0 };
+                });
+            }
+
+            window.allOrders.forEach((o) => {
+                if (!clientsMap[o.clientName]) {
+                    clientsMap[o.clientName] = { phone: o.clientPhone || 'غير متوفر', credit: 0 };
+                }
+
+                if (o.status === 'مكتمل' || o.status === 'مكتمل (مباشر)') {
+                    if (o.paidAmount) dayTotal += (o.date.slice(0, 10) === today ? o.paidAmount : 0);
+                    if (o.paidAmount) monthTotal += (o.date.slice(0, 7) === thisMonth ? o.paidAmount : 0);
+                    
+                    if (o.benefice) totalBenefice += o.benefice;
+
+                    let currentCred = o.creditAmount !== undefined ? o.creditAmount : (o.paymentStatus === 'Crédit' ? o.totalSell : 0);
+                    totalCredit += currentCred;
+                    clientsMap[o.clientName].credit += currentCred;
+
+                    if (o.items && Array.isArray(o.items)) {
+                        o.items.forEach(i => {
+                            if (!i.id.includes('recharge')) {
+                                if (!salesCounts[i.id]) salesCounts[i.id] = { operator: i.operator, name: i.name, qty: 0 };
+                                salesCounts[i.id].qty += i.qty;
+                            }
+                        });
+                    }
+                }
+
+                if (o.status === 'قيد الانتظار للتحضير') {
+                    ordersHtml += `
+                        <button onclick="openOrderInvoice('${o.id}')" class="w-full text-right bg-indigo-50/70 hover:bg-indigo-100 border border-indigo-200 p-4 rounded-2xl flex justify-between items-center transition shadow-sm mb-2">
+                            <div class="flex items-center gap-3">
+                                <div class="bg-indigo-600 text-white w-10 h-10 rounded-xl flex items-center justify-center font-bold">
+                                    <i class="fa-solid fa-store"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-gray-900 text-base">${o.clientName}</h4>
+                                    <p class="text-xs text-gray-500">${o.clientAddress || ''} - هاتف: ${o.clientPhone}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="font-extrabold text-indigo-600 text-sm">${o.totalSell.toFixed(3)} د.ت</span>
+                                <span class="bg-indigo-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow">فتح الفاتورة</span>
+                            </div>
+                        </button>
+                    `;
+                }
+            });
+
+            document.getElementById('modalRecetteDay').innerText = dayTotal.toFixed(3) + ' د.ت';
+            document.getElementById('modalRecetteMonth').innerText = monthTotal.toFixed(3) + ' د.ت';
+            document.getElementById('modalTotalBenefice').innerText = totalBenefice.toFixed(3) + ' د.ت';
+            document.getElementById('modalTotalCredit').innerText = totalCredit.toFixed(3) + ' د.ت';
+
+            const ordersContainer = document.getElementById('ordersListContainer');
+            if (ordersContainer) {
+                ordersContainer.innerHTML = ordersHtml || '<p class="text-gray-400 text-center py-6">لا توجد طلبات معلقة للتحضير حالياً.</p>';
+            }
+
+            let statsHtml = '';
+            for (let id in salesCounts) {
+                let s = salesCounts[id];
+                statsHtml += `
+                    <tr class="border-b text-sm">
+                        <td class="p-3 font-semibold text-indigo-900">${s.operator}</td>
+                        <td class="p-3">${s.name}</td>
+                        <td class="p-3 font-extrabold text-emerald-600">${s.qty} قطعة</td>
+                    </tr>
+                `;
+            }
+            const statsBody = document.getElementById('salesStatsTableBody');
+            if (statsBody) {
+                statsBody.innerHTML = statsHtml || `<tr><td colspan="3" class="text-center py-4 text-gray-400">لا توجد مبيعات مكتملة بعد.</td></tr>`;
+            }
+
+            let stockHtml = '';
+            window.tariffs.forEach(t => {
+                if (!t.id.includes('recharge')) {
+                    let sold = salesCounts[t.id] ? salesCounts[t.id].qty : 0;
+                    let purchased = window.stockPurchases[t.id] || 0;
+                    let remainingStock = purchased - sold;
+
+                    stockHtml += `
+                        <tr class="border-b text-sm">
+                            <td class="p-3 font-semibold">${t.operator}</td>
+                            <td class="p-3">${t.name}</td>
+                            <td class="p-3 font-bold">${purchased} قطعة</td>
+                            <td class="p-3 font-extrabold ${remainingStock > 5 ? 'text-emerald-600' : 'text-rose-600'}">${remainingStock} قطعة</td>
+                        </tr>
+                    `;
+                }
+            });
+            const stockBody = document.getElementById('stockTableBody');
+            if (stockBody) stockBody.innerHTML = stockHtml;
+
+            let creditsTableHtml = '';
+            let clientsListHtml = '<option value="">اختر الحانوت لعرض الكشف...</option>';
+            let posClientsListHtml = '<option value="">اختر الحانوت...</option>';
+            
+            for (let cName in clientsMap) {
+                let cData = clientsMap[cName];
+                clientsListHtml += `<option value="${cName}">${cName}</option>`;
+                posClientsListHtml += `<option value="${cName}">${cName}</option>`;
+                
+                creditsTableHtml += `
+                    <tr class="border-b text-sm">
+                        <td class="p-3 font-semibold">${cName}</td>
+                        <td class="p-3">${cData.phone}</td>
+                        <td class="p-3 font-extrabold ${cData.credit > 0 ? 'text-rose-600' : 'text-emerald-600'}">${cData.credit.toFixed(3)} د.ت</td>
+                        <td class="p-3">
+                            <button onclick="openPayCreditModal('${cName}')" class="bg-indigo-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold hover:bg-indigo-700 shadow-sm">تسجيل خلاص (Solder)</button>
+                        </td>
+                    </tr>
+                `;
+            }
+            const creditsBody = document.getElementById('creditsTableBody');
+            if (creditsBody) creditsBody.innerHTML = creditsTableHtml;
+
+            const selectReleve = document.getElementById('selectClientReleve');
+            if (selectReleve) {
+                let currentVal = selectReleve.value;
+                selectReleve.innerHTML = clientsListHtml;
+                selectReleve.value = currentVal;
+            }
+
+            const posSelect = document.getElementById('posRegisteredClientSelect');
+            if (posSelect) {
+                let currentPosVal = posSelect.value;
+                posSelect.innerHTML = posClientsListHtml;
+                posSelect.value = currentPosVal;
+            }
+
+            if (typeof loadClientReleve === 'function') loadClientReleve();
+        }
+        window.processAdminData = processAdminData;
+
+        function loadClientReleve() {
+            const selectEl = document.getElementById('selectClientReleve');
+            if (!selectEl) return;
+            const clientName = selectEl.value;
+            const summaryDiv = document.getElementById('clientReleveSummary');
+            if (!clientName) {
+                summaryDiv.innerHTML = '<p class="text-gray-400 text-sm text-center py-4">الرجاء اختيار حانوت لعرض الفواتير...</p>';
+                return;
+            }
+
+            let clientOrders = window.allOrders.filter(o => o.clientName === clientName);
+            if (clientOrders.length === 0) {
+                summaryDiv.innerHTML = '<p class="text-gray-400 text-sm text-center py-4">لا توجد فواتير مسجلة لهذا الحانوت.</p>';
+                return;
+            }
+
+            let html = `<p class="text-xs text-gray-500 font-bold mb-2">اضغط على أي فاتورة لعرض تفاصيلها:</p><div class="space-y-2">`;
+            
+            clientOrders.forEach(o => {
+                let dateStr = new Date(o.date).toLocaleDateString('ar-TN', { year: 'numeric', month: 'numeric', day: 'numeric' });
+                let timeStr = new Date(o.date).toLocaleTimeString('ar-TN', { hour: '2-digit', minute: '2-digit' });
+
+                html += `
+                    <div onclick='openReleveDetailModal(${JSON.stringify(o.items)}, ${o.totalSell})' class="bg-gray-50 hover:bg-indigo-50/50 border border-gray-200 p-4 rounded-2xl cursor-pointer transition flex justify-between items-center shadow-sm">
+                        <div>
+                            <span class="text-xs font-bold text-indigo-600"><i class="fa-regular fa-calendar ml-1"></i> ${dateStr} - ${timeStr}</span>
+                            <p class="text-xs text-gray-500 mt-1">الحالة: <span class="font-bold text-gray-800">${o.paymentStatus}</span></p>
+                        </div>
+                        <div class="text-left">
+                            <span class="font-extrabold text-emerald-600 text-base">${o.totalSell.toFixed(3)} د.ت</span>
+                            <i class="fa-solid fa-chevron-left text-xs text-gray-400 mr-2"></i>
+                        </div>
+                    </div>
+                `;
+            });
+            html += `</div>`;
+            summaryDiv.innerHTML = html;
+        }
+        window.loadClientReleve = loadClientReleve;
+
+        window.openReleveDetailModal = function(items, totalSell) {
+            let container = document.getElementById('releveModalItemsContainer');
+            let html = '';
+            items.forEach(i => {
+                html += `<div class="flex justify-between items-center bg-gray-50 p-2.5 rounded-xl border text-sm"><span>${i.name}</span><span class="font-bold">${i.sell ? i.sell.toFixed(3) + ' د.ت' : '× ' + i.qty}</span></div>`;
+            });
+            container.innerHTML = html;
+            document.getElementById('releveModalTotal').innerText = totalSell.toFixed(3) + ' د.ت';
+            document.getElementById('releveDetailModal').classList.remove('hidden');
+        };
+
+        function closeReleveDetailModal() {
+            document.getElementById('releveDetailModal').classList.add('hidden');
+        }
+        window.closeReleveDetailModal = closeReleveDetailModal;
+
+        function renderAdminTariffs() {
+            let html = '';
+            window.tariffs.forEach(t => {
+                if (!t.id.includes('recharge')) {
+                    html += `
+                        <tr class="border-b text-sm">
+                            <td class="p-3 font-semibold">${t.operator}</td>
+                            <td class="p-3">${t.name}</td>
+                            <td class="p-3"><input type="number" step="0.001" value="${t.buy}" id="buy_${t.id}" class="border p-1.5 rounded-xl w-24 text-center"></td>
+                            <td class="p-3"><input type="number" step="0.001" value="${t.sell}" id="sell_${t.id}" class="border p-1.5 rounded-xl w-24 text-center"></td>
+                            <td class="p-3"><button onclick="updateTariff('${t.id}')" class="bg-indigo-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow-sm">حفظ</button></td>
+                        </tr>
+                    `;
+                }
+            });
+            const tariffsBody = document.getElementById('tariffsTableBody');
+            if (tariffsBody) tariffsBody.innerHTML = html;
+        }
+        window.renderAdminTariffs = renderAdminTariffs;
+
+        window.updateTariff = function(id) {
+            const newBuy = parseFloat(document.getElementById(`buy_${id}`).value);
+            const newSell = parseFloat(document.getElementById(`sell_${id}`).value);
+            const tariff = window.tariffs.find(t => t.id === id);
+            if (tariff) {
+                tariff.buy = newBuy;
+                tariff.sell = newSell;
+                showCustomAlert('نجاح', 'تم تحديث السعر بنجاح!');
+            }
+        };
     </script>
 </body>
 </html>

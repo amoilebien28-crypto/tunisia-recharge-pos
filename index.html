@@ -9,7 +9,7 @@
     <!-- FontAwesome للأيقونات -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-slate-200 min-h-screen font-sans pb-12 text-slate-800">
+<body class="bg-emerald-950/10 min-h-screen font-sans pb-12 text-slate-800">
 
     <!-- شاشة تسجيل الدخول للتاجر -->
     <div id="clientAuthScreen" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -36,23 +36,22 @@
         </div>
     </div>
 
-    <!-- نافذة اختيار البائع (Vendeur) بعد تسجيل الدخول مباشرة -->
+    <!-- نافذة اختيار البائع (مع التحقق من التفعيل في قائمة حرفاء البائع) -->
     <div id="selectVendeurModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-md w-full space-y-6 border border-slate-300">
             <div class="text-center space-y-2">
-                <div class="bg-indigo-50 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto text-indigo-600 text-2xl font-bold border border-indigo-200">
+                <div class="bg-emerald-50 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto text-emerald-600 text-2xl font-bold border border-emerald-200">
                     <i class="fa-solid fa-user-tie"></i>
                 </div>
                 <h2 class="text-xl font-black text-slate-900">اختر البائع (الموزع)</h2>
-                <p class="text-xs text-slate-500">الرجاء اختيار البائع الذي سترسل له طلبياتك وتتعامل معه:</p>
+                <p class="text-xs text-slate-500">البائعون الذين أضافوك في قائمة حرفائهم فقط هم من تستطيع التعامل معهم:</p>
             </div>
 
-            <div class="space-y-3" id="vendeursRadioList">
-                <!-- تعبئة ديناميكية للبائعين المتاحين -->
-                <p class="text-center text-xs text-slate-400 py-3">جاري البحث عن البائعين...</p>
+            <div class="space-y-3" id="vendeursListContainer">
+                <p class="text-center text-xs text-slate-400 py-3">جاري التحقق من البائعين...</p>
             </div>
 
-            <button onclick="confirmSelectedVendeur()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3.5 rounded-xl font-bold shadow-md transition text-xs">تأكيد والدخول للقفة</button>
+            <button onclick="confirmSelectedVendeur()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-xl font-bold shadow-md transition text-xs">تأكيد والدخول للقفة</button>
         </div>
     </div>
 
@@ -75,7 +74,7 @@
                 <h1 class="text-base font-black flex items-center gap-2 text-emerald-700">
                     <i class="fa-solid fa-store text-lg"></i> <span id="headerClientName" class="text-slate-800">الحانوت</span>
                 </h1>
-                <span id="headerVendeurTag" class="text-[10px] bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-lg font-bold border border-indigo-200"></span>
+                <span id="headerVendeurTag" class="text-[10px] bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-lg font-bold border border-emerald-200"></span>
             </div>
             <button onclick="logoutClient()" class="bg-rose-50 hover:bg-rose-100 text-rose-600 px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 border border-rose-200 shadow-2xs">
                 <i class="fa-solid fa-right-from-bracket"></i> خروج
@@ -116,7 +115,7 @@
             <div id="clientProductsSection" class="hidden space-y-4 pt-3 border-t border-slate-200">
                 <h4 id="clientSelectedOperatorTitle" class="font-bold text-xs text-slate-700"></h4>
                 
-                <!-- شبكة البطاقات (مع زر إضافة + وزر نقص -) -->
+                <!-- شبكة البطاقات (بألوان واضحة لكل بطاقة) -->
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="clientCardsGrid"></div>
 
                 <!-- خانة الشحن المباشر (الكتابة المباشرة) -->
@@ -236,9 +235,8 @@
             if (window.currentClient) {
                 document.getElementById('clientAuthScreen').classList.add('hidden');
                 
-                // إذا لم يختار التاجر البائع بعد، نعرض نافذة اختيار البائع
                 if (!window.selectedVendeurObj) {
-                    loadVendeursListForSelection();
+                    verifyAndLoadVendeursForClient();
                 } else {
                     document.getElementById('selectVendeurModal').classList.add('hidden');
                     document.getElementById('headerClientName').innerText = window.currentClient.name || "الحانوت";
@@ -251,28 +249,54 @@
             }
         };
 
-        // جلب قائمة البائعين المسجلين ليختار التاجر منهم
-        async function loadVendeursListForSelection() {
+        // التحقق من أن البائع قد أضاف التاجر في قائمة الحوانت لديه أم لا (مفعل / غير مفعل)
+        async function verifyAndLoadVendeursForClient() {
             try {
-                const snap = await getDocs(collection(db, "vendeurs"));
-                let html = '';
-                let vList = [];
-                snap.forEach(d => vList.push({ id: d.id, ...d.data() }));
+                const vendeursSnap = await getDocs(collection(db, "vendeurs"));
+                const clientsSnap = await getDocs(collection(db, "clients"));
 
-                if (vList.length === 0) {
-                    html = '<p class="text-xs text-rose-600 text-center">لا توجد بائعين مسجلين في النظام حالياً.</p>';
-                } else {
-                    vList.forEach((v, idx) => {
-                        let checked = idx === 0 ? 'checked' : '';
-                        html += `
-                            <label class="flex items-center gap-3 p-3.5 bg-slate-50 border border-slate-300 rounded-2xl cursor-pointer hover:bg-slate-100 transition">
-                                <input type="radio" name="vendeurRadio" value="${v.id}" data-name="${v.name}" ${checked} class="w-4 h-4 text-indigo-600">
-                                <span class="font-bold text-sm text-slate-800"><i class="fa-solid fa-user-tie text-indigo-600 ml-2"></i> ${v.name} (${v.phone || 'بدون هاتف'})</span>
+                let allVendeurs = [];
+                vendeursSnap.forEach(d => allVendeurs.push({ id: d.id, ...d.data() }));
+
+                // قائمة الحوانت المسجلة لدى البائعين
+                let registeredClients = [];
+                clientsSnap.forEach(d => registeredClients.push(d.data()));
+
+                let html = '';
+                let activeCount = 0;
+
+                allVendeurs.forEach((v, idx) => {
+                    // هل هذا البائع أضاف هذا التاجر (عبر اسم الحانوت أو رقم الهاتف)؟
+                    let isLinked = registeredClients.some(c => 
+                        c.vendeurId === v.id && 
+                        (c.name.trim().toLowerCase() === window.currentClient.name.trim().toLowerCase() || c.phone === window.currentClient.phone)
+                    );
+
+                    let statusBadge = isLinked 
+                        ? '<span class="text-[10px] bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full font-black border border-emerald-300">مفعل</span>' 
+                        : '<span class="text-[10px] bg-rose-100 text-rose-800 px-2.5 py-1 rounded-full font-black border border-rose-300">غير مفعل</span>';
+                    
+                    let disabledAttr = isLinked ? '' : 'disabled opacity-50 cursor-not-allowed';
+                    let radioId = `vend_${v.id}`;
+                    let checked = (isLinked && activeCount === 0) ? 'checked' : (isLinked ? '' : '');
+                    if (isLinked) activeCount++;
+
+                    html += `
+                        <div class="flex items-center justify-between p-3.5 bg-slate-50 border border-slate-300 rounded-2xl transition">
+                            <label class="flex items-center gap-3 cursor-pointer flex-1 ${isLinked ? '' : 'cursor-not-allowed'}">
+                                <input type="radio" name="vendeurRadio" id="${radioId}" value="${v.id}" data-name="${v.name}" ${isLinked ? checked : ''} ${disabledAttr} class="w-4 h-4 text-emerald-600">
+                                <span class="font-bold text-sm text-slate-800"><i class="fa-solid fa-user-tie text-indigo-600 ml-2"></i> ${v.name}</span>
                             </label>
-                        `;
-                    });
+                            <div>${statusBadge}</div>
+                        </div>
+                    `;
+                });
+
+                if (allVendeurs.length === 0) {
+                    html = '<p class="text-xs text-rose-600 text-center">لا توجد بائعين مسجلين في النظام.</p>';
                 }
-                document.getElementById('vendeursRadioList').innerHTML = html;
+
+                document.getElementById('vendeursListContainer').innerHTML = html;
                 document.getElementById('selectVendeurModal').classList.remove('hidden');
             } catch (e) {
                 console.error(e);
@@ -282,7 +306,7 @@
         window.confirmSelectedVendeur = function() {
             const selectedRadio = document.querySelector('input[name="vendeurRadio"]:checked');
             if (!selectedRadio) {
-                alert('الرجاء اختيار بائع للمتابعة.');
+                alert('الرجاء اختيار بائع مفعل للمتابعة.');
                 return;
             }
             window.selectedVendeurObj = {
@@ -307,7 +331,7 @@
                     snap.forEach(d => cData = { id: d.id, ...d.data() });
                     window.currentClient = cData;
                     localStorage.setItem('currentClient', JSON.stringify(window.currentClient));
-                    localStorage.removeItem('selectedVendeurObj'); // إعادة تعيين اختيار البائع عند دخول جديد
+                    localStorage.removeItem('selectedVendeurObj'); 
                     window.selectedVendeurObj = null;
                     window.checkClientAuth();
                 } else { alert('رقم الهاتف أو كلمة المرور غير صحيحة.'); }
@@ -325,24 +349,27 @@
         window.selectClientOperator = function(op) {
             window.selectedOp = op;
             document.getElementById('clientProductsSection').classList.remove('hidden');
-            document.getElementById('clientSelectedOperatorTitle').innerText = `البطاقات المتاحة للمشغل: ${op} (انقر للزيادة، أو استخدم زر النقصان -)`;
+            document.getElementById('clientSelectedOperatorTitle').innerText = `البطاقات المتاحة للمشغل: ${op} (انقر للزيادة أو النقصان)`;
             
+            // ألوان مميزة وواضحة لكل بطاقة حسب المشغل
+            let headerBgColor = op === 'Ooredoo' ? 'bg-red-50 text-red-700 border-red-300' : (op === 'Telecom' ? 'bg-blue-50 text-blue-700 border-blue-300' : 'bg-orange-50 text-orange-700 border-orange-300');
+
             let html = '';
             window.tariffs.filter(t => t.operator === op).forEach(t => {
                 let key = `${op}_${t.id}`;
                 let qty = window.clientCart[key] ? window.clientCart[key].qty : 0;
                 html += `
-                    <div class="bg-white border-2 border-emerald-500/40 p-3 rounded-2xl flex flex-col justify-between items-center text-center transition shadow-2xs relative">
-                        ${qty > 0 ? `<span class="absolute -top-2 -right-2 bg-emerald-600 text-white text-xs w-6 h-6 rounded-full flex items-center justify-center font-bold shadow-sm">${qty}</span>` : ''}
+                    <div class="bg-white border-2 p-3 rounded-2xl flex flex-col justify-between items-center text-center transition shadow-2xs relative ${headerBgColor}">
+                        ${qty > 0 ? `<span class="absolute -top-2 -right-2 bg-slate-900 text-white text-xs w-6 h-6 rounded-full flex items-center justify-center font-bold shadow-sm">${qty}</span>` : ''}
                         
                         <div onclick="addCardByClick('${key}')" class="cursor-pointer w-full py-1">
-                            <span class="font-black text-sm text-slate-900 block">${t.name}</span>
-                            <span class="text-xs font-bold text-emerald-600 mt-1 block">${t.price.toFixed(3)} د.ت</span>
+                            <span class="font-black text-sm block">${t.name}</span>
+                            <span class="text-xs font-bold mt-1 block">${t.price.toFixed(3)} د.ت</span>
                         </div>
 
                         <div class="flex items-center gap-2 mt-2 pt-2 border-t border-slate-200 w-full justify-center">
                             <button onclick="decrementCard('${key}')" class="w-7 h-7 bg-rose-100 text-rose-700 rounded-lg font-bold text-xs hover:bg-rose-200 transition"><i class="fa-solid fa-minus"></i></button>
-                            <span class="font-bold text-xs w-6 text-center">${qty}</span>
+                            <span class="font-bold text-xs w-6 text-center text-slate-800">${qty}</span>
                             <button onclick="addCardByClick('${key}')" class="w-7 h-7 bg-emerald-100 text-emerald-700 rounded-lg font-bold text-xs hover:bg-emerald-200 transition"><i class="fa-solid fa-plus"></i></button>
                         </div>
                     </div>
@@ -416,7 +443,7 @@
             try {
                 await addDoc(collection(db, "orders"), {
                     clientName: window.currentClient.name,
-                    vendeurId: window.selectedVendeurObj.id, // الإرسال للبائع المحدد بالمليمتر
+                    vendeurId: window.selectedVendeurObj.id, 
                     items, totalSell, totalBuy: totalSell * 0.95, benefice: totalSell * 0.05,
                     paymentStatus: 'En attente', paidAmount: 0, creditAmount: 0,
                     date: new Date().toISOString(), status: 'قيد الانتظار'
@@ -435,7 +462,6 @@
         function fetchClientData() {
             if (!window.currentClient || !window.selectedVendeurObj) return;
 
-            // جلب طلبات هذا التاجر والمرتبطة حصرياً بالبائع المختار
             onSnapshot(query(collection(db, "orders"), where("clientName", "==", window.currentClient.name), where("vendeurId", "==", window.selectedVendeurObj.id)), (snap) => {
                 window.clientOrdersCache = [];
                 let totalCredit = 0;

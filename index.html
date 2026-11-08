@@ -36,13 +36,25 @@
         </div>
     </div>
 
+    <!-- نافذة إشعار احترافية للتاجر -->
+    <div id="clientNotificationModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs hidden flex items-center justify-center z-50 p-4 text-slate-800">
+        <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-sm w-full space-y-4 text-center">
+            <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto text-2xl font-bold">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h4 id="clientNotifTitle" class="font-black text-lg text-slate-900">تم بنجاح</h4>
+            <p id="clientNotifText" class="text-xs text-slate-500">تم إرسال الطلبية إلى البائع بنجاح وشكرا!</p>
+            <button onclick="closeClientNotification()" class="w-full bg-slate-900 hover:bg-slate-800 text-white py-3 rounded-xl font-bold text-xs shadow-sm transition">موافق</button>
+        </div>
+    </div>
+
     <!-- رأسية فضاء التاجر -->
     <header class="bg-white shadow-xs border-b border-slate-200">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
             <h1 class="text-base font-black flex items-center gap-2 text-emerald-700">
                 <i class="fa-solid fa-store text-lg"></i> <span id="headerClientName" class="text-slate-800">مرحباً بضيفنا الكريم</span>
             </h1>
-            <button onclick="logoutClient()" class="bg-rose-50 hover:bg-rose-100 text-rose-600 px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1 border border-rose-200">
+            <button onclick="logoutClient()" class="bg-rose-50 hover:bg-rose-100 text-rose-600 px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 border border-rose-200 shadow-2xs">
                 <i class="fa-solid fa-right-from-bracket"></i> خروج
             </button>
         </div>
@@ -61,7 +73,7 @@
             </div>
         </div>
 
-        <!-- أزرار المشغّلين بتصميم عصري وألوان مزينة -->
+        <!-- أزرار المشغّلين بتصميم عصري ملون -->
         <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 space-y-4">
             <h3 class="font-extrabold text-slate-800 text-sm border-b pb-2"><i class="fa-solid fa-cart-plus text-emerald-600 ml-1"></i> اختر المشغل لطلب البطاقات أو الشحن المباشر</h3>
             
@@ -81,7 +93,7 @@
             <div id="clientProductsSection" class="hidden space-y-4 pt-3 border-t">
                 <h4 id="clientSelectedOperatorTitle" class="font-bold text-xs text-slate-700"></h4>
                 
-                <!-- شبكة الكروت (الضغط مباشرة عليها كالسبحة للإضافة) -->
+                <!-- شبكة البطاقات (مع زر إضافة + وزر نقص -) -->
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="clientCardsGrid"></div>
 
                 <!-- خانة الشحن المباشر (الكتابة المباشرة) -->
@@ -104,18 +116,37 @@
             </div>
         </div>
 
-        <!-- قسم الطلبيات السابقة (سطور منظمة) -->
+        <!-- زر الطلبيات السابقة الكبير في الصفحة الرئيسية -->
         <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 space-y-4">
-            <h3 class="font-extrabold text-slate-800 text-sm border-b pb-2"><i class="fa-solid fa-box-archive text-indigo-600 ml-1"></i> الطلبيات السابقة (انقر على أي طلب لعرض تفاصيله)</h3>
-            <div id="clientOrdersContainer" class="space-y-2">
-                <p class="text-slate-400 text-xs text-center py-4">لا توجد طلبات سابقة.</p>
-            </div>
+            <button onclick="openClientOrdersModal()" class="w-full bg-indigo-50 hover:bg-indigo-100 text-indigo-900 border-2 border-indigo-500 p-5 rounded-2xl font-black text-base flex justify-between items-center transition shadow-sm">
+                <div class="flex items-center gap-3">
+                    <div class="bg-indigo-600 text-white w-10 h-10 rounded-xl flex items-center justify-center font-bold">
+                        <i class="fa-solid fa-box-archive"></i>
+                    </div>
+                    <span>الطلبيات السابقة (سجل الطلبات وحالتها)</span>
+                </div>
+                <i class="fa-solid fa-chevron-left text-indigo-600 text-sm"></i>
+            </button>
         </div>
 
     </main>
 
-    <!-- نافذة تفاصيل الطلبية السابقة للتاجر -->
-    <div id="clientOrderDetailModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs hidden flex items-center justify-center z-50 p-4 text-slate-800">
+    <!-- نافذة الطلبيات السابقة (التي تفتح عند الضغط على الزر الكبير) -->
+    <div id="clientOrdersModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs hidden flex items-center justify-center z-50 p-4 text-slate-800">
+        <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto space-y-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h4 class="font-bold text-lg text-slate-900"><i class="fa-solid fa-box-archive text-indigo-600 ml-2"></i> سجل الطلبيات السابقة</h4>
+                <button onclick="closeClientOrdersModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
+            </div>
+            <div id="clientOrdersModalListContainer" class="space-y-2">
+                <p class="text-slate-400 text-xs text-center py-4">لا توجد طلبات سابقة.</p>
+            </div>
+            <button onclick="closeClientOrdersModal()" class="w-full bg-slate-800 text-white py-3 rounded-xl font-bold text-xs">إغلاق</button>
+        </div>
+    </div>
+
+    <!-- نافذة تفاصيل الطلبية المنفردة -->
+    <div id="clientOrderDetailModal" class="fixed inset-0 bg-black/70 backdrop-blur-xs hidden flex items-center justify-center z-50 p-4 text-slate-800">
         <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-md w-full space-y-4">
             <div class="flex justify-between items-center border-b pb-3">
                 <h4 class="font-bold text-base text-slate-900"><i class="fa-solid fa-file-invoice text-emerald-600 ml-2"></i> تفاصيل الطلبية</h4>
@@ -148,6 +179,15 @@
         window.currentClient = JSON.parse(localStorage.getItem('currentClient') || 'null');
         window.clientOrdersCache = [];
 
+        window.showClientNotification = function(title, text) {
+            document.getElementById('clientNotifTitle').innerText = title;
+            document.getElementById('clientNotifText').innerText = text;
+            document.getElementById('clientNotificationModal').classList.remove('hidden');
+        };
+        window.closeClientNotification = function() {
+            document.getElementById('clientNotificationModal').classList.add('hidden');
+        };
+
         window.tariffs = [
             { id: '1', operator: 'Ooredoo', name: 'بطاقة 1 د.ت', price: 1.000 },
             { id: '5', operator: 'Ooredoo', name: 'بطاقة 5 د.ت', price: 5.000 },
@@ -171,7 +211,7 @@
         window.checkClientAuth = function() {
             if (window.currentClient) {
                 document.getElementById('clientAuthScreen').classList.add('hidden');
-                document.getElementById('headerClientName').innerText = `الحانوت: ${window.currentClient.name}`;
+                document.getElementById('headerClientName').innerText = window.currentClient.name || "الحانوت";
                 fetchClientData();
             } else {
                 document.getElementById('clientAuthScreen').classList.remove('hidden');
@@ -205,24 +245,34 @@
         window.selectClientOperator = function(op) {
             window.selectedOp = op;
             document.getElementById('clientProductsSection').classList.remove('hidden');
-            document.getElementById('clientSelectedOperatorTitle').innerText = `البطاقات المتاحة للمشغل: ${op} (انقر على البطاقة للإضافة مباشرة)`;
+            document.getElementById('clientSelectedOperatorTitle').innerText = `البطاقات المتاحة للمشغل: ${op} (انقر للزيادة، أو استخدم زر النقصان -)`;
             
             let html = '';
             window.tariffs.filter(t => t.operator === op).forEach(t => {
                 let key = `${op}_${t.id}`;
                 let qty = window.clientCart[key] ? window.clientCart[key].qty : 0;
                 html += `
-                    <div onclick="addCardByClick('${key}')" class="bg-white hover:bg-emerald-50/50 border-2 border-emerald-500/40 p-4 rounded-2xl cursor-pointer flex flex-col justify-between items-center text-center transition shadow-2xs relative group">
+                    <div class="bg-white border-2 border-emerald-500/40 p-3 rounded-2xl flex flex-col justify-between items-center text-center transition shadow-2xs relative">
                         ${qty > 0 ? `<span class="absolute -top-2 -right-2 bg-emerald-600 text-white text-xs w-6 h-6 rounded-full flex items-center justify-center font-bold shadow-sm">${qty}</span>` : ''}
-                        <span class="font-black text-sm text-slate-900">${t.name}</span>
-                        <span class="text-xs font-bold text-emerald-600 mt-2">${t.price.toFixed(3)} د.ت</span>
+                        
+                        <!-- النقر على البطاقة كالسبحة للزيادة -->
+                        <div onclick="addCardByClick('${key}')" class="cursor-pointer w-full py-1">
+                            <span class="font-black text-sm text-slate-900 block">${t.name}</span>
+                            <span class="text-xs font-bold text-emerald-600 mt-1 block">${t.price.toFixed(3)} د.ت</span>
+                        </div>
+
+                        <!-- زر النقصان (-) وزر الزيادة (+) -->
+                        <div class="flex items-center gap-2 mt-2 pt-2 border-t w-full justify-center">
+                            <button onclick="decrementCard('${key}')" class="w-7 h-7 bg-rose-100 text-rose-700 rounded-lg font-bold text-xs hover:bg-rose-200 transition"><i class="fa-solid fa-minus"></i></button>
+                            <span class="font-bold text-xs w-6 text-center">${qty}</span>
+                            <button onclick="addCardByClick('${key}')" class="w-7 h-7 bg-emerald-100 text-emerald-700 rounded-lg font-bold text-xs hover:bg-emerald-200 transition"><i class="fa-solid fa-plus"></i></button>
+                        </div>
                     </div>
                 `;
             });
             document.getElementById('clientCardsGrid').innerHTML = html;
         };
 
-        // النقر المباشر على البطاقة كالسبحة لإضافة قطعة
         window.addCardByClick = function(key) {
             let [op, id] = key.split('_');
             let t = window.tariffs.find(item => item.operator === op && item.id === id);
@@ -233,7 +283,19 @@
             }
             window.clientCart[key].qty += 1;
             calcClientTotal();
-            selectClientOperator(op); // تحديث العرض لتظهر العلامة (السبحة)
+            selectClientOperator(op);
+        };
+
+        window.decrementCard = function(key) {
+            let [op, id] = key.split('_');
+            if (window.clientCart[key] && window.clientCart[key].qty > 0) {
+                window.clientCart[key].qty -= 1;
+                if (window.clientCart[key].qty === 0) {
+                    delete window.clientCart[key];
+                }
+                calcClientTotal();
+                selectClientOperator(op);
+            }
         };
 
         window.addDirectRecharge = function() {
@@ -281,13 +343,16 @@
                     paymentStatus: 'En attente', paidAmount: 0, creditAmount: 0,
                     date: new Date().toISOString(), status: 'قيد الانتظار'
                 });
-                alert('تم إرسال الطلبية بنجاح إلى البائع!');
+                window.showClientNotification("إرسال الطلبية", "تم إرسال الطلبية بنجاح إلى البائع وشكرا!");
                 window.clientCart = {};
                 calcClientTotal();
                 if(window.selectedOp) selectClientOperator(window.selectedOp);
                 fetchClientData();
             } catch (e) { alert('خطأ أثناء إرسال الطلب.'); }
         };
+
+        window.openClientOrdersModal = () => document.getElementById('clientOrdersModal').classList.remove('hidden');
+        window.closeClientOrdersModal = () => document.getElementById('clientOrdersModal').classList.add('hidden');
 
         function fetchClientData() {
             if (!window.currentClient) return;
@@ -319,7 +384,7 @@
                 });
 
                 document.getElementById('clientTotalCreditDisplay').innerText = totalCredit.toFixed(3) + ' د.ت';
-                const container = document.getElementById('clientOrdersContainer');
+                const container = document.getElementById('clientOrdersModalListContainer');
                 if(container) container.innerHTML = ordersHtml || '<p class="text-slate-400 text-xs text-center py-4">لا توجد طلبات سابقة.</p>';
             });
         }

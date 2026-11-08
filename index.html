@@ -9,7 +9,7 @@
     <!-- FontAwesome للأيقونات -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-slate-50 min-h-screen font-sans pb-12 text-slate-800">
+<body class="bg-slate-100 min-h-screen font-sans pb-12 text-slate-800">
 
     <!-- شاشة تسجيل الدخول للتاجر -->
     <div id="clientAuthScreen" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -37,12 +37,12 @@
     </div>
 
     <!-- رأسية فضاء التاجر -->
-    <header class="bg-white shadow-sm border-b border-slate-200">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <h1 class="text-lg font-black flex items-center gap-2 text-emerald-700">
-                <i class="fa-solid fa-store"></i> <span id="headerClientName">مرحباً بضيفنا الكريم</span>
+    <header class="bg-white shadow-xs border-b border-slate-200">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-base font-black flex items-center gap-2 text-emerald-700">
+                <i class="fa-solid fa-store text-lg"></i> <span id="headerClientName" class="text-slate-800">مرحباً بضيفنا الكريم</span>
             </h1>
-            <button onclick="logoutClient()" class="bg-rose-50 hover:bg-rose-100 text-rose-600 px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1">
+            <button onclick="logoutClient()" class="bg-rose-50 hover:bg-rose-100 text-rose-600 px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1 border border-rose-200">
                 <i class="fa-solid fa-right-from-bracket"></i> خروج
             </button>
         </div>
@@ -61,24 +61,30 @@
             </div>
         </div>
 
-        <!-- أزرار المشغّلين لتقديم طلبية جديدة -->
+        <!-- أزرار المشغّلين بتصميم عصري وألوان مزينة -->
         <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 space-y-4">
-            <h3 class="font-extrabold text-slate-800 text-sm border-b pb-2"><i class="fa-solid fa-cart-plus text-emerald-600 ml-1"></i> طلب بطاقات أو شحن مباشر جديد</h3>
+            <h3 class="font-extrabold text-slate-800 text-sm border-b pb-2"><i class="fa-solid fa-cart-plus text-emerald-600 ml-1"></i> اختر المشغل لطلب البطاقات أو الشحن المباشر</h3>
             
             <div class="grid grid-cols-3 gap-3">
-                <button onclick="selectClientOperator('Ooredoo')" id="btnOpOoredoo" class="py-3 rounded-2xl font-bold text-xs bg-slate-100 text-slate-700 hover:bg-red-50 hover:text-red-600 border border-slate-200 transition">أوريدو</button>
-                <button onclick="selectClientOperator('Telecom')" id="btnOpTelecom" class="py-3 rounded-2xl font-bold text-xs bg-slate-100 text-slate-700 hover:bg-blue-50 hover:text-blue-600 border border-slate-200 transition">تيليكوم</button>
-                <button onclick="selectClientOperator('Orange')" id="btnOpOrange" class="py-3 rounded-2xl font-bold text-xs bg-slate-100 text-slate-700 hover:bg-orange-50 hover:text-orange-600 border border-slate-200 transition">أورنج</button>
+                <button onclick="selectClientOperator('Ooredoo')" id="btnOpOoredoo" class="py-4 rounded-2xl font-black text-sm bg-red-50 text-red-600 hover:bg-red-100 border-2 border-red-500 shadow-2xs transition flex flex-col items-center justify-center gap-1">
+                    <i class="fa-solid fa-signal text-lg"></i> أوريدو
+                </button>
+                <button onclick="selectClientOperator('Telecom')" id="btnOpTelecom" class="py-4 rounded-2xl font-black text-sm bg-blue-50 text-blue-600 hover:bg-blue-100 border-2 border-blue-500 shadow-2xs transition flex flex-col items-center justify-center gap-1">
+                    <i class="fa-solid fa-signal text-lg"></i> تيليكوم
+                </button>
+                <button onclick="selectClientOperator('Orange')" id="btnOpOrange" class="py-4 rounded-2xl font-black text-sm bg-orange-50 text-orange-600 hover:bg-orange-100 border-2 border-orange-500 shadow-2xs transition flex flex-col items-center justify-center gap-1">
+                    <i class="fa-solid fa-signal text-lg"></i> أورنج
+                </button>
             </div>
 
             <!-- منتجات المشغل المحدد -->
             <div id="clientProductsSection" class="hidden space-y-4 pt-3 border-t">
-                <h4 id="clientSelectedOperatorTitle" class="font-bold text-xs text-slate-600"></h4>
+                <h4 id="clientSelectedOperatorTitle" class="font-bold text-xs text-slate-700"></h4>
                 
-                <!-- شبكة الكروت (1، 5، 10، 25) -->
+                <!-- شبكة الكروت (الضغط مباشرة عليها كالسبحة للإضافة) -->
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="clientCardsGrid"></div>
 
-                <!-- خانة الشحن المباشر (اللايت بالكتابة المباشرة) -->
+                <!-- خانة الشحن المباشر (الكتابة المباشرة) -->
                 <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2">
                     <label class="block text-xs font-bold text-slate-700"><i class="fa-solid fa-bolt text-amber-500 ml-1"></i> الشحن المباشر (اكتب المبلغ مباشرة):</label>
                     <div class="flex gap-2">
@@ -93,12 +99,12 @@
                         <span class="text-xs font-bold text-emerald-800">مجموع الطلبية الحالية:</span>
                         <span id="clientCartTotal" class="text-lg font-black text-emerald-700">0.000 د.ت</span>
                     </div>
-                    <button onclick="submitClientOrder()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl font-bold text-xs shadow-sm transition">إرسال الطلب إلى البائع</button>
+                    <button onclick="submitClientOrder()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-xl font-bold text-xs shadow-sm transition">إرسال الطلب إلى البائع</button>
                 </div>
             </div>
         </div>
 
-        <!-- قسم الطلبيات السابقة (سطور منظمة مع فتح التفاصيل بالنقر) -->
+        <!-- قسم الطلبيات السابقة (سطور منظمة) -->
         <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 space-y-4">
             <h3 class="font-extrabold text-slate-800 text-sm border-b pb-2"><i class="fa-solid fa-box-archive text-indigo-600 ml-1"></i> الطلبيات السابقة (انقر على أي طلب لعرض تفاصيله)</h3>
             <div id="clientOrdersContainer" class="space-y-2">
@@ -199,30 +205,25 @@
         window.selectClientOperator = function(op) {
             window.selectedOp = op;
             document.getElementById('clientProductsSection').classList.remove('hidden');
-            document.getElementById('clientSelectedOperatorTitle').innerText = `اختر البطاقات للمشغل: ${op}`;
+            document.getElementById('clientSelectedOperatorTitle').innerText = `البطاقات المتاحة للمشغل: ${op} (انقر على البطاقة للإضافة مباشرة)`;
             
             let html = '';
             window.tariffs.filter(t => t.operator === op).forEach(t => {
                 let key = `${op}_${t.id}`;
                 let qty = window.clientCart[key] ? window.clientCart[key].qty : 0;
                 html += `
-                    <div class="bg-slate-50 border p-3 rounded-2xl flex flex-col justify-between">
-                        <span class="font-bold text-xs text-slate-800">${t.name}</span>
-                        <div class="flex justify-between items-center mt-3">
-                            <span class="text-xs font-extrabold text-emerald-600">${t.price.toFixed(3)} د.ت</span>
-                            <div class="flex items-center gap-2">
-                                <button onclick="changeClientQty('${key}', -1)" class="w-7 h-7 bg-slate-200 rounded-lg font-bold text-xs">-</button>
-                                <span id="qty_${key}" class="font-bold text-xs">${qty}</span>
-                                <button onclick="changeClientQty('${key}', 1)" class="w-7 h-7 bg-emerald-600 text-white rounded-lg font-bold text-xs">+</button>
-                            </div>
-                        </div>
+                    <div onclick="addCardByClick('${key}')" class="bg-white hover:bg-emerald-50/50 border-2 border-emerald-500/40 p-4 rounded-2xl cursor-pointer flex flex-col justify-between items-center text-center transition shadow-2xs relative group">
+                        ${qty > 0 ? `<span class="absolute -top-2 -right-2 bg-emerald-600 text-white text-xs w-6 h-6 rounded-full flex items-center justify-center font-bold shadow-sm">${qty}</span>` : ''}
+                        <span class="font-black text-sm text-slate-900">${t.name}</span>
+                        <span class="text-xs font-bold text-emerald-600 mt-2">${t.price.toFixed(3)} د.ت</span>
                     </div>
                 `;
             });
             document.getElementById('clientCardsGrid').innerHTML = html;
         };
 
-        window.changeClientQty = function(key, delta) {
+        // النقر المباشر على البطاقة كالسبحة لإضافة قطعة
+        window.addCardByClick = function(key) {
             let [op, id] = key.split('_');
             let t = window.tariffs.find(item => item.operator === op && item.id === id);
             if (!t) return;
@@ -230,11 +231,9 @@
             if (!window.clientCart[key]) {
                 window.clientCart[key] = { operator: op, name: t.name, price: t.price, qty: 0 };
             }
-            window.clientCart[key].qty += delta;
-            if (window.clientCart[key].qty < 0) window.clientCart[key].qty = 0;
-
-            document.getElementById(`qty_${key}`).innerText = window.clientCart[key].qty;
+            window.clientCart[key].qty += 1;
             calcClientTotal();
+            selectClientOperator(op); // تحديث العرض لتظهر العلامة (السبحة)
         };
 
         window.addDirectRecharge = function() {
@@ -306,7 +305,6 @@
                     let isCompleted = o.status === 'مكتمل ومؤكد';
                     let dateStr = o.date ? new Date(o.date).toLocaleDateString() : '';
 
-                    // عرض سطر منظم ونظيف لكل طلبية
                     ordersHtml += `
                         <div onclick="openClientOrderDetail('${o.id}')" class="bg-slate-50 hover:bg-slate-100 cursor-pointer p-3 rounded-xl border flex justify-between items-center transition">
                             <div>

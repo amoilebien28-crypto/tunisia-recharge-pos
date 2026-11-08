@@ -65,7 +65,7 @@
             <!-- المنتجات الخاصة بالمشغل -->
             <div id="clientProductsSection" class="hidden space-y-3 border-t pt-4">
                 <h3 id="clientSelectedOperatorTitle" class="font-bold text-slate-700 text-sm"></h3>
-                <div class="grid grid-cols-2 gap-3" id="clientCardsGrid"></div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="clientCardsGrid"></div>
             </div>
         </div>
 
@@ -143,13 +143,22 @@
             location.reload();
         };
 
+        // تحديث جميع الأسعار والفئات للمشغلين الثلاثة بالتساوي
         window.tariffs = [
             { id: 'Ooredoo_1', operator: 'Ooredoo', name: '1 د.ت', sell: 1.000 },
             { id: 'Ooredoo_5', operator: 'Ooredoo', name: '5 د.ت', sell: 5.000 },
+            { id: 'Ooredoo_10', operator: 'Ooredoo', name: '10 د.ت', sell: 10.000 },
+            { id: 'Ooredoo_25', operator: 'Ooredoo', name: '25 د.ت', sell: 25.000 },
+
             { id: 'Telecom_1', operator: 'Telecom', name: '1 د.ت', sell: 1.000 },
             { id: 'Telecom_5', operator: 'Telecom', name: '5 د.ت', sell: 5.000 },
+            { id: 'Telecom_10', operator: 'Telecom', name: '10 د.ت', sell: 10.000 },
+            { id: 'Telecom_25', operator: 'Telecom', name: '25 د.ت', sell: 25.000 },
+
             { id: 'Orange_1', operator: 'Orange', name: '1 د.ت', sell: 1.000 },
-            { id: 'Orange_5', operator: 'Orange', name: '5 د.ت', sell: 5.000 }
+            { id: 'Orange_5', operator: 'Orange', name: '5 د.ت', sell: 5.000 },
+            { id: 'Orange_10', operator: 'Orange', name: '10 د.ت', sell: 10.000 },
+            { id: 'Orange_25', operator: 'Orange', name: '25 د.ت', sell: 25.000 }
         ];
         window.clientCart = {};
 
@@ -186,7 +195,10 @@
         }
 
         window.submitClientOrder = async function() {
-            if (!window.currentClient) return;
+            if (!window.currentClient) {
+                alert('الرجاء تسجيل الدخول أولاً.');
+                return;
+            }
             let items = [], totalSell = 0, totalBuy = 0;
             for (let id in window.clientCart) {
                 if (window.clientCart[id] > 0) {
@@ -196,23 +208,34 @@
                     totalBuy += (item.sell * 0.950) * window.clientCart[id];
                 }
             }
-            if (items.length === 0) { alert('اختر منتجاً أولاً.'); return; }
+            if (items.length === 0) { 
+                alert('اختر منتجاً أولاً.'); 
+                return; 
+            }
 
             try {
                 await addDoc(collection(db, "orders"), {
                     clientName: window.currentClient.name,
                     clientPhone: window.currentClient.phone,
-                    vendeurId: window.currentClient.vendeurId,
-                    items, totalSell, totalBuy, benefice: totalSell - totalBuy,
-                    paymentStatus: 'Crédit', creditAmount: totalSell,
-                    date: new Date().toISOString(), status: 'قيد الانتظار'
+                    vendeurId: window.currentClient.vendeurId || "",
+                    items, 
+                    totalSell, 
+                    totalBuy, 
+                    benefice: totalSell - totalBuy,
+                    paymentStatus: 'Crédit', 
+                    creditAmount: totalSell,
+                    date: new Date().toISOString(), 
+                    status: 'قيد الانتظار'
                 });
                 alert('تم إرسال الطلب بنجاح إلى البائع!');
                 window.clientCart = {};
                 calcClientTotal();
                 document.getElementById('clientProductsSection').classList.add('hidden');
+                // إعادة رسم الأعداد في الواجهة لترجع لصفر
+                if(window.lastSelectedOp) selectClientOperator(window.lastSelectedOp);
             } catch (e) {
-                alert('خطأ في إرسال الطلب.');
+                console.error(e);
+                alert('خطأ في إرسال الطلب، تحقق من الاتصال.');
             }
         };
 
